@@ -1,0 +1,27 @@
+{
+  "name": "mc-publish",
+  "version": "1.0.0",
+  "description": "GitHub Action that helps you publish your Minecraft mods",
+  "main": "src/index.ts",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kir-Antipov/mc-publish.git"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "minecraft",
+    "minecraft-mod",
+    "publish"
+  ],
+  "author": "Kir-Antipov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kir-Antipov/mc-publish/issues"
+  },
+  "homepage": "https://github.com/Kir-Antipov/mc-publish#readme",
+  "devDependencies": {},
+  "dependencies": {}
+}
