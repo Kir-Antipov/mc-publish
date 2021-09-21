@@ -4,6 +4,7 @@
   "description": "GitHub Action that helps you publish your Minecraft mods",
   "main": "src/index.ts",
   "scripts": {
+    "build": "ncc build --source-map --license license.txt",
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,10 @@
     "url": "https://github.com/Kir-Antipov/mc-publish/issues"
   },
   "homepage": "https://github.com/Kir-Antipov/mc-publish#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "^16.10.1",
+    "@vercel/ncc": "^0.31.1",
+    "typescript": "^4.4.3"
+  },
   "dependencies": {}
 }

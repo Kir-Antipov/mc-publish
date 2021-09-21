@@ -1,0 +1,11 @@
+{
+    "include": ["./src/**/*"],
+    "exclude": ["node_modules", "./test/**/*"],
+    "compilerOptions": {
+        "target": "ES6",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "baseUrl": "./src",
+        "outDir": "./dist",
+    },
+}
