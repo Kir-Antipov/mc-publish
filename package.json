@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "ncc build --source-map --license license.txt",
+    "test:lint": "eslint src/** && eslint test/**",
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,10 @@
   "homepage": "https://github.com/Kir-Antipov/mc-publish#readme",
   "devDependencies": {
     "@types/node": "^16.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
     "@vercel/ncc": "^0.31.1",
+    "eslint": "^7.32.0",
     "typescript": "^4.4.3"
   },
   "dependencies": {}
