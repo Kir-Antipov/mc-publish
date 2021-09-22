@@ -39,6 +39,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@actions/core": "^1.5.0"
+    "@actions/core": "^1.5.0",
+    "fast-glob": "^3.2.7"
   }
 }
