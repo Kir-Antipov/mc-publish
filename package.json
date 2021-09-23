@@ -41,6 +41,7 @@
   "dependencies": {
     "@actions/core": "^1.5.0",
     "fast-glob": "^3.2.7",
+    "formdata-node": "^4.2.2",
     "node-fetch": "^3.0.0"
   }
 }
