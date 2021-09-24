@@ -43,6 +43,7 @@
     "@actions/github": "^5.0.0",
     "fast-glob": "^3.2.7",
     "formdata-node": "^4.2.2",
+    "modrinth": "^1.3.0",
     "node-fetch": "^3.0.0"
   }
 }
