@@ -1,0 +1,67 @@
+name: Publish Minecraft mods
+description: GitHub Action that helps you publish your Minecraft mods
+author: Kir-Antipov
+branding:
+  color: orange
+  icon: upload
+inputs:
+  modrinth-id:
+    description: The ID of the Modrinth project to upload to
+    required: false
+  modrinth-token:
+    description: A valid API token for the Modrinth API
+    required: false
+
+  curseforge-id:
+    description: The ID of the CurseForge project to upload to
+    required: false
+  curseforge-token:
+    description: A valid API token for the CurseForge API
+    required: false
+
+  github-tag:
+    description: The tag name of the release to upload assets to
+    required: false
+  github-token:
+    description: A valid API token for the GitHub API
+    required: false
+
+  files:
+    description: A glob of the files to upload
+    required: false
+  files-primary:
+    description: A glob of the primary files to upload
+    required: false
+  files-secondary:
+    description: A glob of the secondary files to upload
+    required: false
+
+  name:
+    description: The name of the version
+    required: false
+  version:
+    description: The version number of the version
+    required: false
+  version-type:
+    description: The type of the release - alpha, beta, or release
+    required: false
+
+  changelog:
+    description: The changelog for this version
+    required: false
+  changelog-file:
+    description: A glob of the changelog file
+    required: false
+
+  loaders:
+    description: A list of supported mod loaders
+    required: false
+  game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+  java:
+    description: A list of supported Java versions
+    required: false
+runs:
+  using: node12
+  main: dist/index.js
