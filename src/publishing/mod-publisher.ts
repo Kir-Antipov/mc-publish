@@ -63,10 +63,10 @@ export default abstract class ModPublisher<TUniqueOptions = unknown> extends Pub
             throw new Error(`Specified files (${typeof fileSelector === "string" ? fileSelector : fileSelector.primary}) were not found`);
         }
 
-        const version = this.options.version || <string>releaseInfo?.tag_name || parseVersionFromFilename(files[0].name);
+        const version = (typeof this.options.version === "string" && this.options.version) || <string>releaseInfo?.tag_name || parseVersionFromFilename(files[0].name);
         const versionType = this.options.versionType?.toLowerCase() || parseVersionTypeFromFilename(files[0].name);
-        const name = this.options.name || <string>releaseInfo?.name || version;
-        const changelog = (this.options.changelog ? await readChangelog(this.options.changelog) : <string>releaseInfo?.body) || "";
+        const name = (typeof this.options.name === "string" && this.options.name) || <string>releaseInfo?.name || version;
+        const changelog = ((typeof this.options.changelog === "string" || this.options.changelog?.file) ? (await readChangelog(this.options.changelog)) : <string>releaseInfo?.body) || "";
 
         const loaders = processMultilineInput(this.options.loaders, /\s+/);
         if (!loaders.length) {
