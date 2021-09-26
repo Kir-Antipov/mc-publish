@@ -8,13 +8,14 @@ export async function createVersion(id: string, data: Record<string, any>, files
         dependencies: [],
         ...data,
         mod_id: id,
-        file_parts: files.map(x => x.name)
+        file_parts: files.map((_, i) => i.toString())
     };
 
     const form = new FormData();
     form.append("data", JSON.stringify(data));
-    for (const file of files) {
-        form.append(file.name, await fileFromPath(file.path), file.name);
+    for (let i = 0; i < files.length; ++i) {
+        const file = files[i];
+        form.append(i.toString(), await fileFromPath(file.path), file.name);
     }
 
     const response = await fetch("https://api.modrinth.com/api/v1/version", {
