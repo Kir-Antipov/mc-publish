@@ -1,4 +1,4 @@
-name: Publish Minecraft mods
+name: Publish Minecraft Mods
 description: GitHub Action that helps you publish your Minecraft mods
 author: Kir-Antipov
 branding:
@@ -9,21 +9,21 @@ inputs:
     description: The ID of the Modrinth project to upload to
     required: false
   modrinth-token:
-    description: A valid API token for the Modrinth API
+    description: A valid token for the Modrinth API
     required: false
 
   curseforge-id:
     description: The ID of the CurseForge project to upload to
     required: false
   curseforge-token:
-    description: A valid API token for the CurseForge API
+    description: A valid token for the CurseForge API
     required: false
 
   github-tag:
     description: The tag name of the release to upload assets to
     required: false
   github-token:
-    description: A valid API token for the GitHub API
+    description: A valid token for the GitHub API
     required: false
 
   files:
@@ -40,7 +40,7 @@ inputs:
     description: The name of the version
     required: false
   version:
-    description: The version number of the version
+    description: The version number
     required: false
   version-type:
     description: The type of the release - alpha, beta, or release
