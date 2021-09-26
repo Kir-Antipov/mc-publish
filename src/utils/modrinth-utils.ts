@@ -5,6 +5,7 @@ import { File } from "./file-utils";
 
 export async function createVersion(id: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
     data = {
+        dependencies: [],
         ...data,
         mod_id: id,
         file_parts: files.map(x => x.name)
