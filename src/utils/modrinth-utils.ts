@@ -23,7 +23,11 @@ export async function createVersion(id: string, data: Record<string, any>, files
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to upload file: ${response.status} (${response.statusText})`)
+        let errorText = response.statusText;
+        try {
+            errorText += `, ${await response.text()}`;
+        } catch { }
+        throw new Error(`Failed to upload file: ${response.status} (${errorText})`);
     }
 
     return (<{ id: string }>await response.json()).id;

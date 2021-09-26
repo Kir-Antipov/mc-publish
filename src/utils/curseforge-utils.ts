@@ -97,7 +97,11 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to upload file: ${response.status} (${response.statusText})`)
+        let errorText = response.statusText;
+        try {
+            errorText += `, ${await response.text()}`;
+        } catch { }
+        throw new Error(`Failed to upload file: ${response.status} (${errorText})`);
     }
 
     return (<{ id: number }>await response.json()).id;
