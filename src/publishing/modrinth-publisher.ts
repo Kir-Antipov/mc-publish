@@ -1,4 +1,4 @@
-import { Modrinth } from "modrinth";
+import { createVersion } from "../utils/modrinth-utils";
 import { File } from "../utils/file-utils";
 import ModPublisher from "./mod-publisher";
 import PublisherTarget from "./publisher-target";
@@ -10,23 +10,14 @@ export default class ModrinthPublisher extends ModPublisher {
 
     protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[]): Promise<void> {
         const data = {
-            name,
+            version_title: name,
             version_number: version,
-            changelog,
+            version_body: changelog,
+            release_channel: channel,
             game_versions: gameVersions,
-            version_type: channel,
             loaders,
             featured: true,
         };
-        const uploadFiles = files.map((x, i) => ({
-            name: x.path,
-            data: {
-                filename: x.name,
-                primary: i === 0
-            }
-        }));
-
-        const modrinth = new Modrinth({ authorization: token });
-        await modrinth.createVersion(id, data, uploadFiles);
+        await createVersion(id, data, files, token);
     }
 }
