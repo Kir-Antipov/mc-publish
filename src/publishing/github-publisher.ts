@@ -6,8 +6,13 @@ import { getFiles } from "../utils/file-utils";
 interface GitHubPublisherOptions {
     tag?: string;
     token: string;
-    files: string;
+    files?: string | { primary?: string, secondary?: string };
 }
+
+const defaultFiles = {
+    primary: "build/libs/!(*-@(dev|sources)).jar",
+    secondary: "build/libs/*-@(dev|sources).jar"
+};
 
 export default class GitHubPublisher extends Publisher<GitHubPublisherOptions> {
     public get target(): PublisherTarget {
@@ -30,9 +35,10 @@ export default class GitHubPublisher extends Publisher<GitHubPublisherOptions> {
             throw new Error(`Couldn't find release #${this.options.tag || releaseId}`);
         }
 
-        const files = await getFiles(this.options.files);
+        const fileSelector = this.options.files && (typeof(this.options.files) === "string" || this.options.files.primary) ? this.options.files : defaultFiles;
+        const files = await getFiles(fileSelector);
         if (!files.length) {
-            throw new Error("Couldn't find specified files");
+            throw new Error(`Specified files (${typeof fileSelector === "string" ? fileSelector : fileSelector.primary}) were not found`);
         }
 
         const existingAssets = (await octokit.rest.repos.listReleaseAssets({ ...repo, release_id: releaseId })).data;
