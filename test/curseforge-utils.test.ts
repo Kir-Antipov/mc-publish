@@ -61,6 +61,12 @@ describe("unifyJava", () => {
 });
 
 describe("convertToCurseForgeVersions", () => {
+    // This test can only be executed in the GitHub Actions' environment,
+    // because CurseForge is a little bitch.
+    if (!process.env.CI) {
+        return;
+    }
+
     test("versions are converted to CurseForge ids", async () => {
         const versions = {
             gameVersions: {
@@ -68,7 +74,7 @@ describe("convertToCurseForgeVersions", () => {
                 "21w37a": 8633,
                 "1.18 (snapshot)": 8633,
                 "1.18-rc1": 8633,
-                "1.17-pre3": 73242,
+                "1.17-pre3": 8282,
                 "1.17.1": 8516,
             },
             loaders: {
