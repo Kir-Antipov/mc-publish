@@ -6,16 +6,16 @@ import CurseForgePublisher from "./curseforge-publisher";
 import Logger from "../utils/logger";
 
 export default class PublisherFactory {
-    public create(target: PublisherTarget, options: Record<string, unknown>, logger?: Logger): Publisher<unknown> {
+    public create(target: PublisherTarget, logger?: Logger): Publisher<unknown> {
         switch(target) {
             case PublisherTarget.GitHub:
-                return new GitHubPublisher(<any>options, logger);
+                return new GitHubPublisher(logger);
 
             case PublisherTarget.Modrinth:
-                return new ModrinthPublisher(<any>options, logger);
+                return new ModrinthPublisher(logger);
 
             case PublisherTarget.CurseForge:
-                return new CurseForgePublisher(<any>options, logger);
+                return new CurseForgePublisher(logger);
 
             default:
                 throw new Error(`Unknown target "${PublisherTarget.toString(target)}"`);

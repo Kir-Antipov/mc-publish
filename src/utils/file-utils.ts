@@ -24,22 +24,27 @@ export class File {
         });
     }
 
-    public getStats(): Promise<fs.Stats> {
-        return new Promise((resolve, reject) => fs.stat(this.path, (error, stats) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(stats);
-            }
-        }));
-    }
-
     public equals(file: unknown): boolean {
         return file instanceof File && file.path === this.path;
     }
 }
 
-export async function getFiles(files: string | { primary?: string, secondary?: string }): Promise<File[]> {
+export type FileSelector = string | { primary?: string, secondary?: string };
+
+export const gradleOutputSelector: FileSelector = {
+    primary: "build/libs/!(*-@(dev|sources)).jar",
+    secondary: "build/libs/*-@(dev|sources).jar"
+};
+
+export async function getRequiredFiles(files: FileSelector): Promise<File[] | never> {
+    const foundFiles = await getFiles(files);
+    if (foundFiles && foundFiles.length) {
+        return foundFiles;
+    }
+    throw new Error(`Specified files ('${typeof files === "string" ? files : [files.primary, files.secondary].filter(x => x).join(", ")}') were not found`);
+}
+
+export async function getFiles(files: FileSelector): Promise<File[]> {
     if (!files || typeof files !== "string" && !files.primary && !files.secondary) {
         return [];
     }

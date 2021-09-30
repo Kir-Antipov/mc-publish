@@ -7,11 +7,9 @@ describe("PublisherFactory.create", () => {
     test("factory can create publisher for every PublisherTarget value", () => {
         const factory = new PublisherFactory();
         for (const target of PublisherTarget.getValues()) {
-            const options = {};
             const logger = getConsoleLogger();
-            const publisher = factory.create(target, options, logger);
+            const publisher = factory.create(target, logger);
             expect(publisher.target).toStrictEqual(target);
-            expect((<any>publisher).options).toStrictEqual(options);
             expect((<any>publisher).logger).toStrictEqual(logger);
         }
     });
@@ -19,26 +17,14 @@ describe("PublisherFactory.create", () => {
     test("every publisher has logger object", () => {
         const factory = new PublisherFactory();
         for (const target of PublisherTarget.getValues()) {
-            const options = {};
-            const publisher = factory.create(target, options);
+            const publisher = factory.create(target);
             expect(publisher.target).toStrictEqual(target);
-            expect((<any>publisher).options).toStrictEqual(options);
             expect((<any>publisher).logger).toBeTruthy();
         }
     });
 
     test("the method throws on invalid PublisherTarget value", () => {
         const factory = new PublisherFactory();
-        expect(() => factory.create(-1, {})).toThrow();
-    });
-
-    test("the method throws on invalid options", () => {
-        const factory = new PublisherFactory();
-        const invalidOptions = [null, undefined, "", true, false, () => {}];
-        for (const target of PublisherTarget.getValues()) {
-            for (const options of invalidOptions) {
-                expect(() => factory.create(target, <any>options)).toThrow();
-            }
-        }
+        expect(() => factory.create(-1)).toThrow();
     });
 });
