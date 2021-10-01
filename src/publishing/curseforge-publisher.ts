@@ -16,7 +16,7 @@ export default class CurseForgePublisher extends ModPublisher {
             const data = {
                 changelog,
                 changelogType: "markdown",
-                displayName: name,
+                displayName: (parentFileId || !name) ? file.name : name,
                 parentFileID: parentFileId,
                 releaseType: channel,
                 gameVersions: parentFileId ? undefined : versions

@@ -10,7 +10,7 @@ export default class ModrinthPublisher extends ModPublisher {
 
     protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[]): Promise<void> {
         const data = {
-            version_title: name,
+            version_title: name || version,
             version_number: version,
             version_body: changelog,
             release_channel: channel,

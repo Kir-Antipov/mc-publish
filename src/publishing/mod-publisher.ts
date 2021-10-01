@@ -57,7 +57,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
 
         const version = (typeof options.version === "string" && options.version) || <string>releaseInfo?.tag_name || parseVersionFromFilename(files[0].name);
         const versionType = options.versionType?.toLowerCase() || parseVersionTypeFromFilename(files[0].name);
-        const name = (typeof options.name === "string" && options.name) || <string>releaseInfo?.name || version;
+        const name = typeof options.name === "string" ? options.name : (<string>releaseInfo?.name || version);
         const changelog = ((typeof options.changelog === "string" || options.changelog?.file) ? (await readChangelog(options.changelog)) : <string>releaseInfo?.body) || "";
 
         const loaders = processMultilineInput(options.loaders, /\s+/);
