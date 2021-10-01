@@ -142,12 +142,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
+exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
 const os = __importStar(__nccwpck_require__(2087));
 const path = __importStar(__nccwpck_require__(5622));
+const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
  */
@@ -416,6 +417,12 @@ function getState(name) {
     return process.env[`STATE_${name}`] || '';
 }
 exports.getState = getState;
+function getIDToken(aud) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield oidc_utils_1.OidcClient.getIDToken(aud);
+    });
+}
+exports.getIDToken = getIDToken;
 //# sourceMappingURL=core.js.map
 
 /***/ }),
@@ -469,6 +476,90 @@ exports.issueCommand = issueCommand;
 
 /***/ }),
 
+/***/ 8041:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OidcClient = void 0;
+const http_client_1 = __nccwpck_require__(9925);
+const auth_1 = __nccwpck_require__(3702);
+const core_1 = __nccwpck_require__(2186);
+class OidcClient {
+    static createHttpClient(allowRetry = true, maxRetry = 10) {
+        const requestOptions = {
+            allowRetries: allowRetry,
+            maxRetries: maxRetry
+        };
+        return new http_client_1.HttpClient('actions/oidc-client', [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
+    }
+    static getRequestToken() {
+        const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
+        if (!token) {
+            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable');
+        }
+        return token;
+    }
+    static getIDTokenUrl() {
+        const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL'];
+        if (!runtimeUrl) {
+            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable');
+        }
+        return runtimeUrl;
+    }
+    static getCall(id_token_url) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const httpclient = OidcClient.createHttpClient();
+            const res = yield httpclient
+                .getJson(id_token_url)
+                .catch(error => {
+                throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
+        Error Message: ${error.result.message}`);
+            });
+            const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
+            if (!id_token) {
+                throw new Error('Response json body do not have ID Token field');
+            }
+            return id_token;
+        });
+    }
+    static getIDToken(audience) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // New ID Token is requested from action service
+                let id_token_url = OidcClient.getIDTokenUrl();
+                if (audience) {
+                    const encodedAudience = encodeURIComponent(audience);
+                    id_token_url = `${id_token_url}&audience=${encodedAudience}`;
+                }
+                core_1.debug(`ID token url is ${id_token_url}`);
+                const id_token = yield OidcClient.getCall(id_token_url);
+                core_1.setSecret(id_token);
+                return id_token;
+            }
+            catch (error) {
+                throw new Error(`Error message: ${error.message}`);
+            }
+        });
+    }
+}
+exports.OidcClient = OidcClient;
+//# sourceMappingURL=oidc-utils.js.map
+
+/***/ }),
+
 /***/ 5278:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -504,6 +595,7 @@ function toCommandProperties(annotationProperties) {
     }
     return {
         title: annotationProperties.title,
+        file: annotationProperties.file,
         line: annotationProperties.startLine,
         endLine: annotationProperties.endLine,
         col: annotationProperties.startColumn,
@@ -727,6 +819,72 @@ function getOctokitOptions(token, options) {
 }
 exports.getOctokitOptions = getOctokitOptions;
 //# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ 3702:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+class BasicCredentialHandler {
+    constructor(username, password) {
+        this.username = username;
+        this.password = password;
+    }
+    prepareRequest(options) {
+        options.headers['Authorization'] =
+            'Basic ' +
+                Buffer.from(this.username + ':' + this.password).toString('base64');
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.BasicCredentialHandler = BasicCredentialHandler;
+class BearerCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        options.headers['Authorization'] = 'Bearer ' + this.token;
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.BearerCredentialHandler = BearerCredentialHandler;
+class PersonalAccessTokenCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        options.headers['Authorization'] =
+            'Basic ' + Buffer.from('PAT:' + this.token).toString('base64');
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
+
 
 /***/ }),
 
@@ -2332,7 +2490,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 var universalUserAgent = __nccwpck_require__(5030);
 var beforeAfterHook = __nccwpck_require__(3682);
-var request = __nccwpck_require__(6234);
+var request = __nccwpck_require__(5712);
 var graphql = __nccwpck_require__(8467);
 var authToken = __nccwpck_require__(334);
 
@@ -2912,7 +3070,7 @@ exports.endpoint = endpoint;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-var request = __nccwpck_require__(6234);
+var request = __nccwpck_require__(5712);
 var universalUserAgent = __nccwpck_require__(5030);
 
 const VERSION = "4.8.0";
@@ -4422,7 +4580,7 @@ exports.RequestError = RequestError;
 
 /***/ }),
 
-/***/ 6234:
+/***/ 5712:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -10205,7 +10363,7 @@ exports.default = ProviderStream;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const sync_1 = __nccwpck_require__(8821);
+const sync_1 = __nccwpck_require__(6234);
 const provider_1 = __nccwpck_require__(257);
 class ProviderSync extends provider_1.default {
     constructor() {
@@ -10368,7 +10526,7 @@ exports.default = ReaderStream;
 
 /***/ }),
 
-/***/ 8821:
+/***/ 6234:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -19594,6 +19752,101 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(5747);
+var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(5622);
+var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
+// EXTERNAL MODULE: ./node_modules/fast-glob/out/index.js
+var out = __nccwpck_require__(3664);
+var out_default = /*#__PURE__*/__nccwpck_require__.n(out);
+;// CONCATENATED MODULE: ./src/utils/file-utils.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+class File {
+    constructor(filePath) {
+        this.name = external_path_default().basename(filePath);
+        this.path = filePath;
+        Object.freeze(this);
+    }
+    getBuffer() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                external_fs_default().readFile(this.path, (error, data) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    else {
+                        resolve(data);
+                    }
+                });
+            });
+        });
+    }
+    equals(file) {
+        return file instanceof File && file.path === this.path;
+    }
+}
+const gradleOutputSelector = {
+    primary: "build/libs/!(*-@(dev|sources)).jar",
+    secondary: "build/libs/*-@(dev|sources).jar"
+};
+function getRequiredFiles(files) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const foundFiles = yield getFiles(files);
+        if (foundFiles && foundFiles.length) {
+            return foundFiles;
+        }
+        throw new Error(`Specified files ('${typeof files === "string" ? files : [files.primary, files.secondary].filter(x => x).join(", ")}') were not found`);
+    });
+}
+function getFiles(files) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!files || typeof files !== "string" && !files.primary && !files.secondary) {
+            return [];
+        }
+        if (typeof files === "string") {
+            return (yield out_default()(files)).map(x => new File(x));
+        }
+        let results = [];
+        if (files.primary) {
+            results = (yield out_default()(files.primary)).map(x => new File(x));
+        }
+        if (files.secondary) {
+            results = results.concat((yield out_default()(files.secondary)).map(x => new File(x)));
+        }
+        return results.filter((x, i, self) => self.findIndex(y => x.equals(y)) === i);
+    });
+}
+function parseVersionFromFilename(filename) {
+    filename = external_path_default().parse(filename).name;
+    const match = filename.match(/[a-z]{0,2}\d+\.\d+.*/i);
+    return match ? match[0] : filename;
+}
+function parseVersionTypeFromFilename(filename) {
+    filename = external_path_default().parse(filename).name;
+    if (filename.match(/[+-_]alpha/i)) {
+        return "alpha";
+    }
+    else if (filename.match(/[+-_]beta/i)) {
+        return "beta";
+    }
+    else {
+        return "release";
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/publishing/publisher-target.ts
 var PublisherTarget;
 (function (PublisherTarget) {
@@ -19651,109 +19904,18 @@ function getEmptyLogger() {
 ;// CONCATENATED MODULE: ./src/publishing/publisher.ts
 
 class Publisher {
-    constructor(options, logger) {
+    constructor(logger) {
+        this.logger = logger || getEmptyLogger();
+    }
+    validateOptions(options) {
         if (!options || typeof options !== "object") {
             throw new Error(`Expected options to be an object, got ${options ? typeof options : options}`);
         }
-        this.options = options;
-        this.logger = logger || getEmptyLogger();
     }
 }
 
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(5747);
-var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
-// EXTERNAL MODULE: external "path"
-var external_path_ = __nccwpck_require__(5622);
-var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
-// EXTERNAL MODULE: ./node_modules/fast-glob/out/index.js
-var out = __nccwpck_require__(3664);
-var out_default = /*#__PURE__*/__nccwpck_require__.n(out);
-;// CONCATENATED MODULE: ./src/utils/file-utils.ts
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-class File {
-    constructor(filePath) {
-        this.name = external_path_default().basename(filePath);
-        this.path = filePath;
-        Object.freeze(this);
-    }
-    getBuffer() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                external_fs_default().readFile(this.path, (error, data) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    else {
-                        resolve(data);
-                    }
-                });
-            });
-        });
-    }
-    getStats() {
-        return new Promise((resolve, reject) => external_fs_default().stat(this.path, (error, stats) => {
-            if (error) {
-                reject(error);
-            }
-            else {
-                resolve(stats);
-            }
-        }));
-    }
-    equals(file) {
-        return file instanceof File && file.path === this.path;
-    }
-}
-function getFiles(files) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!files || typeof files !== "string" && !files.primary && !files.secondary) {
-            return [];
-        }
-        if (typeof files === "string") {
-            return (yield out_default()(files)).map(x => new File(x));
-        }
-        let results = [];
-        if (files.primary) {
-            results = (yield out_default()(files.primary)).map(x => new File(x));
-        }
-        if (files.secondary) {
-            results = results.concat((yield out_default()(files.secondary)).map(x => new File(x)));
-        }
-        return results.filter((x, i, self) => self.findIndex(y => x.equals(y)) === i);
-    });
-}
-function parseVersionFromFilename(filename) {
-    filename = external_path_default().parse(filename).name;
-    const match = filename.match(/[a-z]{0,2}\d+\.\d+.*/i);
-    return match ? match[0] : filename;
-}
-function parseVersionTypeFromFilename(filename) {
-    filename = external_path_default().parse(filename).name;
-    if (filename.match(/[+-_]alpha/i)) {
-        return "alpha";
-    }
-    else if (filename.match(/[+-_]beta/i)) {
-        return "beta";
-    }
-    else {
-        return "release";
-    }
-}
-
 ;// CONCATENATED MODULE: ./src/publishing/github-publisher.ts
 var github_publisher_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -19767,23 +19929,19 @@ var github_publisher_awaiter = (undefined && undefined.__awaiter) || function (t
 
 
 
-
-const defaultFiles = {
-    primary: "build/libs/!(*-@(dev|sources)).jar",
-    secondary: "build/libs/*-@(dev|sources).jar"
-};
 class GitHubPublisher extends Publisher {
     get target() {
         return publisher_target.GitHub;
     }
-    publish() {
+    publish(files, options) {
         var _a;
         return github_publisher_awaiter(this, void 0, void 0, function* () {
+            this.validateOptions(options);
             let releaseId = 0;
             const repo = github.context.repo;
-            const octokit = github.getOctokit(this.options.token);
-            if (this.options.tag) {
-                const response = yield octokit.rest.repos.getReleaseByTag(Object.assign(Object.assign({}, repo), { tag: this.options.tag }));
+            const octokit = github.getOctokit(options.token);
+            if (options.tag) {
+                const response = yield octokit.rest.repos.getReleaseByTag(Object.assign(Object.assign({}, repo), { tag: options.tag }));
                 if (response.status >= 200 && response.status < 300) {
                     releaseId = response.data.id;
                 }
@@ -19792,12 +19950,7 @@ class GitHubPublisher extends Publisher {
                 releaseId = (_a = github.context.payload.release) === null || _a === void 0 ? void 0 : _a.id;
             }
             if (!releaseId) {
-                throw new Error(`Couldn't find release #${this.options.tag || releaseId}`);
-            }
-            const fileSelector = this.options.files && (typeof (this.options.files) === "string" || this.options.files.primary) ? this.options.files : defaultFiles;
-            const files = yield getFiles(fileSelector);
-            if (!files.length) {
-                throw new Error(`Specified files (${typeof fileSelector === "string" ? fileSelector : fileSelector.primary}) were not found`);
+                throw new Error(`Couldn't find release #${options.tag || releaseId}`);
             }
             const existingAssets = (yield octokit.rest.repos.listReleaseAssets(Object.assign(Object.assign({}, repo), { release_id: releaseId }))).data;
             for (const file of files) {
@@ -20007,9 +20160,12 @@ class Blob {
             async pull(controller) {
                 const { value, done } = await iterator.next();
                 if (done) {
-                    return controller.close();
+                    return queueMicrotask(() => controller.close());
                 }
                 controller.enqueue(value);
+            },
+            async cancel() {
+                await iterator.return();
             }
         });
     }
@@ -20041,7 +20197,7 @@ var File_classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) 
 var _File_name, _File_lastModified;
 
 class File_File extends Blob {
-    constructor(fileBits, name, options = { lastModified: Date.now() }) {
+    constructor(fileBits, name, options = {}) {
         super(fileBits, options);
         _File_name.set(this, void 0);
         _File_lastModified.set(this, 0);
@@ -20050,7 +20206,9 @@ class File_File extends Blob {
                 + `but only ${arguments.length} present.`);
         }
         File_classPrivateFieldSet(this, _File_name, String(name), "f");
-        const lastModified = Number(options.lastModified);
+        const lastModified = options.lastModified === undefined
+            ? Date.now()
+            : Number(options.lastModified);
         if (!Number.isNaN(lastModified)) {
             File_classPrivateFieldSet(this, _File_lastModified, lastModified, "f");
         }
@@ -20182,9 +20340,9 @@ class FormData {
     }, Symbol.iterator)]() {
         return this.entries();
     }
-    forEach(fn, ctx) {
+    forEach(callback, thisArg) {
         for (const [name, value] of this) {
-            fn.call(ctx, value, name, this);
+            callback.call(thisArg, value, name, this);
         }
     }
     get [Symbol.toStringTag]() {
@@ -22200,6 +22358,12 @@ class Version {
             this.build = build || 0;
         }
     }
+    equals(version) {
+        if (version instanceof Version) {
+            return this.major === version.major && this.minor === version.minor && this.build === version.build;
+        }
+        return typeof version === "string" && this.equals(new Version(version));
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/utils/minecraft-utils.ts
@@ -22345,6 +22509,52 @@ function getCompatibleBuilds(build) {
     });
 }
 
+;// CONCATENATED MODULE: ./src/utils/game-version-resolver.ts
+var game_version_resolver_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+class GameVersionResolver {
+    constructor(filter) {
+        this._filter = filter || ((_, x) => x);
+    }
+    resolve(version) {
+        return game_version_resolver_awaiter(this, void 0, void 0, function* () {
+            return this.filter(version, yield this.getCompatibleVersions(version));
+        });
+    }
+    filter(version, versions) {
+        return this._filter(version, versions);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/utils/minecraft-version-resolver.ts
+
+
+class MinecraftVersionResolver extends GameVersionResolver {
+    static byName(name) {
+        for (const [key, value] of Object.entries(MinecraftVersionResolver)) {
+            if (value instanceof MinecraftVersionResolver && key.localeCompare(name, undefined, { sensitivity: "accent" }) === 0) {
+                return value;
+            }
+        }
+        return null;
+    }
+    getCompatibleVersions(version) {
+        return getCompatibleBuilds(version);
+    }
+}
+MinecraftVersionResolver.exact = new MinecraftVersionResolver((n, v) => [v.find(x => x.version.equals(n))].filter(x => x));
+MinecraftVersionResolver.latest = new MinecraftVersionResolver((_, v) => v.find(x => x.isRelease) ? [v.find(x => x.isRelease)] : v.length ? [v[0]] : []);
+MinecraftVersionResolver.all = new MinecraftVersionResolver((_, v) => v);
+MinecraftVersionResolver.releases = new MinecraftVersionResolver((_, v) => v.filter(x => x.isRelease));
+MinecraftVersionResolver.releasesIfAny = new MinecraftVersionResolver((_, v) => v.find(x => x.isRelease) ? v.filter(x => x.isRelease) : v);
+
 ;// CONCATENATED MODULE: ./src/publishing/mod-publisher.ts
 var mod_publisher_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -22360,10 +22570,7 @@ var mod_publisher_awaiter = (undefined && undefined.__awaiter) || function (this
 
 
 
-const mod_publisher_defaultFiles = {
-    primary: "build/libs/!(*-@(dev|sources)).jar",
-    secondary: "build/libs/*-@(dev|sources).jar"
-};
+
 const defaultLoaders = ["fabric"];
 function processMultilineInput(input, splitter) {
     if (!input) {
@@ -22384,42 +22591,39 @@ function readChangelog(changelog) {
     });
 }
 class ModPublisher extends Publisher {
-    publish() {
+    publish(files, options) {
         var _a, _b;
         return mod_publisher_awaiter(this, void 0, void 0, function* () {
+            this.validateOptions(options);
             const releaseInfo = github.context.payload.release;
-            const id = this.options.id;
+            const id = options.id;
             if (!id) {
                 throw new Error(`Project id is required to publish your assets to ${publisher_target.toString(this.target)}`);
             }
-            const token = this.options.token;
+            const token = options.token;
             if (!token) {
                 throw new Error(`Token is required to publish your assets to ${publisher_target.toString(this.target)}`);
             }
-            const fileSelector = this.options.files && (typeof (this.options.files) === "string" || this.options.files.primary) ? this.options.files : mod_publisher_defaultFiles;
-            const files = yield getFiles(fileSelector);
-            if (!files.length) {
-                throw new Error(`Specified files (${typeof fileSelector === "string" ? fileSelector : fileSelector.primary}) were not found`);
-            }
-            const version = (typeof this.options.version === "string" && this.options.version) || (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.tag_name) || parseVersionFromFilename(files[0].name);
-            const versionType = ((_a = this.options.versionType) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || parseVersionTypeFromFilename(files[0].name);
-            const name = (typeof this.options.name === "string" && this.options.name) || (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.name) || version;
-            const changelog = ((typeof this.options.changelog === "string" || ((_b = this.options.changelog) === null || _b === void 0 ? void 0 : _b.file)) ? (yield readChangelog(this.options.changelog)) : releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.body) || "";
-            const loaders = processMultilineInput(this.options.loaders, /\s+/);
+            const version = (typeof options.version === "string" && options.version) || (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.tag_name) || parseVersionFromFilename(files[0].name);
+            const versionType = ((_a = options.versionType) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || parseVersionTypeFromFilename(files[0].name);
+            const name = typeof options.name === "string" ? options.name : ((releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.name) || version);
+            const changelog = ((typeof options.changelog === "string" || ((_b = options.changelog) === null || _b === void 0 ? void 0 : _b.file)) ? (yield readChangelog(options.changelog)) : releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.body) || "";
+            const loaders = processMultilineInput(options.loaders, /\s+/);
             if (!loaders.length) {
                 loaders.push(...defaultLoaders);
             }
-            const gameVersions = processMultilineInput(this.options.gameVersions);
+            const gameVersions = processMultilineInput(options.gameVersions);
             if (!gameVersions.length) {
                 const minecraftVersion = parseVersionNameFromFileVersion(version);
                 if (minecraftVersion) {
-                    gameVersions.push(...(yield getCompatibleBuilds(minecraftVersion)).map(x => x.id));
+                    const resolver = options.versionResolver && MinecraftVersionResolver.byName(options.versionResolver) || MinecraftVersionResolver.releasesIfAny;
+                    gameVersions.push(...(yield resolver.resolve(minecraftVersion)).map(x => x.id));
                 }
                 if (!gameVersions.length) {
                     throw new Error("At least one game version should be specified");
                 }
             }
-            const java = processMultilineInput(this.options.java);
+            const java = processMultilineInput(options.java);
             yield this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files);
         });
     }
@@ -22445,7 +22649,7 @@ class ModrinthPublisher extends ModPublisher {
     publishMod(id, token, name, version, channel, loaders, gameVersions, _java, changelog, files) {
         return modrinth_publisher_awaiter(this, void 0, void 0, function* () {
             const data = {
-                version_title: name,
+                version_title: name || version,
                 version_number: version,
                 version_body: changelog,
                 release_channel: channel,
@@ -22588,7 +22792,7 @@ class CurseForgePublisher extends ModPublisher {
                 const data = {
                     changelog,
                     changelogType: "markdown",
-                    displayName: name,
+                    displayName: (parentFileId || !name) ? file.name : name,
                     parentFileID: parentFileId,
                     releaseType: channel,
                     gameVersions: parentFileId ? undefined : versions
@@ -22608,14 +22812,14 @@ class CurseForgePublisher extends ModPublisher {
 
 
 class PublisherFactory {
-    create(target, options, logger) {
+    create(target, logger) {
         switch (target) {
             case publisher_target.GitHub:
-                return new GitHubPublisher(options, logger);
+                return new GitHubPublisher(logger);
             case publisher_target.Modrinth:
-                return new ModrinthPublisher(options, logger);
+                return new ModrinthPublisher(logger);
             case publisher_target.CurseForge:
-                return new CurseForgePublisher(options, logger);
+                return new CurseForgePublisher(logger);
             default:
                 throw new Error(`Unknown target "${publisher_target.toString(target)}"`);
         }
@@ -22663,6 +22867,7 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 
 
 
+
 function main() {
     return src_awaiter(this, void 0, void 0, function* () {
         const commonOptions = getInputAsObject();
@@ -22675,10 +22880,13 @@ function main() {
             if (!publisherOptions) {
                 continue;
             }
-            const publisher = publisherFactory.create(target, Object.assign(Object.assign({}, commonOptions), publisherOptions), logger);
+            const options = Object.assign(Object.assign({}, commonOptions), publisherOptions);
+            const fileSelector = options.files && (typeof (options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
+            const files = yield getRequiredFiles(fileSelector);
+            const publisher = publisherFactory.create(target, logger);
             logger.info(`Publishing assets to ${targetName}...`);
             const start = new Date();
-            yield publisher.publish();
+            yield publisher.publish(files, options);
             logger.info(`Successfully published assets to ${targetName} (in ${new Date().getTime() - start.getTime()}ms)`);
             publishedTo.push(targetName);
         }
