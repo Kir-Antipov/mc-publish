@@ -16,4 +16,11 @@ export default class Version {
             this.build = build || 0;
         }
     }
+
+    public equals(version: unknown): boolean {
+        if (version instanceof Version) {
+            return this.major === version.major && this.minor === version.minor && this.build === version.build;
+        }
+        return typeof version === "string" && this.equals(new Version(version));
+    }
 }

@@ -1,8 +1,9 @@
 import { context } from "@actions/github";
-import { getCompatibleBuilds, parseVersionNameFromFileVersion } from "../utils/minecraft-utils";
+import { parseVersionNameFromFileVersion } from "../utils/minecraft-utils";
 import { File, getFiles, parseVersionFromFilename, parseVersionTypeFromFilename } from "../utils/file-utils";
 import Publisher from "./publisher";
 import PublisherTarget from "./publisher-target";
+import MinecraftVersionResolver from "../utils/minecraft-version-resolver";
 
 interface ModPublisherOptions {
     id: string;
@@ -12,6 +13,7 @@ interface ModPublisherOptions {
     name?: string;
     version?: string;
     changelog?: string | { file?: string };
+    versionResolver?: string;
     gameVersions?: string | string[];
     java?: string | string[];
     files?: string | { primary?: string, secondary?: string };
@@ -67,7 +69,8 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         if (!gameVersions.length) {
             const minecraftVersion = parseVersionNameFromFileVersion(version);
             if (minecraftVersion) {
-                gameVersions.push(...(await getCompatibleBuilds(minecraftVersion)).map(x => x.id));
+                const resolver = options.versionResolver && MinecraftVersionResolver.byName(options.versionResolver) || MinecraftVersionResolver.releasesIfAny;
+                gameVersions.push(...(await resolver.resolve(minecraftVersion)).map(x => x.id));
             }
             if (!gameVersions.length) {
                 throw new Error("At least one game version should be specified");

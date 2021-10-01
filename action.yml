@@ -59,6 +59,9 @@ inputs:
   game-versions:
     description: A list of supported Minecraft versions
     required: false
+  version-resolver:
+    description: Determines the way automatic game-versions resolvement works
+    required: false
   java:
     description: A list of supported Java versions
     required: false

@@ -66,6 +66,7 @@ jobs:
 | changelog-file | A glob of the changelog file | ❌ | `CHANGELOG.md` |
 | loaders | A list of supported mod loaders | `fabric` | `fabric` <br> `forge` <br> `rift` |
 | game-versions | A list of supported Minecraft versions | Will be parsed from the `version` value (e.g., `0.40.0+1.18_experimental` results in `21w37a` and `21w38a` at the moment) | `21w37a` <br> `1.17` |
+| version-resolver | Determines the way automatic `game-versions` resolvement works | `releasesIfAny` | `exact` - exact game version *(`1.16` -> `1.16`)* <br><br> `latest` - the latest release of the given minor *(`1.16` -> `1.16.5`)* <br><br> `all` - all versions of the given minor starting with the specified build <br><br> `releases` - all releases of the given minor starting with the specified build *(`1.16.3` -> `[1.16.3, 1.16.4, 1.16.5]`)* <br><br> `releasesIfAny` - all releases of the given minor starting with the specified build, if any; otherwise, all versions |
 | java | A list of supported Java versions | *empty string* | `Java 8` <br> `Java 1.8` <br> `8` |
 
 ### Minimalistic Example
