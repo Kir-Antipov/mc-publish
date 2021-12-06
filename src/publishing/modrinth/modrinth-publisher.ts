@@ -1,7 +1,7 @@
-import { createVersion } from "../utils/modrinth-utils";
-import { File } from "../utils/file-utils";
-import ModPublisher from "./mod-publisher";
-import PublisherTarget from "./publisher-target";
+import { createVersion } from "../../utils/modrinth-utils";
+import { File } from "../../utils/file-utils";
+import ModPublisher from "../mod-publisher";
+import PublisherTarget from "../publisher-target";
 
 export default class ModrinthPublisher extends ModPublisher {
     public get target(): PublisherTarget {

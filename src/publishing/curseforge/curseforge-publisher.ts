@@ -1,7 +1,7 @@
-import { File } from "../utils/file-utils";
-import ModPublisher from "./mod-publisher";
-import PublisherTarget from "./publisher-target";
-import { convertToCurseForgeVersions, uploadFile } from "../utils/curseforge-utils";
+import { File } from "../../utils/file-utils";
+import ModPublisher from "../mod-publisher";
+import PublisherTarget from "../publisher-target";
+import { convertToCurseForgeVersions, uploadFile } from "../../utils/curseforge-utils";
 
 export default class CurseForgePublisher extends ModPublisher {
     public get target(): PublisherTarget {

@@ -1,7 +1,7 @@
-import Publisher from "./publisher";
-import PublisherTarget from "./publisher-target";
+import Publisher from "../publisher";
+import PublisherTarget from "../publisher-target";
 import * as github from "@actions/github";
-import { File } from "../utils/file-utils";
+import { File } from "../../utils/file-utils";
 
 interface GitHubPublisherOptions {
     tag?: string;
