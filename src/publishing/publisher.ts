@@ -1,4 +1,4 @@
-import { File } from "utils/file-utils";
+import { File } from "../utils/file";
 import Logger from "../utils/logger";
 import { getEmptyLogger } from "../utils/logger-utils";
 import PublisherTarget from "./publisher-target";

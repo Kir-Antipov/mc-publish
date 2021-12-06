@@ -1,9 +1,10 @@
 import { context } from "@actions/github";
-import { parseVersionNameFromFileVersion } from "../utils/minecraft-utils";
-import { File, getFiles, parseVersionFromFilename, parseVersionTypeFromFilename } from "../utils/file-utils";
+import { File } from "../utils/file";
+import { getFiles } from "../utils/file-utils";
 import Publisher from "./publisher";
 import PublisherTarget from "./publisher-target";
 import MinecraftVersionResolver from "../utils/minecraft-version-resolver";
+import { parseVersionFromName, parseVersionTypeFromName } from "../utils/version-utils";
 
 interface ModPublisherOptions {
     id: string;

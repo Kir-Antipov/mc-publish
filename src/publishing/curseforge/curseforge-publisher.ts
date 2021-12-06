@@ -1,4 +1,4 @@
-import { File } from "../../utils/file-utils";
+import { File } from "../../utils/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
 import { convertToCurseForgeVersions, uploadFile } from "../../utils/curseforge-utils";

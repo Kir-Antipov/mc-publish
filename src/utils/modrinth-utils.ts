@@ -1,7 +1,7 @@
 import { FormData } from "formdata-node";
 import { fileFromPath } from "formdata-node/file-from-path";
 import fetch from "node-fetch";
-import { File } from "./file-utils";
+import { File } from "./file";
 
 export async function createVersion(id: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
     data = {

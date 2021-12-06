@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { FormData } from "formdata-node";
 import { fileFromPath } from "formdata-node/file-from-path";
-import { File } from "../utils/file-utils";
+import { File } from "./file";
 import { findVersionByName } from "./minecraft-utils";
 
 const baseUrl = "https://minecraft.curseforge.com/api";
