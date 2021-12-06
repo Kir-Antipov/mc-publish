@@ -127,6 +127,11 @@ export function parseVersionNameFromFileVersion(fileVersion: string): string | n
     }
 }
 
+export function parseVersionName(version: string): string | null {
+    const versionCandidates = [...(version.match(/\d+\.\d+(?:\.\d+)?/g) || [])];
+    return versionCandidates.filter(x => x.startsWith("1."))[0] || null;
+}
+
 export async function getLatestRelease(): Promise<MinecraftVersion | null> {
     return (await getVersions()).find(x => x.isRelease) || null;
 }

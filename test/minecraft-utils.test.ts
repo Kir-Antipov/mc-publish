@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@jest/globals";
-import { getVersionById, findVersionByName, isSnapshot, parseVersionNameFromFileVersion, getVersions, getLatestRelease, getCompatibleBuilds } from "../src/utils/minecraft-utils";
+import { getVersionById, findVersionByName, isSnapshot, parseVersionName, parseVersionNameFromFileVersion, getVersions, getLatestRelease, getCompatibleBuilds } from "../src/utils/minecraft-utils";
 import Version from "../src/utils/version";
 
 describe("getVersionById", () => {
@@ -75,6 +75,27 @@ describe("isSnapshot", () => {
         for (const [name, snapshot] of Object.entries(versions)) {
             expect(isSnapshot(name)).toStrictEqual(snapshot);
         }
+    });
+});
+
+describe("parseVersionName", () => {
+    test("Minecraft versions are parsed correctly", () => {
+        expect(parseVersionName("1.17.1")).toStrictEqual("1.17.1");
+        expect(parseVersionName("1.16.3")).toStrictEqual("1.16.3");
+        expect(parseVersionName("1.17")).toStrictEqual("1.17");
+        expect(parseVersionName("1.16")).toStrictEqual("1.16");
+    });
+
+    test("weird formats that contain Minecraft version are parsed correctly", () => {
+        expect(parseVersionName("1.17-5.0.1-beta+build.29")).toStrictEqual("1.17");
+        expect(parseVersionName("[1.16.5, 1.17)")).toStrictEqual("1.16.5");
+        expect(parseVersionName(">=1.17")).toStrictEqual("1.17");
+    });
+
+    test("null is returned if version string does not contain Minecraft version", () => {
+        expect(parseVersionName("5.0.8-beta+build.111")).toBeNull();
+        expect(parseVersionName("5.3.3-BETA+ec3b0e5d")).toBeNull();
+        expect(parseVersionName("2.0.12")).toBeNull();
     });
 });
 
