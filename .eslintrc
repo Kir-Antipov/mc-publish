@@ -9,6 +9,7 @@
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended"
     ],
+    "ignorePatterns": ["*.json", "*.toml"],
     "rules": {
       "arrow-body-style": ["error", "as-needed"],
       "complexity": ["warn", { "max": 30 }],
