@@ -7,5 +7,6 @@
         "moduleResolution": "node",
         "baseUrl": "./src",
         "outDir": "./dist",
+        "resolveJsonModule": true,
     },
 }
