@@ -1,0 +1,65 @@
+modLoader="javafml"
+loaderVersion="[34,)"
+issueTrackerURL="https://github.com/"
+displayURL="https://github.com/"
+authors="Author"
+license="MIT"
+
+[[mods]]
+    modId="example-mod"
+    version="0.1.0"
+    displayName="Example Mod"
+    description='''
+    Example mod
+    '''
+
+[projects]
+    modrinth="AANobbMI"
+[custom.projects]
+    curseforge=394468
+[custom.mc-publish]
+    github="mc1.18-0.4.0-alpha5"
+
+[[dependencies.example-mod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17, 1.18)"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[34,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="recommended-mod"
+    mandatory=false
+    versionRange="0.2.0"
+    ordering="NONE"
+    side="BOTH"
+    [dependencies.example-mod.projects]
+        modrinth="AAAA"
+    [dependencies.example-mod.custom.projects]
+        curseforge=42
+    [dependencies.example-mod.custom.mc-publish]
+        github="v0.2.0"
+        ignore=true
+
+
+[[dependencies.example-mod]]
+    modId="included-mod"
+    mandatory=false
+    embedded=true
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="breaking-mod"
+    mandatory=false
+    incompatible=true
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
