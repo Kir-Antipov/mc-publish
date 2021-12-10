@@ -4,14 +4,16 @@ import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
 import PublisherTarget from "../../publishing/publisher-target";
 
+const ignoredByDefault = ["minecraft", "java", "fabricloader"];
 function getDependenciesByKind(config: any, kind: DependencyKind): Dependency[] {
     const kindName = DependencyKind.toString(kind).toLowerCase();
     const dependencies = new Array<Dependency>();
     for (const [id, value] of Object.entries(config[kindName] || {})) {
+        const ignore = ignoredByDefault.includes(id);
         if (typeof value === "string") {
-            dependencies.push(Dependency.create({ id, kind, version: value }));
+            dependencies.push(Dependency.create({ id, kind, version: value, ignore }));
         } else {
-            dependencies.push(new ModConfigDependency({ ...<any>value, id, kind }));
+            dependencies.push(new ModConfigDependency({ ignore, ...<any>value, id, kind }));
         }
     }
     return dependencies;

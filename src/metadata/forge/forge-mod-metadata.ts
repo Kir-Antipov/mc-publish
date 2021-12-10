@@ -3,8 +3,10 @@ import ModConfigDependency from "../../metadata/mod-config-dependency";
 import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
 
+const ignoredByDefault = ["minecraft", "java", "forge"];
 function createDependency(body: any): Dependency {
     return new ModConfigDependency({
+        ignore: ignoredByDefault.includes(body.modId),
         ...body,
         id: body.modId,
         version: body.versionRange,

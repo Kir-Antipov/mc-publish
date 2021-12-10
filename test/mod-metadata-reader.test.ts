@@ -54,14 +54,14 @@ describe("ModMetadataReader.readMetadata", () => {
 
         test("dependency info can be read", async () => {
             const metadata = await ModMetadataReader.readMetadata("example-mod.fabric.jar");
-            const minecraft = metadata.dependencies.find(x => x.id === "minecraft");
-            expect(minecraft).toBeTruthy();
-            expect(minecraft.id).toBe("minecraft");
-            expect(minecraft.kind).toBe(DependencyKind.Depends);
-            expect(minecraft.version).toBe("1.17.x");
-            expect(minecraft.ignore).toBe(false);
+            const fabric = metadata.dependencies.find(x => x.id === "fabric");
+            expect(fabric).toBeTruthy();
+            expect(fabric.id).toBe("fabric");
+            expect(fabric.kind).toBe(DependencyKind.Depends);
+            expect(fabric.version).toBe(">=0.40.0");
+            expect(fabric.ignore).toBe(false);
             for (const project of PublisherTarget.getValues()) {
-                expect(minecraft.getProjectSlug(project)).toBe(minecraft.id);
+                expect(fabric.getProjectSlug(project)).toBe(fabric.id);
             }
         });
 
@@ -76,6 +76,13 @@ describe("ModMetadataReader.readMetadata", () => {
             expect(recommended.getProjectSlug(PublisherTarget.Modrinth)).toBe("AAAA");
             expect(recommended.getProjectSlug(PublisherTarget.CurseForge)).toBe("42");
             expect(recommended.getProjectSlug(PublisherTarget.GitHub)).toBe("v0.2.0");
+        });
+
+        test("special case dependencies (minecraft, java and fabricloader) are ignored by default", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.fabric.jar");
+            expect(metadata.dependencies.find(x => x.id === "minecraft").ignore).toBe(true);
+            expect(metadata.dependencies.find(x => x.id === "java").ignore).toBe(true);
+            expect(metadata.dependencies.find(x => x.id === "fabricloader").ignore).toBe(true);
         });
     });
 
@@ -111,10 +118,11 @@ describe("ModMetadataReader.readMetadata", () => {
 
         test("all dependencies are read", async () => {
             const metadata = await ModMetadataReader.readMetadata("example-mod.forge.jar");
-            expect(metadata.dependencies).toHaveLength(5);
+            expect(metadata.dependencies).toHaveLength(6);
             const dependencies = metadata.dependencies.reduce((agg, x) => { agg[x.id] = x; return agg; }, <Record<string, Dependency>>{});
             expect(dependencies["forge"]?.kind).toBe(DependencyKind.Depends);
             expect(dependencies["minecraft"]?.kind).toBe(DependencyKind.Depends);
+            expect(dependencies["java"]?.kind).toBe(DependencyKind.Depends);
             expect(dependencies["recommended-mod"]?.kind).toBe(DependencyKind.Recommends);
             expect(dependencies["included-mod"]?.kind).toBe(DependencyKind.Includes);
             expect(dependencies["breaking-mod"]?.kind).toBe(DependencyKind.Breaks);
@@ -122,14 +130,14 @@ describe("ModMetadataReader.readMetadata", () => {
 
         test("dependency info can be read", async () => {
             const metadata = await ModMetadataReader.readMetadata("example-mod.forge.jar");
-            const minecraft = metadata.dependencies.find(x => x.id === "minecraft");
-            expect(minecraft).toBeTruthy();
-            expect(minecraft.id).toBe("minecraft");
-            expect(minecraft.kind).toBe(DependencyKind.Depends);
-            expect(minecraft.version).toBe("[1.17, 1.18)");
-            expect(minecraft.ignore).toBe(false);
+            const included = metadata.dependencies.find(x => x.id === "included-mod");
+            expect(included).toBeTruthy();
+            expect(included.id).toBe("included-mod");
+            expect(included.kind).toBe(DependencyKind.Includes);
+            expect(included.version).toBe("[0.40.0, )");
+            expect(included.ignore).toBe(false);
             for (const project of PublisherTarget.getValues()) {
-                expect(minecraft.getProjectSlug(project)).toBe(minecraft.id);
+                expect(included.getProjectSlug(project)).toBe(included.id);
             }
         });
 
@@ -144,6 +152,13 @@ describe("ModMetadataReader.readMetadata", () => {
             expect(recommended.getProjectSlug(PublisherTarget.Modrinth)).toBe("AAAA");
             expect(recommended.getProjectSlug(PublisherTarget.CurseForge)).toBe("42");
             expect(recommended.getProjectSlug(PublisherTarget.GitHub)).toBe("v0.2.0");
+        });
+
+        test("special case dependencies (minecraft, java and forge) are ignored by default", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.forge.jar");
+            expect(metadata.dependencies.find(x => x.id === "minecraft").ignore).toBe(true);
+            expect(metadata.dependencies.find(x => x.id === "java").ignore).toBe(true);
+            expect(metadata.dependencies.find(x => x.id === "forge").ignore).toBe(true);
         });
     });
 

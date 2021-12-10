@@ -34,6 +34,13 @@ license="MIT"
     side="BOTH"
 
 [[dependencies.example-mod]]
+    modId="java"
+    mandatory=true
+    versionRange="[16,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.example-mod]]
     modId="recommended-mod"
     mandatory=false
     versionRange="0.2.0"
@@ -52,7 +59,7 @@ license="MIT"
     modId="included-mod"
     mandatory=false
     embedded=true
-    versionRange="*"
+    versionRange="[0.40.0, )"
     ordering="NONE"
     side="BOTH"
 
