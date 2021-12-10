@@ -13,7 +13,7 @@ async function main() {
     for (const target of PublisherTarget.getValues()) {
         const targetName = PublisherTarget.toString(target);
         const publisherOptions = commonOptions[targetName.toLowerCase()];
-        if (!publisherOptions) {
+        if (!publisherOptions?.token || typeof publisherOptions.token !== "string") {
             continue;
         }
 
