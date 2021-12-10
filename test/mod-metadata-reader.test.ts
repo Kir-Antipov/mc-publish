@@ -54,14 +54,14 @@ describe("ModMetadataReader.readMetadata", () => {
 
         test("dependency info can be read", async () => {
             const metadata = await ModMetadataReader.readMetadata("example-mod.fabric.jar");
-            const fabric = metadata.dependencies.find(x => x.id === "fabric");
-            expect(fabric).toBeTruthy();
-            expect(fabric.id).toBe("fabric");
-            expect(fabric.kind).toBe(DependencyKind.Depends);
-            expect(fabric.version).toBe(">=0.40.0");
-            expect(fabric.ignore).toBe(false);
+            const conflicting = metadata.dependencies.find(x => x.id === "conflicting-mod");
+            expect(conflicting).toBeTruthy();
+            expect(conflicting.id).toBe("conflicting-mod");
+            expect(conflicting.kind).toBe(DependencyKind.Conflicts);
+            expect(conflicting.version).toBe("<0.40.0");
+            expect(conflicting.ignore).toBe(false);
             for (const project of PublisherTarget.getValues()) {
-                expect(fabric.getProjectSlug(project)).toBe(fabric.id);
+                expect(conflicting.getProjectSlug(project)).toBe(conflicting.id);
             }
         });
 
@@ -83,6 +83,14 @@ describe("ModMetadataReader.readMetadata", () => {
             expect(metadata.dependencies.find(x => x.id === "minecraft").ignore).toBe(true);
             expect(metadata.dependencies.find(x => x.id === "java").ignore).toBe(true);
             expect(metadata.dependencies.find(x => x.id === "fabricloader").ignore).toBe(true);
+        });
+
+        test("special case dependencies (fabric) are replaced with their aliases", async() => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.fabric.jar");
+            const fabric = metadata.dependencies.find(x => x.id === "fabric");
+            for (const target of PublisherTarget.getValues()) {
+                expect(fabric.getProjectSlug(target) === "fabric-api");
+            }
         });
     });
 

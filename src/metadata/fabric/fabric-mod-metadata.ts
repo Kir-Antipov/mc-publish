@@ -1,3 +1,4 @@
+import action from "../../../package.json";
 import ModConfig from "../../metadata/mod-config";
 import ModConfigDependency from "../../metadata/mod-config-dependency";
 import Dependency from "../../metadata/dependency";
@@ -5,15 +6,34 @@ import DependencyKind from "../../metadata/dependency-kind";
 import PublisherTarget from "../../publishing/publisher-target";
 
 const ignoredByDefault = ["minecraft", "java", "fabricloader"];
+const aliases = new Map([
+    ["fabric", "fabric-api"]
+]);
 function getDependenciesByKind(config: any, kind: DependencyKind): Dependency[] {
     const kindName = DependencyKind.toString(kind).toLowerCase();
     const dependencies = new Array<Dependency>();
     for (const [id, value] of Object.entries(config[kindName] || {})) {
         const ignore = ignoredByDefault.includes(id);
         if (typeof value === "string") {
-            dependencies.push(Dependency.create({ id, kind, version: value, ignore }));
+            const dependencyAliases = aliases.has(id) ? new Map(PublisherTarget.getValues().map(x => [x, aliases.get(id)])) : null;
+            dependencies.push(Dependency.create({ id, kind, version: value, ignore, aliases: dependencyAliases }));
         } else {
-            dependencies.push(new ModConfigDependency({ ignore, ...<any>value, id, kind }));
+            const dependencyMetadata = { ignore, ...<any>value, id, kind };
+            if (aliases.has(id)) {
+                if (!dependencyMetadata.custom) {
+                    dependencyMetadata.custom = {};
+                }
+                if (!dependencyMetadata.custom[action.name]) {
+                    dependencyMetadata.custom[action.name] = {};
+                }
+                for (const target of PublisherTarget.getValues()) {
+                    const targetName = PublisherTarget.toString(target).toLowerCase();
+                    if (typeof dependencyMetadata.custom[action.name][targetName] !== "string") {
+                        dependencyMetadata.custom[action.name][targetName] = aliases.get(id);
+                    }
+                }
+            }
+            dependencies.push(new ModConfigDependency(dependencyMetadata));
         }
     }
     return dependencies;

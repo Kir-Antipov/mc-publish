@@ -11,13 +11,13 @@ interface Dependency {
 }
 
 namespace Dependency {
-    export function create({ id, version = "*", kind = DependencyKind.Depends, ignore = false }: { id: string, version?: string, kind?: DependencyKind, ignore?: boolean }): Dependency {
+    export function create({ id, version = "*", kind = DependencyKind.Depends, ignore = false, aliases = null }: { id: string, version?: string, kind?: DependencyKind, ignore?: boolean, aliases?: Map<PublisherTarget, string> }): Dependency {
         return {
             id,
             version: version ?? "*",
             kind: kind ?? DependencyKind.Depends,
             ignore: ignore ?? false,
-            getProjectSlug: _ => id
+            getProjectSlug: target => aliases?.has(target) ? aliases.get(target) : id
         };
     }
 }

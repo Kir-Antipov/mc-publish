@@ -65,7 +65,7 @@
       "suggested-mod": "*"
     },
     "conflicts": {
-      "conflicting-mod": "*"
+      "conflicting-mod": "<0.40.0"
     },
     "breaks": {
       "breaking-mod": "*"
