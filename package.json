@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "ncc build --source-map --license license.txt",
-    "test:lint": "eslint src/** && eslint test/**",
+    "test:lint": "eslint src/**/*.ts && eslint test/**/*.ts",
     "test:unit": "jest",
     "test": "npm run test:lint && npm run test:unit"
   },
