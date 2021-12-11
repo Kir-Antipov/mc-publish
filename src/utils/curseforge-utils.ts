@@ -19,6 +19,20 @@ interface CurseForgeVersions {
     java: CurseForgeVersion[];
 }
 
+interface CurseForgeUploadErrorInfo {
+    errorCode: number;
+    errorMessage: string;
+}
+
+class CurseForgeUploadError extends Error {
+    public readonly info?: CurseForgeUploadErrorInfo;
+
+    constructor(message: string, info?: CurseForgeUploadErrorInfo) {
+        super(message);
+        this.info = info;
+    }
+}
+
 
 let cachedCurseForgeVersions: CurseForgeVersions = null;
 async function getCurseForgeVersions(token: string): Promise<CurseForgeVersions> {
@@ -98,10 +112,12 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
 
     if (!response.ok) {
         let errorText = response.statusText;
+        let info: CurseForgeUploadErrorInfo;
         try {
-            errorText += `, ${await response.text()}`;
+            info = <CurseForgeUploadErrorInfo>await response.json();
+            errorText += `, ${JSON.stringify(info)}`;
         } catch { }
-        throw new Error(`Failed to upload file: ${response.status} (${errorText})`);
+        throw new CurseForgeUploadError(`Failed to upload file: ${response.status} (${errorText})`, info);
     }
 
     return (<{ id: number }>await response.json()).id;
