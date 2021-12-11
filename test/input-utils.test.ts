@@ -8,6 +8,7 @@ describe("getInputAsObject", () => {
         "object": { foo: "bar" },
         "number": 1,
         "array": ["foo", "bar"],
+        "undefined": "${undefined}",
 
         "files-primary": "primaryPath",
         "files-secondary": "secondaryPath",
@@ -63,5 +64,10 @@ describe("getInputAsObject", () => {
         const input = getInputAsObject();
         expect(input).toHaveProperty("this.is.a.very.long.name", "foo");
         expect(input).toHaveProperty("thisIsAVeryLongName", "foo");
+    });
+
+    test("special case for GitHub Actions: ${undefined} transforms into undefined", () => {
+        const input = getInputAsObject();
+        expect(input.undefined).toBeUndefined();
     });
 });

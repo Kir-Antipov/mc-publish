@@ -8,66 +8,85 @@ inputs:
   modrinth-id:
     description: The ID of the Modrinth project to upload to
     required: false
+    default: ${undefined}
   modrinth-token:
     description: A valid token for the Modrinth API
     required: false
+    default: ${undefined}
 
   curseforge-id:
     description: The ID of the CurseForge project to upload to
     required: false
+    default: ${undefined}
   curseforge-token:
     description: A valid token for the CurseForge API
     required: false
+    default: ${undefined}
 
   github-tag:
     description: The tag name of the release to upload assets to
     required: false
+    default: ${undefined}
   github-token:
     description: A valid token for the GitHub API
     required: false
+    default: ${undefined}
 
   files:
     description: A glob of the files to upload
     required: false
+    default: ${undefined}
   files-primary:
     description: A glob of the primary files to upload
     required: false
+    default: ${undefined}
   files-secondary:
     description: A glob of the secondary files to upload
     required: false
+    default: ${undefined}
 
   name:
     description: The name of the version
     required: false
+    default: ${undefined}
   version:
     description: The version number
     required: false
+    default: ${undefined}
   version-type:
     description: The type of the release - alpha, beta, or release
     required: false
+    default: ${undefined}
 
   changelog:
     description: The changelog for this version
     required: false
+    default: ${undefined}
   changelog-file:
     description: A glob of the changelog file
     required: false
+    default: ${undefined}
 
   loaders:
     description: A list of supported mod loaders
     required: false
+    default: ${undefined}
   game-versions:
     description: A list of supported Minecraft versions
     required: false
+    default: ${undefined}
   dependencies:
     description: A list of dependencies
     required: false
+    default: ${undefined}
   version-resolver:
     description: Determines the way automatic game-versions resolvement works
     required: false
+    default: ${undefined}
   java:
     description: A list of supported Java versions
     required: false
+    default: ${undefined}
 runs:
   using: node12
   main: dist/index.js
