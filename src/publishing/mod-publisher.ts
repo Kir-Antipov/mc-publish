@@ -80,7 +80,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         const name = typeof options.name === "string" ? options.name : (<string>releaseInfo?.name || version);
         const changelog = typeof options.changelog === "string"
             ? options.changelog
-            : typeof options.changelog?.file === "string"
+            : options.changelog?.file
                 ? await readChangelog(options.changelog.file)
                 : <string>releaseInfo?.body || "";
 
