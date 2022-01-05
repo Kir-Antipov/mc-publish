@@ -2,12 +2,13 @@ import { FormData } from "formdata-node";
 import { fileFromPath } from "formdata-node/file-from-path";
 import fetch from "node-fetch";
 import { File } from "./file";
+import { computeHash } from "./hash-utils";
 
-export async function createVersion(id: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
+export async function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
     data = {
         dependencies: [],
         ...data,
-        mod_id: id,
+        mod_id: modId,
         file_parts: files.map((_, i) => i.toString())
     };
 
@@ -32,5 +33,27 @@ export async function createVersion(id: string, data: Record<string, any>, files
         throw new Error(`Failed to upload file: ${response.status} (${errorText})`);
     }
 
-    return (<{ id: string }>await response.json()).id;
+    const versionId = (<{ id: string }>await response.json()).id;
+    const primaryFile = files[0];
+    if (primaryFile) {
+        await makeFilePrimary(versionId, primaryFile.path, token);
+    }
+    return versionId;
+}
+
+export async function makeFilePrimary(versionId: string, filePath: string, token: string): Promise<boolean> {
+    const algorithm = "sha1";
+    const hash = (await computeHash(filePath, algorithm)).digest("hex");
+
+    const response = await fetch(`https://api.modrinth.com/api/v1/version/${versionId}`, {
+        method: "PATCH",
+        headers: {
+            "Authorization": token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            primary_file: [algorithm, hash]
+        })
+    });
+    return response.ok;
 }
