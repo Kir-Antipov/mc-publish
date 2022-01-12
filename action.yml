@@ -87,6 +87,15 @@ inputs:
     description: A list of supported Java versions
     required: false
     default: ${undefined}
+
+  retry-attempts:
+    description: The maximum number of attempts to publish assets
+    required: false
+    default: 2
+  retry-delay:
+    description: Time delay between attempts to publish assets (in milliseconds)
+    required: false
+    default: 10000
 runs:
   using: node12
   main: dist/index.js

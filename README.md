@@ -53,6 +53,8 @@ jobs:
             8
             16
 
+          retry-attempts: 2
+          rettry-delay: 10000
 ```
 
 ### Minimalistic Example
@@ -104,6 +106,8 @@ jobs:
 | [version-resolver](#user-content-version-resolver) | Determines the way automatic [`game-versions`](#user-content-game-versions) resolvement works | `releasesIfAny` | `exact` <br> `latest` <br> `all` <br> `releases` <br> `releasesIfAny` |
 | [dependencies](#user-content-dependencies) | A list of dependencies | A dependency list specified in the config file  | `fabric \| depends \| 0.40.0` <br> `fabric-api` |
 | [java](#user-content-java) | A list of supported Java versions | *empty string* | `Java 8` <br> `Java 1.8` <br> `8` |
+| [retry-attempts](#user-content-retry-attempts) | The maximum number of attempts to publish assets | `2` | `2` <br> `10` <br> `-1` |
+| [retry-delay](#user-content-retry-delay) | Time delay between attempts to publish assets (in milliseconds) | `10000` | `10000` <br> `60000` <br> `0` |
 
 #### modrinth-id
 
@@ -501,4 +505,20 @@ java: |
   8
   16
   Java 17
+```
+
+#### retry-attempts
+
+The maximum number of attempts to publish assets.
+
+```yaml
+retry-attempts: 2
+```
+
+#### retry-delay
+
+Time delay between attempts to publish assets (in milliseconds).
+
+```yaml
+retry-delay: 10000
 ```

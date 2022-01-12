@@ -3,6 +3,7 @@ import { fileFromPath } from "formdata-node/file-from-path";
 import fetch from "node-fetch";
 import { File } from "./file";
 import { computeHash } from "./hash-utils";
+import SoftError from "./soft-error";
 
 export async function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
     data = {
@@ -30,7 +31,8 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
         try {
             errorText += `, ${await response.text()}`;
         } catch { }
-        throw new Error(`Failed to upload file: ${response.status} (${errorText})`);
+        const isServerError = response.status >= 500;
+        throw new SoftError(isServerError, `Failed to upload file: ${response.status} (${errorText})`);
     }
 
     const versionId = (<{ id: string }>await response.json()).id;

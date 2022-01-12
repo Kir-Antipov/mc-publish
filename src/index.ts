@@ -3,6 +3,7 @@ import PublisherFactory from "./publishing/publisher-factory";
 import PublisherTarget from "./publishing/publisher-target";
 import { getInputAsObject } from "./utils/input-utils";
 import { getDefaultLogger } from "./utils/logger-utils";
+import { retry } from "./utils/function-utils";
 
 async function main() {
     const commonOptions = getInputAsObject();
@@ -20,12 +21,25 @@ async function main() {
         const options = { ...commonOptions, ...publisherOptions };
         const fileSelector = options.files && (typeof(options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
         const files = await getRequiredFiles(fileSelector);
+        const retryAttempts = +options.retry?.["attempts"] || 0;
+        const retryDelay = +options.retry?.["delay"] || 0;
 
         const publisher = publisherFactory.create(target, logger);
         logger.info(`Publishing assets to ${targetName}...`);
         const start = new Date();
-        await publisher.publish(files, options);
-        logger.info(`Successfully published assets to ${targetName} (in ${new Date().getTime() - start.getTime()}ms)`);
+
+        await retry({
+            func: () => publisher.publish(files, options),
+            maxAttempts: retryAttempts,
+            delay: retryDelay,
+            errorCallback: e => {
+                logger.error(`${e}`);
+                logger.info(`Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
+            }
+        });
+
+        const end = new Date();
+        logger.info(`Successfully published assets to ${targetName} (in ${end.getTime() - start.getTime()} ms)`);
         publishedTo.push(targetName);
     }
 
@@ -36,4 +50,4 @@ async function main() {
     }
 }
 
-main().catch(error => getDefaultLogger().fatal(error instanceof Error ? error.message : `Something went horribly wrong: ${error}`));
+main().catch(error => getDefaultLogger().fatal(error instanceof Error ? `${error}` : `Something went horribly wrong: ${error}`));

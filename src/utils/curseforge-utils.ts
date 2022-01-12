@@ -3,6 +3,7 @@ import { FormData } from "formdata-node";
 import { fileFromPath } from "formdata-node/file-from-path";
 import { File } from "./file";
 import { findVersionByName } from "./minecraft-utils";
+import SoftError from "./soft-error";
 
 const baseUrl = "https://minecraft.curseforge.com/api";
 
@@ -24,11 +25,11 @@ interface CurseForgeUploadErrorInfo {
     errorMessage: string;
 }
 
-class CurseForgeUploadError extends Error {
+class CurseForgeUploadError extends SoftError {
     public readonly info?: CurseForgeUploadErrorInfo;
 
-    constructor(message: string, info?: CurseForgeUploadErrorInfo) {
-        super(message);
+    constructor(soft: boolean, message?: string, info?: CurseForgeUploadErrorInfo) {
+        super(soft, message);
         this.info = info;
     }
 }
@@ -117,7 +118,8 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
             info = <CurseForgeUploadErrorInfo>await response.json();
             errorText += `, ${JSON.stringify(info)}`;
         } catch { }
-        throw new CurseForgeUploadError(`Failed to upload file: ${response.status} (${errorText})`, info);
+        const isServerError = response.status >= 500;
+        throw new CurseForgeUploadError(isServerError, `Failed to upload file: ${response.status} (${errorText})`, info);
     }
 
     return (<{ id: number }>await response.json()).id;
