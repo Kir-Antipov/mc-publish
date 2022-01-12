@@ -54,7 +54,7 @@ jobs:
             16
 
           retry-attempts: 2
-          rettry-delay: 10000
+          retry-delay: 10000
 ```
 
 ### Minimalistic Example
