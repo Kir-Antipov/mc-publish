@@ -24763,7 +24763,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 9110:
+/***/ 9500:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -25766,6 +25766,7 @@ class FetchError extends FetchBaseError {
 
 ;// CONCATENATED MODULE: external "crypto"
 const external_crypto_namespaceObject = require("crypto");
+var external_crypto_default = /*#__PURE__*/__nccwpck_require__.n(external_crypto_namespaceObject);
 ;// CONCATENATED MODULE: ./node_modules/node-fetch/src/utils/is.js
 /**
  * Is.js
@@ -27320,6 +27321,22 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 	});
 }
 
+;// CONCATENATED MODULE: ./src/utils/hash-utils.ts
+
+
+function computeHash(path, algorithm) {
+    const hash = external_crypto_default().createHash(algorithm);
+    return new Promise(resolve => external_fs_default().createReadStream(path).on("data", data => hash.update(data)).on("end", () => resolve(hash)));
+}
+
+;// CONCATENATED MODULE: ./src/utils/soft-error.ts
+class SoftError extends Error {
+    constructor(soft, message) {
+        super(message);
+        this.soft = soft;
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/utils/modrinth-utils.ts
 var modrinth_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -27333,9 +27350,11 @@ var modrinth_utils_awaiter = (undefined && undefined.__awaiter) || function (thi
 
 
 
-function createVersion(id, data, files, token) {
+
+
+function createVersion(modId, data, files, token) {
     return modrinth_utils_awaiter(this, void 0, void 0, function* () {
-        data = Object.assign(Object.assign({ dependencies: [] }, data), { mod_id: id, file_parts: files.map((_, i) => i.toString()) });
+        data = Object.assign(Object.assign({ dependencies: [] }, data), { mod_id: modId, file_parts: files.map((_, i) => i.toString()) });
         const form = new FormData();
         form.append("data", JSON.stringify(data));
         for (let i = 0; i < files.length; ++i) {
@@ -27353,9 +27372,32 @@ function createVersion(id, data, files, token) {
                 errorText += `, ${yield response.text()}`;
             }
             catch (_a) { }
-            throw new Error(`Failed to upload file: ${response.status} (${errorText})`);
+            const isServerError = response.status >= 500;
+            throw new SoftError(isServerError, `Failed to upload file: ${response.status} (${errorText})`);
         }
-        return (yield response.json()).id;
+        const versionId = (yield response.json()).id;
+        const primaryFile = files[0];
+        if (primaryFile) {
+            yield makeFilePrimary(versionId, primaryFile.path, token);
+        }
+        return versionId;
+    });
+}
+function makeFilePrimary(versionId, filePath, token) {
+    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
+        const algorithm = "sha1";
+        const hash = (yield computeHash(filePath, algorithm)).digest("hex");
+        const response = yield fetch(`https://api.modrinth.com/api/v1/version/${versionId}`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                primary_file: [algorithm, hash]
+            })
+        });
+        return response.ok;
     });
 }
 
@@ -28068,10 +28110,11 @@ var curseforge_utils_awaiter = (undefined && undefined.__awaiter) || function (t
 
 
 
+
 const baseUrl = "https://minecraft.curseforge.com/api";
-class CurseForgeUploadError extends Error {
-    constructor(message, info) {
-        super(message);
+class CurseForgeUploadError extends SoftError {
+    constructor(soft, message, info) {
+        super(soft, message);
         this.info = info;
     }
 }
@@ -28161,7 +28204,8 @@ function uploadFile(id, data, file, token) {
                 errorText += `, ${JSON.stringify(info)}`;
             }
             catch (_a) { }
-            throw new CurseForgeUploadError(`Failed to upload file: ${response.status} (${errorText})`, info);
+            const isServerError = response.status >= 500;
+            throw new CurseForgeUploadError(isServerError, `Failed to upload file: ${response.status} (${errorText})`, info);
         }
         return (yield response.json()).id;
     });
@@ -28297,6 +28341,43 @@ function init(root, path, value) {
     }
 }
 
+;// CONCATENATED MODULE: ./src/utils/sleep.ts
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+;// CONCATENATED MODULE: ./src/utils/function-utils.ts
+var function_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+function retry({ func, delay = 0, maxAttempts = -1, softErrorPredicate, errorCallback }) {
+    return function_utils_awaiter(this, void 0, void 0, function* () {
+        let attempts = 0;
+        while (true) {
+            try {
+                return yield func();
+            }
+            catch (e) {
+                const isSoft = softErrorPredicate ? softErrorPredicate(e) : e === null || e === void 0 ? void 0 : e.soft;
+                if (!isSoft || maxAttempts >= 0 && ++attempts >= maxAttempts) {
+                    throw e;
+                }
+                if (errorCallback) {
+                    errorCallback(e);
+                }
+            }
+            yield sleep(delay);
+        }
+    });
+}
+
 ;// CONCATENATED MODULE: ./src/index.ts
 var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -28312,7 +28393,9 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 
 
 
+
 function main() {
+    var _a, _b;
     return src_awaiter(this, void 0, void 0, function* () {
         const commonOptions = getInputAsObject();
         const publisherFactory = new PublisherFactory();
@@ -28327,11 +28410,22 @@ function main() {
             const options = Object.assign(Object.assign({}, commonOptions), publisherOptions);
             const fileSelector = options.files && (typeof (options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
             const files = yield getRequiredFiles(fileSelector);
+            const retryAttempts = +((_a = options.retry) === null || _a === void 0 ? void 0 : _a["attempts"]) || 0;
+            const retryDelay = +((_b = options.retry) === null || _b === void 0 ? void 0 : _b["delay"]) || 0;
             const publisher = publisherFactory.create(target, logger);
             logger.info(`Publishing assets to ${targetName}...`);
             const start = new Date();
-            yield publisher.publish(files, options);
-            logger.info(`Successfully published assets to ${targetName} (in ${new Date().getTime() - start.getTime()}ms)`);
+            yield retry({
+                func: () => publisher.publish(files, options),
+                maxAttempts: retryAttempts,
+                delay: retryDelay,
+                errorCallback: e => {
+                    logger.error(`${e}`);
+                    logger.info(`Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
+                }
+            });
+            const end = new Date();
+            logger.info(`Successfully published assets to ${targetName} (in ${end.getTime() - start.getTime()} ms)`);
             publishedTo.push(targetName);
         }
         if (publishedTo.length) {
@@ -28342,7 +28436,7 @@ function main() {
         }
     });
 }
-main().catch(error => getDefaultLogger().fatal(error instanceof Error ? error.message : `Something went horribly wrong: ${error}`));
+main().catch(error => getDefaultLogger().fatal(error instanceof Error ? `${error}` : `Something went horribly wrong: ${error}`));
 
 
 /***/ }),
@@ -28617,7 +28711,7 @@ module.exports = require("zlib");
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(9110);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(9500);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
