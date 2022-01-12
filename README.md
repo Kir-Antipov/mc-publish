@@ -13,7 +13,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v2.0
+      - uses: Kir-Antipov/mc-publish@v2.1
         with:
           modrinth-id: AANobbMI
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v2.0
+      - uses: Kir-Antipov/mc-publish@v2.1
         with:
           # You don't need this section if you don't want to publish
           # your assets to Modrinth
