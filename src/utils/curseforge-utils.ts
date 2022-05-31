@@ -102,6 +102,14 @@ export async function convertToCurseForgeVersions(gameVersions: string[], loader
 }
 
 export async function uploadFile(id: string, data: Record<string, any>, file: File, token: string): Promise<number> {
+    if (Array.isArray(data.relations?.projects) && (!data.relations.projects.length || data.parentFileID)) {
+        delete data.relations;
+    }
+
+    if (data.gameVersions && data.parentFileID) {
+        delete data.gameVersions;
+    }
+
     const form = new FormData();
     form.append("file", await fileFromPath(file.path), file.name);
     form.append("metadata", JSON.stringify(data));
