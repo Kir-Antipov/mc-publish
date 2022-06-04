@@ -36,8 +36,6 @@ export default class ModrinthPublisher extends ModPublisher {
             featured: true,
             dependencies: !projects.length ? undefined : projects
         };
-        console.log(data);
-        //this.logger.info(JSON.stringify(data));
-        //await createVersion(id, data, files, token);
+        await createVersion(id, data, files, token);
     }
 }
