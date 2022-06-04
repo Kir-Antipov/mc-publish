@@ -29,8 +29,8 @@ interface ModrinthProject {
     icon_url: string;
     id: string;
     team: string;
-    body_url: string?;
-    moderator_message: string?;
+    body_url: string | null;
+    moderator_message: string | null;
     published: string;
     updated: string;
     followers: number;
