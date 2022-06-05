@@ -170,6 +170,92 @@ describe("ModMetadataReader.readMetadata", () => {
         });
     });
 
+    describe("Quilt", () => {
+        beforeAll(() => new Promise(resolve => {
+            const zip = new ZipFile();
+            zip.addFile("./test/content/quilt.mod.json", "quilt.mod.json");
+            zip.end();
+            zip.outputStream.pipe(fs.createWriteStream("example-mod.quilt.jar")).on("close", resolve);
+        }));
+
+        afterAll(() => new Promise(resolve => fs.unlink("example-mod.quilt.jar", resolve)));
+
+        test("the format can be read", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            expect(metadata).toBeTruthy();
+        });
+
+        test("mod info can be read", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            expect(metadata.id).toBe("example-mod");
+            expect(metadata.name).toBe("Example Mod");
+            expect(metadata.version).toBe("0.1.0");
+            expect(metadata.loaders).toMatchObject(["quilt"]);
+        });
+
+        test("project ids can be specified in the config file", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            expect(metadata.getProjectId(PublisherTarget.Modrinth)).toBe("AANobbMI");
+            expect(metadata.getProjectId(PublisherTarget.CurseForge)).toBe("394468");
+            expect(metadata.getProjectId(PublisherTarget.GitHub)).toBe("mc1.18-0.4.0-alpha5");
+        });
+
+        test("all dependencies are read", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            expect(metadata.dependencies).toHaveLength(8);
+            const dependencies = metadata.dependencies.reduce((agg, x) => { agg[x.id] = x; return agg; }, <Record<string, Dependency>>{});
+            expect(dependencies["quilt_loader"]?.kind).toBe(DependencyKind.Depends);
+            expect(dependencies["quilt_base"]?.kind).toBe(DependencyKind.Depends);
+            expect(dependencies["minecraft"]?.kind).toBe(DependencyKind.Depends);
+            expect(dependencies["java"]?.kind).toBe(DependencyKind.Depends);
+            expect(dependencies["recommended-mod"]?.kind).toBe(DependencyKind.Recommends);
+            expect(dependencies["included-mod"]?.kind).toBe(DependencyKind.Includes);
+            expect(dependencies["conflicting-mod"]?.kind).toBe(DependencyKind.Conflicts);
+            expect(dependencies["breaking-mod"]?.kind).toBe(DependencyKind.Breaks);
+        });
+
+        test("dependency info can be read", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            const conflicting = metadata.dependencies.find(x => x.id === "conflicting-mod");
+            expect(conflicting).toBeTruthy();
+            expect(conflicting.id).toBe("conflicting-mod");
+            expect(conflicting.kind).toBe(DependencyKind.Conflicts);
+            expect(conflicting.version).toBe("<0.40.0");
+            expect(conflicting.ignore).toBe(false);
+            for (const project of PublisherTarget.getValues()) {
+                expect(conflicting.getProjectSlug(project)).toBe(conflicting.id);
+            }
+        });
+
+        test("custom metadata can be attached to dependency entry", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            const recommended = metadata.dependencies.find(x => x.id === "recommended-mod");
+            expect(recommended).toBeTruthy();
+            expect(recommended.id).toBe("recommended-mod");
+            expect(recommended.kind).toBe(DependencyKind.Recommends);
+            expect(recommended.version).toBe("0.2.0");
+            expect(recommended.ignore).toBe(true);
+            expect(recommended.getProjectSlug(PublisherTarget.Modrinth)).toBe("AAAA");
+            expect(recommended.getProjectSlug(PublisherTarget.CurseForge)).toBe("42");
+            expect(recommended.getProjectSlug(PublisherTarget.GitHub)).toBe("v0.2.0");
+        });
+
+        test("special case dependencies (minecraft, java and quilt_loader) are ignored by default", async () => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            expect(metadata.dependencies.find(x => x.id === "minecraft").ignore).toBe(true);
+            expect(metadata.dependencies.find(x => x.id === "java").ignore).toBe(true);
+            expect(metadata.dependencies.find(x => x.id === "quilt_loader").ignore).toBe(true);
+        });
+
+        test("special case dependencies (quilted_quilt_api) are replaced with their aliases", async() => {
+            const metadata = await ModMetadataReader.readMetadata("example-mod.quilt.jar");
+            const quilt = metadata.dependencies.find(x => x.id === "quilt_base");
+            for (const target of PublisherTarget.getValues()) {
+                expect(quilt.getProjectSlug(target) === "qsl");
+            }
+        });
+    });
+
     describe("unsupported mod formats", () => {
         test("null is returned when the format is not supported or specified file does not exist", async () => {
             const metadata = await ModMetadataReader.readMetadata("example-mod.unknown.jar");

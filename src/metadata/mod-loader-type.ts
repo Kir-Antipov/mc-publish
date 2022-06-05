@@ -1,6 +1,7 @@
 enum ModLoaderType {
     Fabric = 1,
     Forge,
+    Quilt,
 }
 
 namespace ModLoaderType {

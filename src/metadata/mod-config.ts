@@ -18,9 +18,11 @@ export default abstract class ModConfig<TConfig = Record<string, unknown>> imple
 
     getProjectId(project: PublisherTarget): string | undefined {
         const projectName = PublisherTarget.toString(project).toLowerCase();
-        const custom = this.config["custom"];
-        const projects = this.config["projects"];
+        const config = this.config;
+        const custom = config["custom"];
+        const projects = config["projects"];
         const projectId = (
+            config[action.name]?.[projectName]?.id ?? config[action.name]?.[projectName] ??
             custom?.[action.name]?.[projectName]?.id ?? custom?.[action.name]?.[projectName] ??
             projects?.[projectName]?.id ?? projects?.[projectName] ??
             custom?.projects?.[projectName]?.id ?? custom?.projects?.[projectName]

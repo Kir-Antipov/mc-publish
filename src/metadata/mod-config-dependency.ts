@@ -27,9 +27,11 @@ export default class ModConfigDependency<TMetadata extends DependencyOptions = R
 
     getProjectSlug(project: PublisherTarget): string {
         const projectName = PublisherTarget.toString(project).toLowerCase();
-        const custom = this.metadata["custom"];
-        const projects = this.metadata["projects"];
+        const metadata = this.metadata;
+        const custom = metadata["custom"];
+        const projects = metadata["projects"];
         return String(
+            metadata[action.name]?.[projectName]?.slug ?? metadata[action.name]?.[projectName] ??
             custom?.[action.name]?.[projectName]?.slug ?? custom?.[action.name]?.[projectName] ??
             projects?.[projectName]?.slug ?? projects?.[projectName] ??
             custom?.projects?.[projectName]?.slug ?? custom?.projects?.[projectName] ??

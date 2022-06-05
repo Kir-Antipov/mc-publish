@@ -80,6 +80,7 @@ describe("convertToCurseForgeVersions", () => {
             loaders: {
                 fabric: 7499,
                 forge: 7498,
+                quilt: 9153,
                 rift: 7500
             },
             java: {
