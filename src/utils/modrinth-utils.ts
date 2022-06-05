@@ -1,15 +1,26 @@
-import { FormData } from "formdata-node";
-import { fileFromPath } from "formdata-node/file-from-path";
+import FormData from "form-data";
 import fetch from "node-fetch";
 import { File } from "./file";
-import { computeHash } from "./hash-utils";
 import SoftError from "./soft-error";
 
-export async function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
+const baseUrl = "https://api.modrinth.com/v2";
+
+interface ModrinthProject {
+    id: string;
+    slug: string;
+}
+
+interface ModrinthVersion {
+    id: string;
+}
+
+export async function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<ModrinthVersion> {
     data = {
+        featured: true,
         dependencies: [],
         ...data,
-        mod_id: modId,
+        project_id: modId,
+        primary_file: files.length ? "0" : undefined,
         file_parts: files.map((_, i) => i.toString())
     };
 
@@ -17,12 +28,14 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
     form.append("data", JSON.stringify(data));
     for (let i = 0; i < files.length; ++i) {
         const file = files[i];
-        form.append(i.toString(), await fileFromPath(file.path), file.name);
+        form.append(i.toString(), file.getStream(), file.name);
     }
 
-    const response = await fetch("https://api.modrinth.com/api/v1/version", {
+    const response = await fetch(`${baseUrl}/version`, {
         method: "POST",
-        headers: { Authorization: token },
+        headers: form.getHeaders({
+            Authorization: token,
+        }),
         body: <any>form
     });
 
@@ -35,27 +48,19 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
         throw new SoftError(isServerError, `Failed to upload file: ${response.status} (${errorText})`);
     }
 
-    const versionId = (<{ id: string }>await response.json()).id;
-    const primaryFile = files[0];
-    if (primaryFile) {
-        await makeFilePrimary(versionId, primaryFile.path, token);
-    }
-    return versionId;
+    return await response.json();
 }
 
-export async function makeFilePrimary(versionId: string, filePath: string, token: string): Promise<boolean> {
-    const algorithm = "sha1";
-    const hash = (await computeHash(filePath, algorithm)).digest("hex");
+export async function getProject(idOrSlug: string): Promise<ModrinthProject> {
+    const response = await fetch(`${baseUrl}/project/${idOrSlug}`);
+    if (response.ok) {
+        return await response.json();
+    }
 
-    const response = await fetch(`https://api.modrinth.com/api/v1/version/${versionId}`, {
-        method: "PATCH",
-        headers: {
-            "Authorization": token,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            primary_file: [algorithm, hash]
-        })
-    });
-    return response.ok;
+    if (response.status === 404) {
+        return null;
+    }
+
+    const isServerError = response.status >= 500;
+    throw new SoftError(isServerError, `${response.status} (${response.statusText})`);
 }

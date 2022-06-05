@@ -1,6 +1,5 @@
 import fetch from "node-fetch";
-import { FormData } from "formdata-node";
-import { fileFromPath } from "formdata-node/file-from-path";
+import FormData from "form-data";
 import { File } from "./file";
 import { findVersionByName } from "./minecraft-utils";
 import SoftError from "./soft-error";
@@ -111,11 +110,12 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
     }
 
     const form = new FormData();
-    form.append("file", await fileFromPath(file.path), file.name);
+    form.append("file", file.getStream(), file.name);
     form.append("metadata", JSON.stringify(data));
 
     const response = await fetch(`${baseUrl}/projects/${id}/upload-file?token=${token}`, {
         method: "POST",
+        headers: form.getHeaders(),
         body: <any>form
     });
 

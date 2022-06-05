@@ -1,22 +1,40 @@
-import { createVersion } from "../../utils/modrinth-utils";
+import { createVersion, getProject } from "../../utils/modrinth-utils";
 import { File } from "../../utils/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
+import Dependency from "../../metadata/dependency";
+import DependencyKind from "../../metadata/dependency-kind";
+
+const modrinthDependencyKinds = new Map([
+    [DependencyKind.Depends, "required"],
+    [DependencyKind.Recommends, "optional"],
+    [DependencyKind.Suggests, "optional"],
+    [DependencyKind.Includes, "optional"],
+    [DependencyKind.Breaks, "incompatible"],
+]);
 
 export default class ModrinthPublisher extends ModPublisher {
     public get target(): PublisherTarget {
         return PublisherTarget.Modrinth;
     }
 
-    protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[]): Promise<void> {
+    protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[], dependencies: Dependency[]): Promise<void> {
+        const projects = (await Promise.all(dependencies
+            .filter((x, _, self) => (x.kind !== DependencyKind.Suggests && x.kind !== DependencyKind.Includes) || !self.find(y => y.id === x.id && y.kind !== DependencyKind.Suggests && y.kind !== DependencyKind.Includes))
+            .map(async x => ({
+                project_id: (await getProject(x.getProjectSlug(this.target))).id,
+                dependency_type: modrinthDependencyKinds.get(x.kind)
+            }))))
+            .filter(x => x.project_id && x.dependency_type);
+
         const data = {
-            version_title: name || version,
+            name: name || version,
             version_number: version,
-            version_body: changelog,
-            release_channel: channel,
+            changelog,
             game_versions: gameVersions,
+            version_type: channel,
             loaders,
-            featured: true,
+            dependencies: projects
         };
         await createVersion(id, data, files, token);
     }

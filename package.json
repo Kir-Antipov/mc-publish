@@ -30,6 +30,7 @@
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
     "@types/node": "^17.0.36",
+    "@types/node-fetch": "^2.6.1",
     "@types/yazl": "^2.4.2",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
@@ -44,7 +45,7 @@
     "@actions/core": "^1.8.2",
     "@actions/github": "^5.0.3",
     "fast-glob": "^3.2.11",
-    "formdata-node": "^4.3.2",
+    "form-data": "^3.0.1",
     "node-fetch": "^2.6.7",
     "node-stream-zip": "^1.15.0",
     "toml": "^3.0.0"
