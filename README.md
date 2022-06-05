@@ -35,6 +35,7 @@ jobs:
           loaders: |
             fabric
             forge
+            quilt
           game-versions: |
             1.16.3
             1.17
@@ -101,7 +102,7 @@ jobs:
 | [version-type](#user-content-version-type) | The type of the release | Will be parsed from the [`version`](#user-content-version) value | `alpha` <br> `beta` <br> `release` |
 | [changelog](#user-content-changelog) | The changelog for this version | A body of the release that triggered the action | `This release fixes a few more issues in Sodium 0.3 for Minecraft 1.17.1.` |
 | [changelog-file](#user-content-changelog-file) | A glob of the changelog file | ❌ | `CHANGELOG.md` |
-| [loaders](#user-content-loaders) | A list of supported mod loaders | `fabric` for Fabric mods <br> `forge` for Forge mods | `fabric` <br> `forge` <br> `rift` |
+| [loaders](#user-content-loaders) | A list of supported mod loaders | `fabric` for Fabric mods <br> `forge` for Forge mods <br> `quilt` for Quilt mods | `fabric` <br> `forge` <br> `quilt` <br> `rift` |
 | [game-versions](#user-content-game-versions) | A list of supported Minecraft versions | A value specified in the config file, if any; otherwise, it will be parsed from the [`version`](#user-content-version) value | `21w37a` <br> `1.17` |
 | [version-resolver](#user-content-version-resolver) | Determines the way automatic [`game-versions`](#user-content-game-versions) resolvement works | `releasesIfAny` | `exact` <br> `latest` <br> `all` <br> `releases` <br> `releasesIfAny` |
 | [dependencies](#user-content-dependencies) | A list of dependencies | A dependency list specified in the config file  | `fabric \| depends \| 0.40.0` <br> `fabric-api` |
@@ -185,6 +186,28 @@ Can be automatically retrieved from the config file of your mod:
       ```toml
       [projects]
           modrinth="AANobbMI"
+      ```
+
+- `quilt.mod.json` (Quilt)
+
+  - `mc-publish` field *(recommended)*:
+      ```json
+      {
+        // ...
+        "mc-publish": {
+          "modrinth": "AANobbMI"
+        },
+      }
+      ```
+
+  - `projects` field:
+      ```json
+      {
+        // ...
+        "projects": {
+          "modrinth": "AANobbMI"
+        },
+      }
       ```
 
 #### modrinth-token
@@ -271,6 +294,28 @@ Can be automatically retrieved from the config file of your mod:
       ```toml
       [projects]
           curseforge=394468
+      ```
+
+- `quilt.mod.json` (Quilt)
+
+  - `mc-publish` field *(recommended)*:
+      ```json
+      {
+        // ...
+        "mc-publish": {
+          "curseforge": 394468
+        },
+      }
+      ```
+
+  - `projects` field:
+      ```json
+      {
+        // ...
+        "projects": {
+          "curseforge": 394468
+        },
+      }
       ```
 
 #### curseforge-token
@@ -363,12 +408,13 @@ changelog-file: CHANGELOG.md
 
 #### loaders
 
-A list of supported mod loaders. If no value is provided, `fabric` will be used for valid Fabric mods and `forge` will be used for valid Forge mods.
+A list of supported mod loaders. If no value is provided, `fabric` will be used for valid Fabric mods, `forge` will be used for valid Forge mods, and `quilt` will be used for valid Quilt mods.
 
 ```yaml
 loaders: |
   fabric
   forge
+  quilt
 ```
 
 #### game-versions
@@ -494,6 +540,40 @@ Can be automatically retrieved from the config file of your mod:
     versionRange="*"
     ordering="NONE"
     side="BOTH"
+  ```
+
+- `quilt.mod.json` (Quilt)
+  ```json
+  "depends": [
+    "required-dependency",
+    {
+      "id": "optional-dependency",
+      "version": "0.1.0",
+      "optional": true
+    }
+  ],
+  "provides": [
+    {
+      "id": "included-dependency",
+      "version": "0.3.0",
+      "mc-publish": {
+        "ignore": false, // `mc-publish` will ignore this dependency, if `ignore` is set to true
+        "modrinth": "included-dependency-fabric", // Modrinth's project slug
+        "curseforge": "included-dependency-fabric" // CurseForge's project slug
+      }
+    }
+  ],
+  "breaks": [
+    {
+      "id": "incompatible-dependency",
+      "version": "*"
+    },
+    {
+      "id": "conflicting-dependency",
+      "version": "*",
+      "unless": "some-mod-that-fixes-conflict"
+    }
+  ],
   ```
 
 #### java
