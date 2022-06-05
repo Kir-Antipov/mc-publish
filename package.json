@@ -1,6 +1,6 @@
 {
   "name": "mc-publish",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "GitHub Action that helps you publish your Minecraft mods",
   "main": "src/index.ts",
   "scripts": {
