@@ -1,7 +1,11 @@
-import { describe, test, expect } from "@jest/globals";
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
 import { getProjectFromSlug } from "../src/utils/modrinth-utils";
 
 describe("getProjectFromSlug", () => {
+    // Modrinth's API is kinda slow sometimes
+    beforeEach(() => jest.setTimeout(15000));
+    afterEach(() => jest.setTimeout(5000));
+
     test("returned versions have expected ids", async () => {
         const projects = {
             "sodium": "AANobbMI",

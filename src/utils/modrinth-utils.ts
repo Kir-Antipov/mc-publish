@@ -88,8 +88,18 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
     return versionId;
 }
 
-export async function getProjectFromSlug(modSlug: string): Promise<ModrinthProject> {
-    return await (await fetch(`${baseUrl}/v2/project/slug/${modSlug}`)).json();
+export async function getProjectFromSlug(slug: string): Promise<ModrinthProject> {
+    const response = await fetch(`${baseUrl}/v2/project/${slug}`);
+    if (response.ok) {
+        return await response.json();
+    }
+
+    if (response.status === 404) {
+        return null;
+    }
+
+    const isServerError = response.status >= 500;
+    throw new SoftError(isServerError, `${response.status} (${response.statusText})`);
 }
 
 export async function makeFilePrimary(versionId: string, filePath: string, token: string): Promise<boolean> {
