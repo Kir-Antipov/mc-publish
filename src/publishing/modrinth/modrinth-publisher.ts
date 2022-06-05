@@ -22,7 +22,7 @@ export default class ModrinthPublisher extends ModPublisher {
         const projects = (await Promise.all(dependencies
             .filter((x, _, self) => (x.kind !== DependencyKind.Suggests && x.kind !== DependencyKind.Includes) || !self.find(y => y.id === x.id && y.kind !== DependencyKind.Suggests && y.kind !== DependencyKind.Includes))
             .map(async x => ({
-                project_id: (await getProject(x.getProjectSlug(this.target))).id,
+                project_id: (await getProject(x.getProjectSlug(this.target)))?.id,
                 dependency_type: modrinthDependencyKinds.get(x.kind)
             }))))
             .filter(x => x.project_id && x.dependency_type);

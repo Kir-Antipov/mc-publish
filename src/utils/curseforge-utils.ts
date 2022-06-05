@@ -33,6 +33,25 @@ class CurseForgeUploadError extends SoftError {
     }
 }
 
+async function fetchJsonArray<T>(url: string): Promise<T[] | never> {
+    const response = await fetch(url);
+    if (!response.ok) {
+        const isServerError = response.status >= 500;
+        throw new SoftError(isServerError, `${response.status} (${response.statusText})`);
+    }
+
+    let array: T[];
+    try {
+        array = await response.json();
+    } catch {
+        array = null;
+    }
+
+    if (!Array.isArray(array)) {
+        throw new SoftError(true, "CurseForge sometimes returns Cloudflare's HTML page instead of its API response. Yeah, I know, very cool. Just wait 15-20 minutes, then try re-running this action, and you should be fine.");
+    }
+    return array;
+}
 
 let cachedCurseForgeVersions: CurseForgeVersions = null;
 async function getCurseForgeVersions(token: string): Promise<CurseForgeVersions> {
@@ -43,12 +62,12 @@ async function getCurseForgeVersions(token: string): Promise<CurseForgeVersions>
 }
 
 async function loadCurseForgeVersions(token: string): Promise<CurseForgeVersions> {
-    const versionTypes = <{ id: number, slug: string }[]>await (await fetch(`${baseUrl}/game/version-types?token=${token}`)).json();
+    const versionTypes = await fetchJsonArray<{ id: number, slug: string }>(`${baseUrl}/game/version-types?token=${token}`);
     const javaVersionTypes = versionTypes.filter(x => x.slug.startsWith("java")).map(x => x.id);
     const minecraftVersionTypes = versionTypes.filter(x => x.slug.startsWith("minecraft")).map(x => x.id);
     const loaderVersionTypes = versionTypes.filter(x => x.slug.startsWith("modloader")).map(x => x.id);
 
-    const versions = <CurseForgeVersion[]>await (await fetch(`${baseUrl}/game/versions?token=${token}`)).json();
+    const versions = await fetchJsonArray<CurseForgeVersion>(`${baseUrl}/game/versions?token=${token}`);
     return versions.reduce((container, version) => {
         if (javaVersionTypes.includes(version.gameVersionTypeID)) {
             container.java.push(version);
