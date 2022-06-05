@@ -9,7 +9,7 @@ const modrinthDependencyKinds = new Map([
     [DependencyKind.Depends, "required"],
     [DependencyKind.Recommends, "optional"],
     [DependencyKind.Suggests, "optional"],
-    [DependencyKind.Includes, ""],
+    [DependencyKind.Includes, "optional"],
     [DependencyKind.Breaks, "incompatible"],
 ]);
 
