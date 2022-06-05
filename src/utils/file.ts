@@ -11,6 +11,10 @@ export class File {
         Object.freeze(this);
     }
 
+    public getStream(): fs.ReadStream {
+        return fs.createReadStream(this.path);
+    }
+
     public async getBuffer(): Promise<Buffer> {
         return new Promise((resolve, reject) => {
             fs.readFile(this.path, (error, data) => {

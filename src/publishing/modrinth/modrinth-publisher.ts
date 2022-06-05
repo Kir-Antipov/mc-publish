@@ -22,20 +22,19 @@ export default class ModrinthPublisher extends ModPublisher {
         const projects = (await Promise.all(dependencies
             .filter((x, _, self) => (x.kind !== DependencyKind.Suggests && x.kind !== DependencyKind.Includes) || !self.find(y => y.id === x.id && y.kind !== DependencyKind.Suggests && y.kind !== DependencyKind.Includes))
             .map(async x => ({
-                id: (await getProject(x.getProjectSlug(this.target))).id,
-                type: modrinthDependencyKinds.get(x.kind)
+                project_id: (await getProject(x.getProjectSlug(this.target))).id,
+                dependency_type: modrinthDependencyKinds.get(x.kind)
             }))))
-            .filter(x => x.id && x.type);
+            .filter(x => x.project_id && x.dependency_type);
 
         const data = {
-            version_title: name || version,
+            name: name || version,
             version_number: version,
-            version_body: changelog,
-            release_channel: channel,
+            changelog,
             game_versions: gameVersions,
+            version_type: channel,
             loaders,
-            featured: true,
-            dependencies: projects.length ? projects : undefined
+            dependencies: projects
         };
         await createVersion(id, data, files, token);
     }

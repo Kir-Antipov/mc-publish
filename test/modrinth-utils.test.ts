@@ -1,12 +1,9 @@
-import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
+import { jest, describe, test, expect } from "@jest/globals";
 import { getProject } from "../src/utils/modrinth-utils";
 
 describe("getProject", () => {
-    // Modrinth's API is kinda slow sometimes
-    beforeEach(() => jest.setTimeout(15000));
-    afterEach(() => jest.setTimeout(5000));
-
     test("returned versions have expected ids", async () => {
+        jest.setTimeout(15000);
         const projects = {
             "sodium": "AANobbMI",
             "fabric-api": "P7dR8mSH",
@@ -22,6 +19,7 @@ describe("getProject", () => {
     });
 
     test("the method returns null if project with the given slug does not exist", async () => {
+        jest.setTimeout(15000);
         const nonExistentProjects = [
             "Na-11",
             "api-fabric",
