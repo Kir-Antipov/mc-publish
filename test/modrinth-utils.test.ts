@@ -1,7 +1,7 @@
 import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
-import { getProjectFromSlug } from "../src/utils/modrinth-utils";
+import { getProject } from "../src/utils/modrinth-utils";
 
-describe("getProjectFromSlug", () => {
+describe("getProject", () => {
     // Modrinth's API is kinda slow sometimes
     beforeEach(() => jest.setTimeout(15000));
     afterEach(() => jest.setTimeout(5000));
@@ -16,7 +16,7 @@ describe("getProjectFromSlug", () => {
         };
 
         for (const [slug, id] of Object.entries(projects)) {
-            const project = await getProjectFromSlug(slug);
+            const project = await getProject(slug);
             expect(project).toHaveProperty("id", id);
         }
     });
@@ -32,7 +32,7 @@ describe("getProjectFromSlug", () => {
         ];
 
         for (const slug of nonExistentProjects) {
-            const project = await getProjectFromSlug(slug);
+            const project = await getProject(slug);
             expect(project).toBeNull();
         }
     });

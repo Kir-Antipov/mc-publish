@@ -1,4 +1,4 @@
-import { createVersion, getProjectFromSlug } from "../../utils/modrinth-utils";
+import { createVersion, getProject } from "../../utils/modrinth-utils";
 import { File } from "../../utils/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
@@ -22,10 +22,11 @@ export default class ModrinthPublisher extends ModPublisher {
         const projects = (await Promise.all(dependencies
             .filter((x, _, self) => (x.kind !== DependencyKind.Suggests && x.kind !== DependencyKind.Includes) || !self.find(y => y.id === x.id && y.kind !== DependencyKind.Suggests && y.kind !== DependencyKind.Includes))
             .map(async x => ({
-                project_id: (await getProjectFromSlug(x.getProjectSlug(this.target))).id, // Should probably allow id's here also
-                dependency_type: modrinthDependencyKinds.get(x.kind)
+                id: (await getProject(x.getProjectSlug(this.target))).id,
+                type: modrinthDependencyKinds.get(x.kind)
             }))))
-            .filter(x => x.project_id && x.dependency_type);
+            .filter(x => x.id && x.type);
+
         const data = {
             version_title: name || version,
             version_number: version,
@@ -34,7 +35,7 @@ export default class ModrinthPublisher extends ModPublisher {
             game_versions: gameVersions,
             loaders,
             featured: true,
-            dependencies: !projects.length ? undefined : projects
+            dependencies: projects.length ? projects : undefined
         };
         await createVersion(id, data, files, token);
     }

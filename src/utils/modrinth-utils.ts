@@ -8,46 +8,8 @@ import SoftError from "./soft-error";
 const baseUrl = "https://api.modrinth.com";
 
 interface ModrinthProject {
-    slug: string;
-    title: string;
-    description: string;
-    categories: string[];
-    client_side: string;
-    server_side: string;
-    body: string;
-    issues_url: string;
-    source_url: string;
-    wiki_url: string;
-    discord_url: string;
-    donation_urls: {
-        id: string;
-        platform: string;
-        url: string;
-    }[];
-    project_type: string;
-    downloads: number;
-    icon_url: string;
     id: string;
-    team: string;
-    body_url: string | null;
-    moderator_message: string | null;
-    published: string;
-    updated: string;
-    followers: number;
-    status: string;
-    license: {
-        id: string;
-        name: string;
-        url: string;
-    };
-    versions: string[];
-    gallery: {
-        url: string;
-        featured: boolean;
-        title: string;
-        description: string;
-        created: string;
-    }[];
+    slug: string;
 }
 
 export async function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<string> {
@@ -88,8 +50,8 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
     return versionId;
 }
 
-export async function getProjectFromSlug(slug: string): Promise<ModrinthProject> {
-    const response = await fetch(`${baseUrl}/v2/project/${slug}`);
+export async function getProject(idOrSlug: string): Promise<ModrinthProject> {
+    const response = await fetch(`${baseUrl}/v2/project/${idOrSlug}`);
     if (response.ok) {
         return await response.json();
     }
