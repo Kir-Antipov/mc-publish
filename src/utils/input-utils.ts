@@ -32,3 +32,52 @@ function init(root: InputObject, path: string[], value: string): void {
         init(inner, path.slice(1), value);
     }
 }
+
+export function mapStringInput(value: any, defaultValue = ""): string {
+    return mapInput(value, defaultValue ?? "");
+}
+
+export function mapObjectInput(value: any, defaultValue: object = null): object {
+    return mapInput(value, defaultValue ?? null);
+}
+
+export function mapNumberInput(value: any, defaultValue = 0): number {
+    return mapInput(value, defaultValue ?? 0, {
+        string: x => {
+            const num = +x;
+            return isNaN(num) ? undefined : num;
+        }
+    });
+}
+
+export function mapBooleanInput(value: any, defaultValue = false): boolean {
+    return mapInput(value, defaultValue ?? false, {
+        string: x => {
+            const strValue = x.trim().toLowerCase();
+            return (
+                strValue === "true" ? true :
+                strValue === "false" ? false :
+                undefined
+            );
+        }
+    });
+}
+
+export function mapInput<T>(value: any, fallbackValue: T, mappers?: Record<string, (x: any) => T | undefined>): T {
+    if (value === undefinedValue || value === undefined || value === null) {
+        return fallbackValue;
+    }
+
+    if (typeof value === typeof fallbackValue) {
+        return value;
+    }
+
+    const mapper = mappers?.[typeof value];
+    if (mapper) {
+        const mappedValue = mapper(value);
+        if (typeof mappedValue === typeof fallbackValue) {
+            return mappedValue;
+        }
+    }
+    return fallbackValue;
+}

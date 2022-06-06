@@ -1,7 +1,7 @@
 import { getRequiredFiles, gradleOutputSelector } from "./utils/file-utils";
 import PublisherFactory from "./publishing/publisher-factory";
 import PublisherTarget from "./publishing/publisher-target";
-import { getInputAsObject } from "./utils/input-utils";
+import { getInputAsObject, mapNumberInput } from "./utils/input-utils";
 import { getDefaultLogger } from "./utils/logger-utils";
 import { retry } from "./utils/function-utils";
 
@@ -21,8 +21,8 @@ async function main() {
         const options = { ...commonOptions, ...publisherOptions };
         const fileSelector = options.files && (typeof(options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
         const files = await getRequiredFiles(fileSelector);
-        const retryAttempts = +options.retry?.["attempts"] || 0;
-        const retryDelay = +options.retry?.["delay"] || 0;
+        const retryAttempts = mapNumberInput(options.retry?.["attempts"]);
+        const retryDelay = mapNumberInput(options.retry?.["delay"]);
 
         const publisher = publisherFactory.create(target, logger);
         logger.info(`Publishing assets to ${targetName}...`);
