@@ -13,6 +13,10 @@ inputs:
     description: A valid token for the Modrinth API
     required: false
     default: ${undefined}
+  modrinth-featured:
+    description: Indicates whether the version should be featured on Modrinth or not
+    required: false
+    default: ${undefined}
 
   curseforge-id:
     description: The ID of the CurseForge project to upload to

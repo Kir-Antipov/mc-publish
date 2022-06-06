@@ -4,6 +4,7 @@ import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
 import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
+import { mapBooleanInput } from "../../utils/input-utils";
 
 const modrinthDependencyKinds = new Map([
     [DependencyKind.Depends, "required"],
@@ -18,7 +19,8 @@ export default class ModrinthPublisher extends ModPublisher {
         return PublisherTarget.Modrinth;
     }
 
-    protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[], dependencies: Dependency[]): Promise<void> {
+    protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<void> {
+        const featured = mapBooleanInput(options.featured, true);
         const projects = (await Promise.all(dependencies
             .filter((x, _, self) => (x.kind !== DependencyKind.Suggests && x.kind !== DependencyKind.Includes) || !self.find(y => y.id === x.id && y.kind !== DependencyKind.Suggests && y.kind !== DependencyKind.Includes))
             .map(async x => ({
@@ -34,6 +36,7 @@ export default class ModrinthPublisher extends ModPublisher {
             game_versions: gameVersions,
             version_type: channel,
             loaders,
+            featured,
             dependencies: projects
         };
         await createVersion(id, data, files, token);

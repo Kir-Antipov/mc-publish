@@ -1,9 +1,8 @@
-import { jest, describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from "@jest/globals";
 import { getProject } from "../src/utils/modrinth-utils";
 
 describe("getProject", () => {
     test("returned versions have expected ids", async () => {
-        jest.setTimeout(15000);
         const projects = {
             "sodium": "AANobbMI",
             "fabric-api": "P7dR8mSH",
@@ -16,10 +15,9 @@ describe("getProject", () => {
             const project = await getProject(slug);
             expect(project).toHaveProperty("id", id);
         }
-    });
+    }, 15000);
 
     test("the method returns null if project with the given slug does not exist", async () => {
-        jest.setTimeout(15000);
         const nonExistentProjects = [
             "Na-11",
             "api-fabric",
@@ -33,5 +31,5 @@ describe("getProject", () => {
             const project = await getProject(slug);
             expect(project).toBeNull();
         }
-    });
+    }, 15000);
 });

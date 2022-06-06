@@ -90,6 +90,7 @@ jobs:
 |------|-------------|---------------|----------|
 | [modrinth-id](#user-content-modrinth-id) | The ID of the Modrinth project to upload to | A value specified in the config file | `AANobbMI` |
 | [modrinth-token](#user-content-modrinth-token) | A valid token for the Modrinth API | ❌ | `${{ secrets.MODRINTH_TOKEN }}` |
+| [modrinth-featured](#user-content-modrinth-featured) | Indicates whether the version should be featured on Modrinth or not | `true` | `true` <br> `false` |
 | [curseforge-id](#user-content-curseforge-id) | The ID of the CurseForge project to upload to | A value specified in the config file | `394468` |
 | [curseforge-token](#user-content-curseforge-token) | A valid token for the CurseForge API | ❌ | `${{ secrets.CURSEFORGE_TOKEN }}` |
 | [github-tag](#user-content-github-tag) | The tag name of the release to upload assets to | A tag of the release that triggered the action | `mc1.17.1-0.3.2` |
@@ -216,6 +217,14 @@ A valid token for the Modrinth API. It's required if you want to publish your as
 
 ```yaml
 modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+```
+
+#### modrinth-featured
+
+Indicates whether the version should be featured on Modrinth or not.
+
+```yaml
+modrinth-featured: true
 ```
 
 #### curseforge-id

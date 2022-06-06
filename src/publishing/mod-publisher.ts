@@ -115,8 +115,8 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
             : metadata?.dependencies || [];
         const uniqueDependencies = dependencies.filter((x, i, self) => !x.ignore && self.findIndex(y => y.id === x.id && y.kind === x.kind) === i);
 
-        await this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies);
+        await this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, <Record<string, unknown>><unknown>options);
     }
 
-    protected abstract publishMod(id: string, token: string, name: string, version: string, versionType: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[]): Promise<void>;
+    protected abstract publishMod(id: string, token: string, name: string, version: string, versionType: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<void>;
 }
