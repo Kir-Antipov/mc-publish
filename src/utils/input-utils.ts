@@ -38,15 +38,15 @@ function init(root: InputObject, path: string[], value: string): void {
 }
 
 export function mapStringInput(value: any, defaultValue = ""): string {
-    return mapInput(value, defaultValue ?? "", null, "string");
+    return mapInput(value, defaultValue, null, "string");
 }
 
 export function mapObjectInput(value: any, defaultValue: object = null): object {
-    return mapInput(value, defaultValue ?? null, null, "object");
+    return mapInput(value, defaultValue, null, "object");
 }
 
 export function mapNumberInput(value: any, defaultValue = 0): number {
-    return mapInput(value, defaultValue ?? 0, {
+    return mapInput(value, defaultValue, {
         string: x => {
             const num = +x;
             return isNaN(num) ? undefined : num;
@@ -55,7 +55,7 @@ export function mapNumberInput(value: any, defaultValue = 0): number {
 }
 
 export function mapBooleanInput(value: any, defaultValue = false): boolean {
-    return mapInput(value, defaultValue ?? false, {
+    return mapInput(value, defaultValue, {
         string: x => {
             const strValue = x.trim().toLowerCase();
             return (
