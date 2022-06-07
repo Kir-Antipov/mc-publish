@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll } from "@jest/globals";
 import { setupInput, unsetInput } from "./utils/input-utils";
-import { getInputAsObject, mapStringInput, mapObjectInput, mapNumberInput, mapBooleanInput } from "../src/utils/input-utils";
+import { getInputAsObject, mapStringInput, mapObjectInput, mapNumberInput, mapBooleanInput, mapEnumInput } from "../src/utils/input-utils";
 
 const defaultInput = {
     "boolean": true,
@@ -193,5 +193,61 @@ describe("mapBooleanInput", () => {
         expect(mapBooleanInput(input["booleanfalsestringlowercase"], true)).toBe(false);
         expect(mapBooleanInput(input["booleanfalsestringuppercase"], true)).toBe(false);
         expect(mapBooleanInput(input["booleanfalsestringuppercasewithwhitespace"], true)).toBe(false);
+    });
+});
+
+describe("mapEnumInput", () => {
+    enum TestEnum {
+        None = 0,
+
+        A = 1,
+        B = 2,
+        C = 4,
+
+        A_B = 1 | 2,
+        A_C = 1 | 4,
+        B_C = 2 | 4,
+
+        A_B_C = 1 | 2 | 4,
+    }
+
+    beforeAll(() => setupInput({
+        ...defaultInput,
+        enumAB: TestEnum.A_B,
+        enumABStringUpperCase: "A_B",
+        enumABStringLowerCase: "a_b",
+        enumABStringLowerCaseWithWhitespace: "  a_b  ",
+        enumABStringLowerCaseWithWhitespaceAndDifferentSeparator: "  a-b  ",
+
+        enumABStringLowerCaseWithWhitespaceBitwise: "  a   |    b  ",
+        enumABCStringLowerCaseWithWhitespaceBitwise: "  c   |    b   |   b  |      a ",
+    }));
+    afterAll(() => unsetInput());
+
+    test("returns default value if input cannot be casted to the given enum", () => {
+        const input = getInputAsObject();
+
+        expect(input["object"]).not.toBeUndefined();
+        expect(mapEnumInput(input["object"], TestEnum)).toBeNull();
+
+        expect(input["boolean"]).not.toBeUndefined();
+        expect(mapEnumInput(input["boolean"], TestEnum)).toBeNull();
+
+        expect(input["array"]).not.toBeUndefined();
+        expect(mapEnumInput(input["array"], TestEnum)).toBeNull();
+
+        expect(input["undefined"]).toBeUndefined();
+        expect(mapEnumInput(input["undefined"], TestEnum, TestEnum.A_B_C)).toBe(TestEnum.A_B_C);
+    });
+
+    test("maps values to the given enum", () => {
+        const input = getInputAsObject();
+        expect(mapEnumInput(input["enumab"], TestEnum)).toBe(TestEnum.A_B);
+        expect(mapEnumInput(input["enumabstringuppercase"], TestEnum)).toBe(TestEnum.A_B);
+        expect(mapEnumInput(input["enumabstringlowercase"], TestEnum)).toBe(TestEnum.A_B);
+        expect(mapEnumInput(input["enumabstringlowercasewithwhitespace"], TestEnum)).toBe(TestEnum.A_B);
+        expect(mapEnumInput(input["enumabstringlowercasewithwhitespaceanddifferentseparator"], TestEnum)).toBe(TestEnum.A_B);
+        expect(mapEnumInput(input["enumabstringlowercasewithwhitespacebitwise"], TestEnum)).toBe(TestEnum.A_B);
+        expect(mapEnumInput(input["enumabcstringlowercasewithwhitespacebitwise"], TestEnum, TestEnum.A_B)).toBe(TestEnum.A_B_C);
     });
 });
