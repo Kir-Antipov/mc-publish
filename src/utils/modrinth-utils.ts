@@ -1,5 +1,5 @@
 import FormData from "form-data";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 import { File } from "./file";
 import SoftError from "./soft-error";
 
@@ -14,7 +14,7 @@ interface ModrinthVersion {
     id: string;
 }
 
-export async function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<ModrinthVersion> {
+export function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<ModrinthVersion> {
     data = {
         featured: true,
         dependencies: [],
@@ -31,7 +31,7 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
         form.append(i.toString(), file.getStream(), file.name);
     }
 
-    const response = await fetch(`${baseUrl}/version`, {
+    const response = fetch(`${baseUrl}/version`, {
         method: "POST",
         headers: form.getHeaders({
             Authorization: token,
@@ -39,28 +39,37 @@ export async function createVersion(modId: string, data: Record<string, any>, fi
         body: <any>form
     });
 
-    if (!response.ok) {
-        let errorText = response.statusText;
-        try {
-            errorText += `, ${await response.text()}`;
-        } catch { }
-        const isServerError = response.status >= 500;
-        throw new SoftError(isServerError, `Failed to upload file: ${response.status} (${errorText})`);
-    }
+    return processResponse(response, undefined, (x, msg) => new SoftError(x, `Failed to upload file: ${msg}`));
+}
 
+export function getProject(idOrSlug: string): Promise<ModrinthProject> {
+    return processResponse(fetch(`${baseUrl}/project/${idOrSlug}`), { 404: () => <ModrinthProject>null });
     return await response.json();
 }
 
-export async function getProject(idOrSlug: string): Promise<ModrinthProject> {
-    const response = await fetch(`${baseUrl}/project/${idOrSlug}`);
+async function processResponse<T>(response: Response | Promise<Response>, mappers?: Record<number, (response: Response) => T | Promise<T>>, errorFactory?: (isServerError: boolean, message: string, response: Response) => Error | Promise<Error>): Promise<T | never> {
+    response = await response;
     if (response.ok) {
-        return await response.json();
+        return <T>await response.json();
     }
 
-    if (response.status === 404) {
-        return null;
+    const mapper = mappers?.[response.status];
+    if (mapper) {
+        const mapped = await mapper(response);
+        if (mapped !== undefined) {
+            return mapped;
+        }
     }
 
+    let errorText = response.statusText;
+    try {
+        errorText += `, ${await response.text()}`;
+    } catch { }
+    errorText = `${response.status} (${errorText})`;
     const isServerError = response.status >= 500;
-    throw new SoftError(isServerError, `${response.status} (${response.statusText})`);
+    if (errorFactory) {
+        throw errorFactory(isServerError, errorText, response);
+    } else {
+        throw new SoftError(isServerError, errorText);
+    }
 }
