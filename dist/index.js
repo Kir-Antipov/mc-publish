@@ -22545,180 +22545,11 @@ var PublisherTarget;
 })(PublisherTarget || (PublisherTarget = {}));
 /* harmony default export */ const publisher_target = (PublisherTarget);
 
-// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2186);
-;// CONCATENATED MODULE: external "console"
-const external_console_namespaceObject = require("console");
-;// CONCATENATED MODULE: ./src/utils/logger-utils.ts
-
-
-function getDefaultLogger() {
-    return {
-        fatal: core.setFailed,
-        error: core.warning,
-        warn: core.warning,
-        info: core.info,
-        debug: core.debug
-    };
-}
-function getConsoleLogger() {
-    return {
-        fatal: console.error,
-        error: console.error,
-        warn: console.warn,
-        info: console.info,
-        debug: console.debug
-    };
-}
-function getEmptyLogger() {
-    return {
-        fatal: () => { },
-        error: () => { },
-        warn: () => { },
-        info: () => { },
-        debug: () => { }
-    };
-}
-
-;// CONCATENATED MODULE: ./src/publishing/publisher.ts
-
-class Publisher {
-    constructor(logger) {
-        this.logger = logger || getEmptyLogger();
-    }
-    validateOptions(options) {
-        if (!options || typeof options !== "object") {
-            throw new Error(`Expected options to be an object, got ${options ? typeof options : options}`);
-        }
-    }
-}
-
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
-;// CONCATENATED MODULE: ./src/publishing/github/github-publisher.ts
-var github_publisher_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-class GitHubPublisher extends Publisher {
-    get target() {
-        return publisher_target.GitHub;
-    }
-    publish(files, options) {
-        var _a;
-        return github_publisher_awaiter(this, void 0, void 0, function* () {
-            this.validateOptions(options);
-            let releaseId = 0;
-            const repo = github.context.repo;
-            const octokit = github.getOctokit(options.token);
-            if (options.tag) {
-                const response = yield octokit.rest.repos.getReleaseByTag(Object.assign(Object.assign({}, repo), { tag: options.tag }));
-                if (response.status >= 200 && response.status < 300) {
-                    releaseId = response.data.id;
-                }
-            }
-            else {
-                releaseId = (_a = github.context.payload.release) === null || _a === void 0 ? void 0 : _a.id;
-            }
-            if (!releaseId) {
-                throw new Error(`Couldn't find release #${options.tag || releaseId}`);
-            }
-            const existingAssets = (yield octokit.rest.repos.listReleaseAssets(Object.assign(Object.assign({}, repo), { release_id: releaseId }))).data;
-            for (const file of files) {
-                const existingAsset = existingAssets.find(x => x.name === file.name || x.name === file.path);
-                if (existingAsset) {
-                    yield octokit.rest.repos.deleteReleaseAsset(Object.assign(Object.assign({}, repo), { asset_id: existingAsset.id }));
-                }
-                yield octokit.rest.repos.uploadReleaseAsset({
-                    owner: repo.owner,
-                    repo: repo.repo,
-                    release_id: releaseId,
-                    name: file.name,
-                    data: yield file.getBuffer()
-                });
-            }
-        });
-    }
-}
-
-// EXTERNAL MODULE: ./node_modules/form-data/lib/form_data.js
-var form_data = __nccwpck_require__(4334);
-var form_data_default = /*#__PURE__*/__nccwpck_require__.n(form_data);
 // EXTERNAL MODULE: ./node_modules/node-fetch/lib/index.js
 var lib = __nccwpck_require__(467);
 var lib_default = /*#__PURE__*/__nccwpck_require__.n(lib);
-;// CONCATENATED MODULE: ./src/utils/soft-error.ts
-class SoftError extends Error {
-    constructor(soft, message) {
-        super(message);
-        this.soft = soft;
-    }
-}
-
-;// CONCATENATED MODULE: ./src/utils/modrinth-utils.ts
-var modrinth_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-
-const baseUrl = "https://api.modrinth.com/v2";
-function createVersion(modId, data, files, token) {
-    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
-        data = Object.assign(Object.assign({ featured: true, dependencies: [] }, data), { project_id: modId, primary_file: files.length ? "0" : undefined, file_parts: files.map((_, i) => i.toString()) });
-        const form = new (form_data_default())();
-        form.append("data", JSON.stringify(data));
-        for (let i = 0; i < files.length; ++i) {
-            const file = files[i];
-            form.append(i.toString(), file.getStream(), file.name);
-        }
-        const response = yield lib_default()(`${baseUrl}/version`, {
-            method: "POST",
-            headers: form.getHeaders({
-                Authorization: token,
-            }),
-            body: form
-        });
-        if (!response.ok) {
-            let errorText = response.statusText;
-            try {
-                errorText += `, ${yield response.text()}`;
-            }
-            catch (_a) { }
-            const isServerError = response.status >= 500;
-            throw new SoftError(isServerError, `Failed to upload file: ${response.status} (${errorText})`);
-        }
-        return yield response.json();
-    });
-}
-function getProject(idOrSlug) {
-    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
-        const response = yield lib_default()(`${baseUrl}/project/${idOrSlug}`);
-        if (response.ok) {
-            return yield response.json();
-        }
-        if (response.status === 404) {
-            return null;
-        }
-        const isServerError = response.status >= 500;
-        throw new SoftError(isServerError, `${response.status} (${response.statusText})`);
-    });
-}
-
 ;// CONCATENATED MODULE: ./src/utils/version.ts
 class Version {
     constructor(major, minor, build) {
@@ -22884,6 +22715,54 @@ function getCompatibleBuilds(build) {
         }
         return versions;
     });
+}
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+;// CONCATENATED MODULE: external "console"
+const external_console_namespaceObject = require("console");
+;// CONCATENATED MODULE: ./src/utils/logger-utils.ts
+
+
+function getDefaultLogger() {
+    return {
+        fatal: core.setFailed,
+        error: core.warning,
+        warn: core.warning,
+        info: core.info,
+        debug: core.debug
+    };
+}
+function getConsoleLogger() {
+    return {
+        fatal: console.error,
+        error: console.error,
+        warn: console.warn,
+        info: console.info,
+        debug: console.debug
+    };
+}
+function getEmptyLogger() {
+    return {
+        fatal: () => { },
+        error: () => { },
+        warn: () => { },
+        info: () => { },
+        debug: () => { }
+    };
+}
+
+;// CONCATENATED MODULE: ./src/publishing/publisher.ts
+
+class Publisher {
+    constructor(logger) {
+        this.logger = logger || getEmptyLogger();
+    }
+    validateOptions(options) {
+        if (!options || typeof options !== "object") {
+            throw new Error(`Expected options to be an object, got ${options ? typeof options : options}`);
+        }
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/utils/game-version-resolver.ts
@@ -23358,19 +23237,25 @@ var ModMetadataReader;
 /* harmony default export */ const mod_metadata_reader = (ModMetadataReader);
 
 ;// CONCATENATED MODULE: ./src/utils/version-utils.ts
+var VersionType;
+(function (VersionType) {
+    VersionType["Alpha"] = "alpha";
+    VersionType["Beta"] = "beta";
+    VersionType["Release"] = "release";
+})(VersionType || (VersionType = {}));
 function parseVersionFromName(name) {
     const match = name.match(/[a-z]{0,2}\d+\.\d+.*/i);
     return match ? match[0] : name;
 }
 function parseVersionTypeFromName(name) {
     if (name.match(/[+-_]alpha/i)) {
-        return "alpha";
+        return VersionType.Alpha;
     }
     else if (name.match(/[+-_]beta/i)) {
-        return "beta";
+        return VersionType.Beta;
     }
     else {
-        return "release";
+        return VersionType.Release;
     }
 }
 
@@ -23423,6 +23308,15 @@ function readChangelog(changelogPath) {
     });
 }
 class ModPublisher extends Publisher {
+    get requiresId() {
+        return true;
+    }
+    get requiresModLoaders() {
+        return true;
+    }
+    get requiresGameVersions() {
+        return true;
+    }
     publish(files, options) {
         var _a, _b;
         return mod_publisher_awaiter(this, void 0, void 0, function* () {
@@ -23437,7 +23331,7 @@ class ModPublisher extends Publisher {
             }
             const metadata = yield mod_metadata_reader.readMetadata(files[0].path);
             const id = options.id || (metadata === null || metadata === void 0 ? void 0 : metadata.getProjectId(this.target));
-            if (!id) {
+            if (!id && this.requiresId) {
                 throw new Error(`Project id is required to publish your assets to ${publisher_target.toString(this.target)}`);
             }
             const filename = external_path_default().parse(files[0].path).name;
@@ -23450,7 +23344,7 @@ class ModPublisher extends Publisher {
                     ? yield readChangelog(options.changelog.file)
                     : (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.body) || "";
             const loaders = processMultilineInput(options.loaders, /\s+/);
-            if (!loaders.length) {
+            if (!loaders.length && this.requiresModLoaders) {
                 if (metadata) {
                     loaders.push(...metadata.loaders);
                 }
@@ -23459,7 +23353,7 @@ class ModPublisher extends Publisher {
                 }
             }
             const gameVersions = processMultilineInput(options.gameVersions);
-            if (!gameVersions.length) {
+            if (!gameVersions.length && this.requiresGameVersions) {
                 const minecraftVersion = (metadata === null || metadata === void 0 ? void 0 : metadata.dependencies.filter(x => x.id === "minecraft").map(x => parseVersionName(x.version))[0]) ||
                     parseVersionNameFromFileVersion(version);
                 if (minecraftVersion) {
@@ -23475,9 +23369,342 @@ class ModPublisher extends Publisher {
                 ? processDependenciesInput(options.dependencies)
                 : (metadata === null || metadata === void 0 ? void 0 : metadata.dependencies) || [];
             const uniqueDependencies = dependencies.filter((x, i, self) => !x.ignore && self.findIndex(y => y.id === x.id && y.kind === x.kind) === i);
-            yield this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies);
+            yield this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, options);
         });
     }
+}
+
+;// CONCATENATED MODULE: external "process"
+const external_process_namespaceObject = require("process");
+var external_process_default = /*#__PURE__*/__nccwpck_require__.n(external_process_namespaceObject);
+;// CONCATENATED MODULE: ./src/utils/input-utils.ts
+
+const undefinedValue = "${undefined}";
+function getInputAsObject() {
+    const inputs = Object.entries((external_process_default()).env).filter(([key, _]) => key.startsWith("INPUT_"));
+    const input = {};
+    for (const [name, value] of inputs) {
+        const words = name.substring(6).toLowerCase().split(/[\W_]/).filter(x => x);
+        init(input, words, value);
+    }
+    return input;
+}
+function init(root, path, value) {
+    if (value === undefinedValue) {
+        return;
+    }
+    const name = path.reduce((a, b, i) => a + (i === 0 ? b : (b.substring(0, 1).toUpperCase() + b.substring(1))), "");
+    root[name] = value;
+    if (path.length === 1) {
+        return;
+    }
+    const innerPath = path[0];
+    const inner = root[innerPath] ? root[innerPath] : (root[innerPath] = {});
+    if (typeof inner === "object") {
+        init(inner, path.slice(1), value);
+    }
+}
+function mapStringInput(value, defaultValue = "") {
+    return mapInput(value, defaultValue, null, "string");
+}
+function mapObjectInput(value, defaultValue = null) {
+    return mapInput(value, defaultValue, null, "object");
+}
+function mapNumberInput(value, defaultValue = 0) {
+    return mapInput(value, defaultValue, {
+        string: x => {
+            const num = +x;
+            return isNaN(num) ? undefined : num;
+        }
+    }, "number");
+}
+function mapBooleanInput(value, defaultValue = false) {
+    return mapInput(value, defaultValue, {
+        string: x => {
+            const strValue = x.trim().toLowerCase();
+            return (strValue === "true" ? true :
+                strValue === "false" ? false :
+                    undefined);
+        }
+    }, "boolean");
+}
+function findEnumValueByName(enumClass, name) {
+    if (typeof enumClass[+name] === "string") {
+        return +name;
+    }
+    if (enumClass[name] !== undefined) {
+        return enumClass[name];
+    }
+    const entries = Object.entries(enumClass);
+    for (const [key, value] of entries) {
+        if (key.localeCompare(name, undefined, { sensitivity: "base" }) === 0) {
+            return value;
+        }
+    }
+    for (const [key, value] of entries) {
+        if (key.trim().replace(/[-_]/g, "").localeCompare(name.trim().replace(/[-_]/g, ""), undefined, { sensitivity: "base" }) === 0) {
+            return value;
+        }
+    }
+    return undefined;
+}
+function mapEnumInput(value, enumClass, defaultValue = null) {
+    return mapInput(value, defaultValue, {
+        string: (x) => {
+            let result = undefined;
+            let i = 0;
+            while (i < x.length) {
+                let separatorIndex = x.indexOf("|", i);
+                if (separatorIndex === -1) {
+                    separatorIndex = x.length;
+                }
+                const currentValue = findEnumValueByName(enumClass, x.substring(i, separatorIndex));
+                if (result === undefined || currentValue !== undefined && typeof currentValue !== "number") {
+                    result = currentValue;
+                }
+                else {
+                    result = (result | currentValue);
+                }
+                i = separatorIndex + 1;
+            }
+            return result;
+        }
+    }, "number");
+}
+function mapInput(value, fallbackValue, mappers, valueType) {
+    if (value === undefinedValue || value === undefined || value === null) {
+        return fallbackValue;
+    }
+    valueType !== null && valueType !== void 0 ? valueType : (valueType = typeof fallbackValue);
+    if (typeof value === valueType) {
+        return value;
+    }
+    const mapper = mappers === null || mappers === void 0 ? void 0 : mappers[typeof value];
+    if (mapper) {
+        const mappedValue = mapper(value);
+        if (typeof mappedValue === valueType) {
+            return mappedValue;
+        }
+    }
+    return fallbackValue;
+}
+
+;// CONCATENATED MODULE: ./src/publishing/github/github-publisher.ts
+var github_publisher_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+
+function getEnvironmentTag() {
+    var _a;
+    if ((_a = external_process_namespaceObject.env.GITHUB_REF) === null || _a === void 0 ? void 0 : _a.startsWith("refs/tags/")) {
+        return external_process_namespaceObject.env.GITHUB_REF.substring(10);
+    }
+    return undefined;
+}
+class GitHubPublisher extends ModPublisher {
+    get target() {
+        return publisher_target.GitHub;
+    }
+    get requiresId() {
+        return false;
+    }
+    get requiresGameVersions() {
+        return false;
+    }
+    get requiresModLoaders() {
+        return false;
+    }
+    publishMod(_id, token, name, version, channel, _loaders, _gameVersions, _java, changelog, files, _dependencies, options) {
+        var _a, _b;
+        return github_publisher_awaiter(this, void 0, void 0, function* () {
+            const repo = github.context.repo;
+            const octokit = github.getOctokit(token);
+            let tag = mapStringInput(options.tag, null);
+            let releaseId = tag ? yield this.getReleaseIdByTag(tag, token) : (_a = github.context.payload.release) === null || _a === void 0 ? void 0 : _a.id;
+            const generated = !releaseId;
+            if (!releaseId && (tag !== null && tag !== void 0 ? tag : (tag = (_b = getEnvironmentTag()) !== null && _b !== void 0 ? _b : version))) {
+                const generateChangelog = mapBooleanInput(options.generateChangelog, !changelog);
+                const draft = mapBooleanInput(options.draft, false);
+                const prerelease = mapBooleanInput(options.prerelease, channel !== VersionType.Release);
+                const commitish = mapStringInput(options.commitish, null);
+                const discussion = mapStringInput(options.discussion, null);
+                releaseId = yield this.createRelease(tag, name, changelog, generateChangelog, draft, prerelease, commitish, discussion, token);
+            }
+            if (!releaseId) {
+                throw new Error(`Cannot find or create release #${options.tag || releaseId}`);
+            }
+            const existingAssets = generated ? [] : (yield octokit.rest.repos.listReleaseAssets(Object.assign(Object.assign({}, repo), { release_id: releaseId }))).data;
+            for (const file of files) {
+                const existingAsset = existingAssets.find(x => x.name === file.name || x.name === file.path);
+                if (existingAsset) {
+                    yield octokit.rest.repos.deleteReleaseAsset(Object.assign(Object.assign({}, repo), { asset_id: existingAsset.id }));
+                }
+                yield octokit.rest.repos.uploadReleaseAsset({
+                    owner: repo.owner,
+                    repo: repo.repo,
+                    release_id: releaseId,
+                    name: file.name,
+                    data: yield file.getBuffer()
+                });
+            }
+        });
+    }
+    getReleaseIdByTag(tag, token) {
+        return github_publisher_awaiter(this, void 0, void 0, function* () {
+            const octokit = github.getOctokit(token);
+            try {
+                const response = yield octokit.rest.repos.getReleaseByTag({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    tag
+                });
+                return response.status >= 200 && response.status < 300 ? response.data.id : undefined;
+            }
+            catch (_a) {
+                return undefined;
+            }
+        });
+    }
+    createRelease(tag, name, body, generateReleaseNotes, draft, prerelease, targetCommitish, discussionCategoryName, token) {
+        return github_publisher_awaiter(this, void 0, void 0, function* () {
+            const octokit = github.getOctokit(token);
+            try {
+                const response = yield octokit.rest.repos.createRelease({
+                    tag_name: tag,
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    target_commitish: targetCommitish || undefined,
+                    name: name || undefined,
+                    body: body || undefined,
+                    draft,
+                    prerelease,
+                    discussion_category_name: discussionCategoryName || undefined,
+                    generate_release_notes: generateReleaseNotes,
+                });
+                return response.status >= 200 && response.status < 300 ? response.data.id : undefined;
+            }
+            catch (_a) {
+                return undefined;
+            }
+        });
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/form-data/lib/form_data.js
+var form_data = __nccwpck_require__(4334);
+var form_data_default = /*#__PURE__*/__nccwpck_require__.n(form_data);
+// EXTERNAL MODULE: external "url"
+var external_url_ = __nccwpck_require__(7310);
+;// CONCATENATED MODULE: ./src/utils/soft-error.ts
+class SoftError extends Error {
+    constructor(soft, message) {
+        super(message);
+        this.soft = soft;
+    }
+}
+
+;// CONCATENATED MODULE: ./src/utils/modrinth-utils.ts
+var modrinth_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+const baseUrl = "https://api.modrinth.com/v2";
+function createVersion(modId, data, files, token) {
+    data = Object.assign(Object.assign({ featured: true, dependencies: [] }, data), { project_id: modId, primary_file: files.length ? "0" : undefined, file_parts: files.map((_, i) => i.toString()) });
+    const form = new (form_data_default())();
+    form.append("data", JSON.stringify(data));
+    for (let i = 0; i < files.length; ++i) {
+        const file = files[i];
+        form.append(i.toString(), file.getStream(), file.name);
+    }
+    const response = lib_default()(`${baseUrl}/version`, {
+        method: "POST",
+        headers: form.getHeaders({
+            Authorization: token,
+        }),
+        body: form
+    });
+    return processResponse(response, undefined, (x, msg) => new SoftError(x, `Failed to upload file: ${msg}`));
+}
+function getProject(idOrSlug) {
+    return processResponse(lib_default()(`${baseUrl}/project/${idOrSlug}`), { 404: () => null });
+}
+function modrinth_utils_getVersions(idOrSlug, loaders, gameVersions, featured, token) {
+    const urlParams = new external_url_.URLSearchParams();
+    if (loaders) {
+        urlParams.append("loaders", JSON.stringify(loaders));
+    }
+    if (gameVersions) {
+        urlParams.append("game_versions", JSON.stringify(gameVersions));
+    }
+    if (typeof featured === "boolean") {
+        urlParams.append("featured", String(featured));
+    }
+    const response = lib_default()(`${baseUrl}/project/${idOrSlug}/version?${urlParams}`, token ? {
+        headers: { Authorization: token }
+    } : undefined);
+    return processResponse(response, { 404: () => [] });
+}
+function modifyVersion(id, version, token) {
+    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
+        const response = yield lib_default()(`${baseUrl}/version/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": token,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(version)
+        });
+        return response.ok;
+    });
+}
+function processResponse(response, mappers, errorFactory) {
+    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
+        response = yield response;
+        if (response.ok) {
+            return yield response.json();
+        }
+        const mapper = mappers === null || mappers === void 0 ? void 0 : mappers[response.status];
+        if (mapper) {
+            const mapped = yield mapper(response);
+            if (mapped !== undefined) {
+                return mapped;
+            }
+        }
+        let errorText = response.statusText;
+        try {
+            errorText += `, ${yield response.text()}`;
+        }
+        catch (_a) { }
+        errorText = `${response.status} (${errorText})`;
+        const isServerError = response.status >= 500;
+        if (errorFactory) {
+            throw errorFactory(isServerError, errorText, response);
+        }
+        else {
+            throw new SoftError(isServerError, errorText);
+        }
+    });
 }
 
 ;// CONCATENATED MODULE: ./src/publishing/modrinth/modrinth-publisher.ts
@@ -23494,6 +23721,23 @@ var modrinth_publisher_awaiter = (undefined && undefined.__awaiter) || function 
 
 
 
+
+var UnfeatureMode;
+(function (UnfeatureMode) {
+    UnfeatureMode[UnfeatureMode["None"] = 0] = "None";
+    UnfeatureMode[UnfeatureMode["VersionSubset"] = 1] = "VersionSubset";
+    UnfeatureMode[UnfeatureMode["VersionIntersection"] = 2] = "VersionIntersection";
+    UnfeatureMode[UnfeatureMode["VersionAny"] = 4] = "VersionAny";
+    UnfeatureMode[UnfeatureMode["LoaderSubset"] = 8] = "LoaderSubset";
+    UnfeatureMode[UnfeatureMode["LoaderIntersection"] = 16] = "LoaderIntersection";
+    UnfeatureMode[UnfeatureMode["LoaderAny"] = 32] = "LoaderAny";
+    UnfeatureMode[UnfeatureMode["Subset"] = 9] = "Subset";
+    UnfeatureMode[UnfeatureMode["Intersection"] = 18] = "Intersection";
+    UnfeatureMode[UnfeatureMode["Any"] = 36] = "Any";
+})(UnfeatureMode || (UnfeatureMode = {}));
+function hasFlag(unfeatureMode, flag) {
+    return (unfeatureMode & flag) === flag;
+}
 const modrinthDependencyKinds = new Map([
     [dependency_kind.Depends, "required"],
     [dependency_kind.Recommends, "optional"],
@@ -23505,8 +23749,10 @@ class ModrinthPublisher extends ModPublisher {
     get target() {
         return publisher_target.Modrinth;
     }
-    publishMod(id, token, name, version, channel, loaders, gameVersions, _java, changelog, files, dependencies) {
+    publishMod(id, token, name, version, channel, loaders, gameVersions, _java, changelog, files, dependencies, options) {
         return modrinth_publisher_awaiter(this, void 0, void 0, function* () {
+            const featured = mapBooleanInput(options.featured, true);
+            const unfeatureMode = mapEnumInput(options.unfeatureMode, UnfeatureMode, featured ? UnfeatureMode.Subset : UnfeatureMode.None);
             const projects = (yield Promise.all(dependencies
                 .filter((x, _, self) => (x.kind !== dependency_kind.Suggests && x.kind !== dependency_kind.Includes) || !self.find(y => y.id === x.id && y.kind !== dependency_kind.Suggests && y.kind !== dependency_kind.Includes))
                 .map((x) => modrinth_publisher_awaiter(this, void 0, void 0, function* () {
@@ -23517,6 +23763,9 @@ class ModrinthPublisher extends ModPublisher {
                 });
             }))))
                 .filter(x => x.project_id && x.dependency_type);
+            if (unfeatureMode !== UnfeatureMode.None) {
+                yield this.unfeatureOlderVersions(id, token, unfeatureMode, loaders, gameVersions);
+            }
             const data = {
                 name: name || version,
                 version_number: version,
@@ -23524,9 +23773,41 @@ class ModrinthPublisher extends ModPublisher {
                 game_versions: gameVersions,
                 version_type: channel,
                 loaders,
+                featured,
                 dependencies: projects
             };
             yield createVersion(id, data, files, token);
+        });
+    }
+    unfeatureOlderVersions(id, token, unfeatureMode, loaders, gameVersions) {
+        return modrinth_publisher_awaiter(this, void 0, void 0, function* () {
+            this.logger.info("Unfeaturing older Modrinth versions...");
+            const start = new Date();
+            const unfeaturedVersions = [];
+            const versionSubset = hasFlag(unfeatureMode, UnfeatureMode.VersionSubset);
+            const loaderSubset = hasFlag(unfeatureMode, UnfeatureMode.LoaderSubset);
+            const olderVersions = yield modrinth_utils_getVersions(id, hasFlag(unfeatureMode, UnfeatureMode.LoaderAny) ? null : loaders, hasFlag(unfeatureMode, UnfeatureMode.VersionAny) ? null : gameVersions, true, token);
+            for (const olderVersion of olderVersions) {
+                if (loaderSubset && !olderVersion.loaders.every(x => loaders.includes(x))) {
+                    continue;
+                }
+                if (versionSubset && !olderVersion.game_versions.every(x => gameVersions.includes(x))) {
+                    continue;
+                }
+                if (yield modifyVersion(olderVersion.id, { featured: false }, token)) {
+                    unfeaturedVersions.push(olderVersion.id);
+                }
+                else {
+                    this.logger.warn(`Cannot unfeature version ${olderVersion.id}`);
+                }
+            }
+            if (unfeaturedVersions.length) {
+                const end = new Date();
+                this.logger.info(`Successfully unfeatured versions ${unfeaturedVersions.join(", ")} (in ${end.getTime() - start.getTime()} ms)`);
+            }
+            else {
+                this.logger.info("No versions to unfeature were found");
+            }
         });
     }
 }
@@ -23772,37 +24053,6 @@ class PublisherFactory {
     }
 }
 
-;// CONCATENATED MODULE: external "process"
-const external_process_namespaceObject = require("process");
-var external_process_default = /*#__PURE__*/__nccwpck_require__.n(external_process_namespaceObject);
-;// CONCATENATED MODULE: ./src/utils/input-utils.ts
-
-const undefinedValue = "${undefined}";
-function getInputAsObject() {
-    const inputs = Object.entries((external_process_default()).env).filter(([key, _]) => key.startsWith("INPUT_"));
-    const input = {};
-    for (const [name, value] of inputs) {
-        const words = name.substring(6).toLowerCase().split(/[\W_]/).filter(x => x);
-        init(input, words, value);
-    }
-    return input;
-}
-function init(root, path, value) {
-    if (value === undefinedValue) {
-        return;
-    }
-    const name = path.reduce((a, b, i) => a + (i === 0 ? b : (b.substring(0, 1).toUpperCase() + b.substring(1))), "");
-    root[name] = value;
-    if (path.length === 1) {
-        return;
-    }
-    const innerPath = path[0];
-    const inner = root[innerPath] ? root[innerPath] : (root[innerPath] = {});
-    if (typeof inner === "object") {
-        init(inner, path.slice(1), value);
-    }
-}
-
 ;// CONCATENATED MODULE: ./src/utils/sleep.ts
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -23872,8 +24122,8 @@ function main() {
             const options = Object.assign(Object.assign({}, commonOptions), publisherOptions);
             const fileSelector = options.files && (typeof (options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
             const files = yield getRequiredFiles(fileSelector);
-            const retryAttempts = +((_a = options.retry) === null || _a === void 0 ? void 0 : _a["attempts"]) || 0;
-            const retryDelay = +((_b = options.retry) === null || _b === void 0 ? void 0 : _b["delay"]) || 0;
+            const retryAttempts = mapNumberInput((_a = options.retry) === null || _a === void 0 ? void 0 : _a["attempts"]);
+            const retryDelay = mapNumberInput((_b = options.retry) === null || _b === void 0 ? void 0 : _b["delay"]);
             const publisher = publisherFactory.create(target, logger);
             logger.info(`Publishing assets to ${targetName}...`);
             const start = new Date();
