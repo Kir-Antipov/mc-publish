@@ -63,7 +63,7 @@ export function getVersions(idOrSlug: string, loaders?: string[], gameVersions?:
     }
 
     const response = fetch(`${baseUrl}/project/${idOrSlug}/version?${urlParams}`, token ? {
-        headers: { "Authorization": token }
+        headers: { Authorization: token }
     } : undefined);
     return processResponse(response, { 404: () => <ModrinthVersion[]>[] });
 }
