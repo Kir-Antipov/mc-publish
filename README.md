@@ -16,6 +16,8 @@ jobs:
       - uses: Kir-Antipov/mc-publish@v3.0
         with:
           modrinth-id: AANobbMI
+          modrinth-featured: true
+          modrinth-unfeature-mode: subset
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           curseforge-id: 394468
@@ -91,6 +93,7 @@ jobs:
 | [modrinth-id](#user-content-modrinth-id) | The ID of the Modrinth project to upload to | A value specified in the config file | `AANobbMI` |
 | [modrinth-token](#user-content-modrinth-token) | A valid token for the Modrinth API | ❌ | `${{ secrets.MODRINTH_TOKEN }}` |
 | [modrinth-featured](#user-content-modrinth-featured) | Indicates whether the version should be featured on Modrinth or not | `true` | `true` <br> `false` |
+| [modrinth-unfeature-mode](#user-content-modrinth-unfeature-mode) | Determines the way automatic unfeaturing of older Modrinth versions works | If [`modrinth-featured`](#user-content-modrinth-featured) is set to true, `subset`; otherwise, `none` | `none` <br> `subset` <br> `intersection` <br> `any` |
 | [curseforge-id](#user-content-curseforge-id) | The ID of the CurseForge project to upload to | A value specified in the config file | `394468` |
 | [curseforge-token](#user-content-curseforge-token) | A valid token for the CurseForge API | ❌ | `${{ secrets.CURSEFORGE_TOKEN }}` |
 | [github-tag](#user-content-github-tag) | The tag name of the release to upload assets to | A tag of the release that triggered the action | `mc1.17.1-0.3.2` |
@@ -226,6 +229,30 @@ Indicates whether the version should be featured on Modrinth or not.
 ```yaml
 modrinth-featured: true
 ```
+
+#### modrinth-unfeature-mode
+
+Determines the way automatic unfeaturing of older Modrinth versions works. Default value is `subset`, if [`modrinth-featured`](#user-content-modrinth-featured) is set to true; otherwise, `none`.
+
+```yaml
+modrinth-unfeature-mode: version-intersection | loader-subset
+```
+
+Available presets:
+
+ - `none` - no Modrinth versions will be unfeatured
+ - `subset` - only those Modrinth versions which are considered a subset of the new one *(i.e., new release suports all of the version's mod loaders **and** game versions)* will be unfeatured
+ - `intersection` - only those Modrinth versions which intersects with the new one *(i.e., support at least one of the mod loaders and one of the game versions supported by the new release)* will be unfeatured
+ - `any` - all Modrinth versions will be unfeatured
+
+ If none of the given presets suits your needs, you can construct a new one from the following values via bitwise `OR`, like so - `version-intersection | loaders-subset`:
+
+ - `version-subset`
+ - `version-intersection`
+ - `version-any`
+ - `loader-subset`
+ - `loader-intersection`
+ - `loader-any`
 
 #### curseforge-id
 

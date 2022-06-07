@@ -1,5 +1,6 @@
 import FormData from "form-data";
 import fetch, { Response } from "node-fetch";
+import { URLSearchParams } from "url";
 import { File } from "./file";
 import SoftError from "./soft-error";
 
@@ -12,6 +13,9 @@ interface ModrinthProject {
 
 interface ModrinthVersion {
     id: string;
+    loaders: string[];
+    game_versions: string[];
+    featured: boolean;
 }
 
 export function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<ModrinthVersion> {
@@ -44,7 +48,37 @@ export function createVersion(modId: string, data: Record<string, any>, files: F
 
 export function getProject(idOrSlug: string): Promise<ModrinthProject> {
     return processResponse(fetch(`${baseUrl}/project/${idOrSlug}`), { 404: () => <ModrinthProject>null });
-    return await response.json();
+}
+
+export function getVersions(idOrSlug: string, loaders?: string[], gameVersions?: string[], featured?: boolean, token?: string): Promise<ModrinthVersion[]> {
+    const urlParams = new URLSearchParams();
+    if (loaders) {
+        urlParams.append("loaders", JSON.stringify(loaders));
+    }
+    if (gameVersions) {
+        urlParams.append("game_versions", JSON.stringify(gameVersions));
+    }
+    if (typeof featured === "boolean") {
+        urlParams.append("featured", String(featured));
+    }
+
+    const response = fetch(`${baseUrl}/project/${idOrSlug}/version?${urlParams}`, token ? {
+        headers: { "Authorization": token }
+    } : undefined);
+    return processResponse(response, { 404: () => <ModrinthVersion[]>[] });
+}
+
+export async function modifyVersion(id: string, version: Partial<ModrinthVersion>, token: string): Promise<boolean> {
+    const response = await fetch(`${baseUrl}/version/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Authorization": token,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(version)
+    });
+
+    return response.ok;
 }
 
 async function processResponse<T>(response: Response | Promise<Response>, mappers?: Record<number, (response: Response) => T | Promise<T>>, errorFactory?: (isServerError: boolean, message: string, response: Response) => Error | Promise<Error>): Promise<T | never> {

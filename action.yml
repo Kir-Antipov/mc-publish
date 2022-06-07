@@ -17,6 +17,10 @@ inputs:
     description: Indicates whether the version should be featured on Modrinth or not
     required: false
     default: ${undefined}
+  modrinth-unfeature-mode: Determines the way automatic unfeaturing of older Modrinth versions works
+    description:
+    required: false
+    default: ${undefined}
 
   curseforge-id:
     description: The ID of the CurseForge project to upload to
