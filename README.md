@@ -24,6 +24,11 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           github-tag: mc1.17.1-0.3.2
+          github-generate-changelog: true
+          github-draft: false
+          github-prerelease: false
+          github-commitish: dev
+          github-discussion: Announcements
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           files-primary: build/libs/!(*-@(dev|sources)).jar
@@ -96,7 +101,12 @@ jobs:
 | [modrinth-unfeature-mode](#user-content-modrinth-unfeature-mode) | Determines the way automatic unfeaturing of older Modrinth versions works | If [`modrinth-featured`](#user-content-modrinth-featured) is set to true, `subset`; otherwise, `none` | `none` <br> `subset` <br> `intersection` <br> `any` |
 | [curseforge-id](#user-content-curseforge-id) | The ID of the CurseForge project to upload to | A value specified in the config file | `394468` |
 | [curseforge-token](#user-content-curseforge-token) | A valid token for the CurseForge API | ❌ | `${{ secrets.CURSEFORGE_TOKEN }}` |
-| [github-tag](#user-content-github-tag) | The tag name of the release to upload assets to | A tag of the release that triggered the action | `mc1.17.1-0.3.2` |
+| [github-tag](#user-content-github-tag) | The tag name of the release to upload assets to | A tag of the release that triggered the action, if any; otherwise it will be inferred from the `GITHUB_REF` environment variable | `mc1.17.1-0.3.2` |
+| [github-generate-changelog](#user-content-github-generate-changelog) | Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists | `true`, if [`changelog`](#user-content-changelog) and [`changelog-file`](#user-content-changelog-file) are not provided; otherwise, `false` | `false` <br> `true` |
+| [github-draft](#user-content-github-draft) | `true` to create a draft (unpublished) release, `false` to create a published one. Unused if the GitHub Release already exists | `false` | `false` <br> `true` |
+| [github-prerelease](#user-content-github-prerelease) | `true` to identify the release as a prerelease, `false` to identify the release as a full release. Unused if the GitHub Release already exists | `false`, if [`version-type`](#user-content-version-type) is `release`; otherwise, `true` | `false` <br> `true` |
+| [github-commitish](#user-content-github-commitish) | Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists | The repository's default branch | `dev` <br> `feature/86` |
+| [github-discussion](#user-content-github-discussion) | If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists | ❌ | `Announcements` |
 | [github-token](#user-content-github-token) | A valid token for the GitHub API | ❌ | `${{ secrets.GITHUB_TOKEN }}` |
 | [files](#user-content-files) | A glob of the file(s) to upload | ❌ | `build/libs/*.jar` |
 | [files-primary](#user-content-files-primary) | A glob of the primary files to upload | `build/libs/!(*-@(dev\|sources)).jar` | `build/libs/!(*-@(dev\|sources)).jar` |
@@ -364,10 +374,50 @@ curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
 #### github-tag
 
-The tag name of the release to upload assets to. If no value is provided, a tag of the release that triggered the action will be used.
+The tag name of the release to upload assets to. If no value is provided, a tag of the release that triggered the action will be used, if any; otherwise it will be inferred from the `GITHUB_REF` environment variable.
 
 ```yaml
 github-tag: mc1.17.1-0.3.2
+```
+
+#### github-generate-changelog
+
+Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists. Default value is `true`, if [`changelog`](#user-content-changelog) and [`changelog-file`](#user-content-changelog-file) are not provided; otherwise, `false`.
+
+```yaml
+github-generate-changelog: false
+```
+
+#### github-draft
+
+`true` to create a draft (unpublished) release, `false` to create a published one. Unused if the GitHub Release already exists. Default value is `false`.
+
+```yaml
+github-draft: false
+```
+
+#### github-prerelease
+
+`true` to identify the release as a prerelease, `false` to identify the release as a full release. Unused if the GitHub Release already exists. Default value is `false`, if [`version-type`](#user-content-version-type) is `release`; otherwise, `true`.
+
+```yaml
+github-prerelease: true
+```
+
+#### github-commitish
+
+Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default value is the repository's default branch.
+
+```yaml
+github-commitish: 347040cd637363613e56a6b333f09eaa5be3a196
+```
+
+#### github-discussion
+
+If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists.
+
+```yaml
+github-discussion: Announcements
 ```
 
 #### github-token

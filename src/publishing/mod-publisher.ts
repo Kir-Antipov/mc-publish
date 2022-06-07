@@ -54,6 +54,18 @@ async function readChangelog(changelogPath: string): Promise<string | never> {
 }
 
 export default abstract class ModPublisher extends Publisher<ModPublisherOptions> {
+    protected get requiresId(): boolean {
+        return true;
+    }
+
+    protected get requiresModLoaders(): boolean {
+        return true;
+    }
+
+    protected get requiresGameVersions(): boolean {
+        return true;
+    }
+
     public async publish(files: File[], options: ModPublisherOptions): Promise<void> {
         this.validateOptions(options);
         const releaseInfo = <any>context.payload.release;
@@ -70,7 +82,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         const metadata = await ModMetadataReader.readMetadata(files[0].path);
 
         const id = options.id || metadata?.getProjectId(this.target);
-        if (!id) {
+        if (!id && this.requiresId) {
             throw new Error(`Project id is required to publish your assets to ${PublisherTarget.toString(this.target)}`);
         }
 
@@ -85,7 +97,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
                 : <string>releaseInfo?.body || "";
 
         const loaders = processMultilineInput(options.loaders, /\s+/);
-        if (!loaders.length) {
+        if (!loaders.length && this.requiresModLoaders) {
             if (metadata) {
                 loaders.push(...metadata.loaders);
             }
@@ -95,7 +107,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         }
 
         const gameVersions = processMultilineInput(options.gameVersions);
-        if (!gameVersions.length) {
+        if (!gameVersions.length && this.requiresGameVersions) {
             const minecraftVersion =
                 metadata?.dependencies.filter(x => x.id === "minecraft").map(x => parseVersionName(x.version))[0] ||
                 parseVersionNameFromFileVersion(version);

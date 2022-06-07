@@ -11,7 +11,7 @@
     ],
     "rules": {
       "arrow-body-style": ["error", "as-needed"],
-      "complexity": ["warn", { "max": 30 }],
+      "complexity": ["warn", { "max": 50 }],
       "curly": ["error", "multi-line", "consistent"],
       "eqeqeq": ["error", "smart"],
       "no-constant-condition": ["error", { "checkLoops": false }],
