@@ -137,7 +137,7 @@ Can be automatically retrieved from the config file of your mod:
 - `fabric.mod.json` (Fabric)
 
   - Custom `mc-publish` field *(recommended)*:
-      ```json
+      ```json5
       {
         // ...
         "custom": {
@@ -149,7 +149,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
-      ```json
+      ```json5
       {
         // ...
         "custom": {
@@ -161,7 +161,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom `projects` field:
-      ```json
+      ```json5
       {
         // ...
         "custom": {
@@ -173,7 +173,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```json5
       {
         // ...
         "projects": {
@@ -205,7 +205,7 @@ Can be automatically retrieved from the config file of your mod:
 - `quilt.mod.json` (Quilt)
 
   - `mc-publish` field *(recommended)*:
-      ```json
+      ```json5
       {
         // ...
         "mc-publish": {
@@ -215,7 +215,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```json5
       {
         // ...
         "projects": {
@@ -277,7 +277,7 @@ Can be automatically retrieved from the config file of your mod:
 - `fabric.mod.json` (Fabric)
 
   - Custom `mc-publish` field *(recommended)*:
-      ```json
+      ```json5
       {
         // ...
         "custom": {
@@ -289,7 +289,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
-      ```json
+      ```json5
       {
         // ...
         "custom": {
@@ -301,7 +301,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom `projects` field:
-      ```json
+      ```json5
       {
         // ...
         "custom": {
@@ -313,7 +313,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```json5
       {
         // ...
         "projects": {
@@ -345,7 +345,7 @@ Can be automatically retrieved from the config file of your mod:
 - `quilt.mod.json` (Quilt)
 
   - `mc-publish` field *(recommended)*:
-      ```json
+      ```json5
       {
         // ...
         "mc-publish": {
@@ -355,7 +355,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```json5
       {
         // ...
         "projects": {
@@ -560,7 +560,7 @@ Available dependency kinds:
 Can be automatically retrieved from the config file of your mod:
 
 - `fabric.mod.json` (Fabric)
-  ```json
+  ```json5
   "depends": {
     "required-dependency": "*"
   },
