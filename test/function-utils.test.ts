@@ -27,7 +27,7 @@ describe("retry", () => {
         expect(await retry({ func: createThrowingFunc(2), maxAttempts: 2, delay: 100 })).toBe(true);
         const end = new Date();
         const duration = end.getTime() - start.getTime();
-        expect(duration >= 100 && duration < 200).toBe(true);
+        expect(duration > 50 && duration < 200).toBe(true);
     });
 
     test("the original error is thrown if retry function didn't succeed", async () => {
@@ -53,7 +53,7 @@ describe("retry (async)", () => {
         expect(await retry({ func: createAsyncThrowingFunc(2), maxAttempts: 2, delay: 100 })).toBe(true);
         const end = new Date();
         const duration = end.getTime() - start.getTime();
-        expect(duration >= 100 && duration < 200).toBe(true);
+        expect(duration > 50 && duration < 200).toBe(true);
     });
 
     test("the original error is thrown if retry function didn't succeed", async () => {
