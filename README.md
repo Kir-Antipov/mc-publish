@@ -124,6 +124,36 @@ jobs:
 | [retry-attempts](#user-content-retry-attempts) | The maximum number of attempts to publish assets | `2` | `2` <br> `10` <br> `-1` |
 | [retry-delay](#user-content-retry-delay) | Time delay between attempts to publish assets (in milliseconds) | `10000` | `10000` <br> `60000` <br> `0` |
 
+Note, that you can use any top-level property *(`name`, `version`, `dependencies`, `files`, etc.)* as a target-specific one. This can help you fine-tune `mc-publish` to suit your tastes and needs. For example, consider the following configuration:
+
+```yaml
+# It is a good idea to share the same primary file among different targets
+files-primary: build/libs/!(*-@(dev\|sources)).jar
+
+modrinth-id: aaaAAAaa
+modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+# Modrinth-specific name for your mod
+modrinth-name: Modrinth Mod
+# Modrinth-specific secondary files
+modrinth-files-secondary: build/libs/*-@(dev\|sources).jar
+# Modrinth-specific dependencies
+# It is possible to use project ids instead of slugs
+modrinth-dependencies: |
+  AANobbMI | depends | *
+  sodium
+
+curseforge-id: 0
+curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+# CurseForge-specific name for your mod
+curseforge-name: CurseForge Mod
+# CurseForge-specific secondary files
+curseforge-files-secondary: ""
+# CurseForge-specific dependencies
+# It is not possible to use project ids instead of slugs
+curseforge-dependencies: |
+  sodium | depends | *
+```
+
 #### modrinth-id
 
 The ID of the Modrinth project to upload to.
