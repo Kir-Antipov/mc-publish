@@ -1,7 +1,7 @@
 enum PublisherTarget {
-    GitHub,
-    Modrinth,
     CurseForge,
+    Modrinth,
+    GitHub,
 }
 
 namespace PublisherTarget {
