@@ -39,6 +39,13 @@ function getDependenciesByKind(config: any, kind: DependencyKind): Dependency[] 
     return dependencies;
 }
 
+function getLoaders(config: any): string[] {
+    if (config[action.name]?.quilt ?? config.custom?.[action.name]?.quilt) {
+        return ["fabric", "quilt"];
+    }
+    return ["fabric"];
+}
+
 export default class FabricModMetadata extends ModConfig {
     public readonly id: string;
     public readonly name: string;
@@ -51,7 +58,7 @@ export default class FabricModMetadata extends ModConfig {
         this.id = String(this.config.id ?? "");
         this.name = String(this.config.name ?? this.id);
         this.version = String(this.config.version ?? "*");
-        this.loaders = ["fabric"];
+        this.loaders = getLoaders(this.config);
         this.dependencies = DependencyKind.getValues().flatMap(x => getDependenciesByKind(this.config, x));
     }
 

@@ -525,7 +525,23 @@ changelog-file: CHANGELOG.md
 
 #### loaders
 
-A list of supported mod loaders. If no value is provided, `fabric` will be used for valid Fabric mods, `forge` will be used for valid Forge mods, and `quilt` will be used for valid Quilt mods.
+A list of supported mod loaders. If no value is provided, `fabric` will be used for valid Fabric mods, `forge` will be used for valid Forge mods, `quilt` will be used for valid Quilt mods, and `fabric, quilt` will be used for Fabric mods that were marked as Quilt-compatible.
+
+Fabric mods can be marked as Quilt-compatible like so:
+
+- `fabric.mod.json`
+  ```json
+  {
+    // ...
+    "custom": {
+      "mc-publish": {
+        "quilt": true
+      }
+    },
+  }
+  ```
+
+<br>
 
 ```yaml
 loaders: |
