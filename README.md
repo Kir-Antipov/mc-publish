@@ -123,6 +123,7 @@ jobs:
 | [java](#user-content-java) | A list of supported Java versions | *empty string* | `Java 8` <br> `Java 1.8` <br> `8` |
 | [retry-attempts](#user-content-retry-attempts) | The maximum number of attempts to publish assets | `2` | `2` <br> `10` <br> `-1` |
 | [retry-delay](#user-content-retry-delay) | Time delay between attempts to publish assets (in milliseconds) | `10000` | `10000` <br> `60000` <br> `0` |
+| [fail-mode](#user-content-fail-mode) | Determines how errors that occur during mod publishing process are handled | `fail` | `fail` <br> `warn` <br> `skip` |
 
 Note, that you can use any top-level property *(`name`, `version`, `dependencies`, `files`, etc.)* as a target-specific one. This can help you fine-tune `mc-publish` to suit your tastes and needs. For example, consider the following configuration:
 
@@ -718,3 +719,17 @@ Time delay between attempts to publish assets (in milliseconds).
 ```yaml
 retry-delay: 10000
 ```
+
+#### fail-mode
+
+Determines how errors that occur during mod publishing process are handled. Default value is `fail`.
+
+```yaml
+fail-mode: fail
+```
+
+Available values:
+
+ - `fail` - immediately sets the action status to **failed** and terminates its execution
+ - `warn` - warns about errors. The action won't be terminated, nor its status will be set to **failed**
+ - `skip` - warns about errors. The action won't be terminated, but its status will be set to **failed** after all specified targets have been processed

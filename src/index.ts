@@ -1,16 +1,24 @@
 import { getRequiredFiles, gradleOutputSelector } from "./utils/file-utils";
 import PublisherFactory from "./publishing/publisher-factory";
 import PublisherTarget from "./publishing/publisher-target";
-import { getInputAsObject, mapNumberInput } from "./utils/input-utils";
+import { getInputAsObject, mapEnumInput, mapNumberInput } from "./utils/input-utils";
 import { getDefaultLogger } from "./utils/logger-utils";
 import { retry } from "./utils/function-utils";
 import LoggingStopwatch from "./utils/logging-stopwatch";
+import AggregateError from "aggregate-error";
+
+enum FailMode {
+    Fail,
+    Warn,
+    Skip,
+}
 
 async function main() {
     const commonOptions = getInputAsObject();
     const publisherFactory = new PublisherFactory();
     const logger = getDefaultLogger();
     const publishedTo = new Array<string>();
+    const errors = new Array<Error>();
 
     for (const target of PublisherTarget.getValues()) {
         const targetName = PublisherTarget.toString(target);
@@ -24,29 +32,47 @@ async function main() {
         const files = await getRequiredFiles(fileSelector);
         const retryAttempts = mapNumberInput(options.retryAttempts);
         const retryDelay = mapNumberInput(options.retryDelay);
-
+        const failMode = mapEnumInput(options.failMode, FailMode, FailMode.Fail as FailMode);
         const publisher = publisherFactory.create(target, logger);
-        const stopwatch = LoggingStopwatch.startNew(logger, `Publishing assets to ${targetName}...`, ms => `Successfully published assets to ${targetName} (in ${ms} ms)`);
-
-        await retry({
+        const func = {
             func: () => publisher.publish(files, options),
             maxAttempts: retryAttempts,
             delay: retryDelay,
-            errorCallback: e => {
-                logger.error(`${e}`);
+            errorCallback: (e: Error) => {
+                logger.error(e);
                 logger.info(`Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
             }
-        });
+        };
 
+        const stopwatch = LoggingStopwatch.startNew(logger, `Publishing assets to ${targetName}...`, ms => `Successfully published assets to ${targetName} (in ${ms} ms)`);
+        try {
+            await retry(func);
+        } catch(e: any) {
+            switch (failMode) {
+                case FailMode.Warn:
+                    logger.warn(e);
+                    continue;
+                case FailMode.Skip:
+                    logger.warn(`An error occurred while uploading assets to ${targetName}`);
+                    errors.push(e);
+                    continue;
+                default:
+                    throw e;
+            }
+        }
         stopwatch.stop();
         publishedTo.push(targetName);
     }
 
     if (publishedTo.length) {
         logger.info(`Your assets have been successfully published to: ${publishedTo.join(", ")}`);
-    } else {
+    } else if (!errors.length) {
         logger.warn("You didn't specify any targets, your assets have not been published");
+    }
+
+    if (errors.length) {
+        throw new AggregateError(errors);
     }
 }
 
-main().catch(error => getDefaultLogger().fatal(error instanceof Error ? `${error}` : `Something went horribly wrong: ${error}`));
+main().catch(error => getDefaultLogger().fatal(error instanceof Error ? error : `Something went horribly wrong: ${error}`));
