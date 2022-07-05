@@ -6,7 +6,7 @@
 
 The `Publish Minecraft Mods` action helps you upload assets of your Minecraft mods to GitHub Releases, Modrinth and CurseForge. This is a cross-platform action that runs on any environment.
 
-### Usage
+### 📖 Usage
 
 Most of the values are automatically resolved *(read further for more info)*. Therefore, here's all you really need to publish your mod:
 
@@ -32,7 +32,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Unnecessary Verbose Example
+### 📖🦜 Unnecessary Verbose Example
 
 Please, **do not** consider the following example as something you should use. `mc-publish` was made to be as zero-configy as possible, you just do not need all this. It's here to show you most of the available inputs in the form of an actual configuration. It not only hurts me on a spiritual level to see configurations with hardcoded values that could be automatically resolved, but sometimes people copy-paste inputs that will break their workflows, e.g., I saw someone trying to use `github-discussion: Announcements` in repo that had neither "Announcements" discussion category, nor discussions in general. [Occam's Razor](https://en.wikipedia.org/wiki/Occam%27s_razor) in action - if you don't see a reason to use an input, just don't use it. With all that said, let's get back to our unnecessary verbose example:
 
@@ -91,7 +91,7 @@ jobs:
           fail-mode: fail
 ```
 
-### Inputs
+### 📝 Inputs
 
 | Name | Description | Default value | Examples |
 |------|-------------|---------------|----------|

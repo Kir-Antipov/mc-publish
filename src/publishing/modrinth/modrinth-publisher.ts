@@ -70,7 +70,7 @@ export default class ModrinthPublisher extends ModPublisher {
 
     private async unfeatureOlderVersions(id: string, token: string, unfeatureMode: UnfeatureMode, loaders: string[], gameVersions: string[]): Promise<void> {
         const unfeaturedVersions = new Array<string>();
-        const stopwatch = LoggingStopwatch.startNew(this.logger, "Unfeaturing older Modrinth versions...", ms => `Successfully unfeatured: ${unfeaturedVersions.join(", ")} (in ${ms} ms)`);
+        const stopwatch = LoggingStopwatch.startNew(this.logger, "📝 Unfeaturing older Modrinth versions...", ms => `✅ Successfully unfeatured: ${unfeaturedVersions.join(", ")} (in ${ms} ms)`);
 
         const versionSubset = hasFlag(unfeatureMode, UnfeatureMode.VersionSubset);
         const loaderSubset = hasFlag(unfeatureMode, UnfeatureMode.LoaderSubset);
@@ -87,14 +87,14 @@ export default class ModrinthPublisher extends ModPublisher {
             if (await modifyVersion(olderVersion.id, { featured: false }, token)) {
                 unfeaturedVersions.push(olderVersion.id);
             } else {
-                this.logger.warn(`Cannot unfeature version ${olderVersion.id}`);
+                this.logger.warn(`⚠️ Cannot unfeature version ${olderVersion.id}`);
             }
         }
 
         if (unfeaturedVersions.length) {
             stopwatch.stop();
         } else {
-            this.logger.info("No versions to unfeature were found");
+            this.logger.info("✅ No versions to unfeature were found");
         }
     }
 }

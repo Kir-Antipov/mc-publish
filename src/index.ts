@@ -40,11 +40,11 @@ async function main() {
             delay: retryDelay,
             errorCallback: (e: Error) => {
                 logger.error(e);
-                logger.info(`Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
+                logger.info(`🔂 Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
             }
         };
 
-        const stopwatch = LoggingStopwatch.startNew(logger, `Publishing assets to ${targetName}...`, ms => `Successfully published assets to ${targetName} (in ${ms} ms)`);
+        const stopwatch = LoggingStopwatch.startNew(logger, `📤 Publishing assets to ${targetName}...`, ms => `✅ Successfully published assets to ${targetName} (in ${ms} ms)`);
         try {
             await retry(func);
         } catch(e: any) {
@@ -53,7 +53,7 @@ async function main() {
                     logger.warn(e);
                     continue;
                 case FailMode.Skip:
-                    logger.warn(`An error occurred while uploading assets to ${targetName}`);
+                    logger.warn(`☢️ An error occurred while uploading assets to ${targetName}`);
                     errors.push(e);
                     continue;
                 default:
@@ -65,9 +65,9 @@ async function main() {
     }
 
     if (publishedTo.length) {
-        logger.info(`Your assets have been successfully published to: ${publishedTo.join(", ")}`);
+        logger.info(`🎉 Your assets have been successfully published to: ${publishedTo.join(", ")}`);
     } else if (!errors.length) {
-        logger.warn("You didn't specify any targets, your assets have not been published");
+        logger.warn("🗿 You didn't specify any targets, your assets have not been published");
     }
 
     if (errors.length) {
@@ -75,4 +75,4 @@ async function main() {
     }
 }
 
-main().catch(error => getDefaultLogger().fatal(error instanceof Error ? error : `Something went horribly wrong: ${error}`));
+main().catch(error => getDefaultLogger().fatal(error instanceof Error ? error : `💀 Something went horribly wrong: ${error}`));
