@@ -34,10 +34,22 @@ export default class GitHubPublisher extends ModPublisher {
     protected async publishMod(_id: string, token: string, name: string, version: string, channel: string, _loaders: string[], _gameVersions: string[], _java: string[], changelog: string, files: File[], _dependencies: Dependency[], options: Record<string, unknown>): Promise<void> {
         const repo = github.context.repo;
         const octokit = github.getOctokit(token);
+        const environmentTag = getEnvironmentTag();
+
         let tag = mapStringInput(options.tag, null);
-        let releaseId = tag ? await this.getReleaseIdByTag(tag, token) : github.context.payload.release?.id;
+        let releaseId = 0;
+        if (tag) {
+            releaseId = await this.getReleaseIdByTag(tag, token);
+        } else if (github.context.payload.release?.id) {
+            releaseId = github.context.payload.release?.id;
+        } else if (environmentTag) {
+            releaseId = await this.getReleaseIdByTag(environmentTag, token);
+        } else if (version) {
+            releaseId = await this.getReleaseIdByTag(version, token);
+        }
+
         const generated = !releaseId;
-        if (!releaseId && (tag ??= getEnvironmentTag() ?? version)) {
+        if (generated && (tag ??= environmentTag ?? version)) {
             const generateChangelog = mapBooleanInput(options.generateChangelog, !changelog);
             const draft = mapBooleanInput(options.draft, false);
             const prerelease = mapBooleanInput(options.prerelease, channel !== VersionType.Release);
@@ -46,7 +58,7 @@ export default class GitHubPublisher extends ModPublisher {
             releaseId = await this.createRelease(tag, name, changelog, generateChangelog, draft, prerelease, commitish, discussion, token);
         }
         if (!releaseId) {
-            throw new Error(`Cannot find or create release #${options.tag || releaseId}`);
+            throw new Error(`Cannot find or create release ${tag || `#${releaseId}`}`);
         }
 
         const existingAssets = generated ? [] : (await octokit.rest.repos.listReleaseAssets({ ...repo, release_id: releaseId })).data;
