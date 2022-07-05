@@ -1,0 +1,325 @@
+name: Publish Minecraft Mods
+description: GitHub Action that helps you publish your Minecraft mods
+author: Kir-Antipov
+branding:
+  color: orange
+  icon: upload
+inputs:
+  modrinth-id:
+    description: The ID of the Modrinth project to upload to
+    required: false
+    default: ${undefined}
+  modrinth-featured:
+    description: Indicates whether the version should be featured on Modrinth or not
+    required: false
+    default: ${undefined}
+  modrinth-unfeature-mode:
+    description: Determines the way automatic unfeaturing of older Modrinth versions works
+    required: false
+    default: ${undefined}
+  modrinth-token:
+    description: A valid token for the Modrinth API
+    required: false
+    default: ${undefined}
+  curseforge-id:
+    description: The ID of the CurseForge project to upload to
+    required: false
+    default: ${undefined}
+  curseforge-token:
+    description: A valid token for the CurseForge API
+    required: false
+    default: ${undefined}
+  github-tag:
+    description: The tag name of the release to upload assets to
+    required: false
+    default: ${undefined}
+  github-generate-changelog:
+    description: Indicates whether to automatically generate the changelog for this
+      release. If changelog is specified, it will be pre-pended to the
+      automatically generated notes. Unused if the GitHub Release already exists
+    required: false
+    default: ${undefined}
+  github-draft:
+    description: true to create a draft (unpublished) release, false to create a
+      published one. Unused if the GitHub Release already exists
+    required: false
+    default: ${undefined}
+  github-prerelease:
+    description: true to identify the release as a prerelease, false to identify the
+      release as a full release. Unused if the GitHub Release already exists
+    required: false
+    default: ${undefined}
+  github-commitish:
+    description: Specifies the commitish value that determines where the Git tag is
+      created from. Can be any branch or commit SHA. Unused if the Git tag
+      already exists
+    required: false
+    default: ${undefined}
+  github-discussion:
+    description: If specified, a discussion of the specified category is created and
+      linked to the release. Unused if the GitHub Release already exists
+    required: false
+    default: ${undefined}
+  github-token:
+    description: A valid token for the GitHub API
+    required: false
+    default: ${undefined}
+  files:
+    description: A glob of the files to upload
+    required: false
+    default: ${undefined}
+  files-primary:
+    description: A glob of the primary files to upload
+    required: false
+    default: ${undefined}
+  files-secondary:
+    description: A glob of the secondary files to upload
+    required: false
+    default: ${undefined}
+  name:
+    description: The name of the version
+    required: false
+    default: ${undefined}
+  version:
+    description: The version number
+    required: false
+    default: ${undefined}
+  version-type:
+    description: The type of the release - alpha, beta, or release
+    required: false
+    default: ${undefined}
+  changelog:
+    description: The changelog for this version
+    required: false
+    default: ${undefined}
+  changelog-file:
+    description: A glob of the changelog file
+    required: false
+    default: ${undefined}
+  loaders:
+    description: A list of supported mod loaders
+    required: false
+    default: ${undefined}
+  game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+    default: ${undefined}
+  dependencies:
+    description: A list of dependencies
+    required: false
+    default: ${undefined}
+  version-resolver:
+    description: Determines the way automatic game-versions resolvement works
+    required: false
+    default: ${undefined}
+  java:
+    description: A list of supported Java versions
+    required: false
+    default: ${undefined}
+  retry-attempts:
+    description: The maximum number of attempts to publish assets
+    default: 2
+    required: false
+  retry-delay:
+    description: Time delay between attempts to publish assets (in milliseconds)
+    default: 10000
+    required: false
+  fail-mode:
+    description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+  modrinth-files:
+    description: A glob of the files to upload
+    required: false
+    default: ${undefined}
+  modrinth-files-primary:
+    description: A glob of the primary files to upload
+    required: false
+    default: ${undefined}
+  modrinth-files-secondary:
+    description: A glob of the secondary files to upload
+    required: false
+    default: ${undefined}
+  modrinth-name:
+    description: The name of the version
+    required: false
+    default: ${undefined}
+  modrinth-version:
+    description: The version number
+    required: false
+    default: ${undefined}
+  modrinth-version-type:
+    description: The type of the release - alpha, beta, or release
+    required: false
+    default: ${undefined}
+  modrinth-changelog:
+    description: The changelog for this version
+    required: false
+    default: ${undefined}
+  modrinth-changelog-file:
+    description: A glob of the changelog file
+    required: false
+    default: ${undefined}
+  modrinth-loaders:
+    description: A list of supported mod loaders
+    required: false
+    default: ${undefined}
+  modrinth-game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+    default: ${undefined}
+  modrinth-dependencies:
+    description: A list of dependencies
+    required: false
+    default: ${undefined}
+  modrinth-version-resolver:
+    description: Determines the way automatic game-versions resolvement works
+    required: false
+    default: ${undefined}
+  modrinth-java:
+    description: A list of supported Java versions
+    required: false
+    default: ${undefined}
+  modrinth-retry-attempts:
+    description: The maximum number of attempts to publish assets
+    default: 2
+    required: false
+  modrinth-retry-delay:
+    description: Time delay between attempts to publish assets (in milliseconds)
+    default: 10000
+    required: false
+  modrinth-fail-mode:
+    description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+  curseforge-files:
+    description: A glob of the files to upload
+    required: false
+    default: ${undefined}
+  curseforge-files-primary:
+    description: A glob of the primary files to upload
+    required: false
+    default: ${undefined}
+  curseforge-files-secondary:
+    description: A glob of the secondary files to upload
+    required: false
+    default: ${undefined}
+  curseforge-name:
+    description: The name of the version
+    required: false
+    default: ${undefined}
+  curseforge-version:
+    description: The version number
+    required: false
+    default: ${undefined}
+  curseforge-version-type:
+    description: The type of the release - alpha, beta, or release
+    required: false
+    default: ${undefined}
+  curseforge-changelog:
+    description: The changelog for this version
+    required: false
+    default: ${undefined}
+  curseforge-changelog-file:
+    description: A glob of the changelog file
+    required: false
+    default: ${undefined}
+  curseforge-loaders:
+    description: A list of supported mod loaders
+    required: false
+    default: ${undefined}
+  curseforge-game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+    default: ${undefined}
+  curseforge-dependencies:
+    description: A list of dependencies
+    required: false
+    default: ${undefined}
+  curseforge-version-resolver:
+    description: Determines the way automatic game-versions resolvement works
+    required: false
+    default: ${undefined}
+  curseforge-java:
+    description: A list of supported Java versions
+    required: false
+    default: ${undefined}
+  curseforge-retry-attempts:
+    description: The maximum number of attempts to publish assets
+    default: 2
+    required: false
+  curseforge-retry-delay:
+    description: Time delay between attempts to publish assets (in milliseconds)
+    default: 10000
+    required: false
+  curseforge-fail-mode:
+    description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+  github-files:
+    description: A glob of the files to upload
+    required: false
+    default: ${undefined}
+  github-files-primary:
+    description: A glob of the primary files to upload
+    required: false
+    default: ${undefined}
+  github-files-secondary:
+    description: A glob of the secondary files to upload
+    required: false
+    default: ${undefined}
+  github-name:
+    description: The name of the version
+    required: false
+    default: ${undefined}
+  github-version:
+    description: The version number
+    required: false
+    default: ${undefined}
+  github-version-type:
+    description: The type of the release - alpha, beta, or release
+    required: false
+    default: ${undefined}
+  github-changelog:
+    description: The changelog for this version
+    required: false
+    default: ${undefined}
+  github-changelog-file:
+    description: A glob of the changelog file
+    required: false
+    default: ${undefined}
+  github-loaders:
+    description: A list of supported mod loaders
+    required: false
+    default: ${undefined}
+  github-game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+    default: ${undefined}
+  github-dependencies:
+    description: A list of dependencies
+    required: false
+    default: ${undefined}
+  github-version-resolver:
+    description: Determines the way automatic game-versions resolvement works
+    required: false
+    default: ${undefined}
+  github-java:
+    description: A list of supported Java versions
+    required: false
+    default: ${undefined}
+  github-retry-attempts:
+    description: The maximum number of attempts to publish assets
+    default: 2
+    required: false
+  github-retry-delay:
+    description: Time delay between attempts to publish assets (in milliseconds)
+    default: 10000
+    required: false
+  github-fail-mode:
+    description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+runs:
+  using: node12
+  main: dist/index.js

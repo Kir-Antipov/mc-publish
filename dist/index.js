@@ -22426,23 +22426,23 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 4067:
+/***/ 1991:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: ./node_modules/fast-glob/out/index.js
-var out = __nccwpck_require__(3664);
-var out_default = /*#__PURE__*/__nccwpck_require__.n(out);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
 var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(1017);
 var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
-;// CONCATENATED MODULE: ./src/utils/file.ts
+// EXTERNAL MODULE: ./node_modules/fast-glob/out/index.js
+var out = __nccwpck_require__(3664);
+var out_default = /*#__PURE__*/__nccwpck_require__.n(out);
+;// CONCATENATED MODULE: ./src/utils/io/file.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -22454,6 +22454,11 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 
+
+const gradleOutputSelector = {
+    primary: "build/libs/!(*-@(dev|sources)).jar",
+    secondary: "build/libs/*-@(dev|sources).jar"
+};
 class File {
     constructor(filePath) {
         this.name = external_path_default().basename(filePath);
@@ -22480,58 +22485,41 @@ class File {
     equals(file) {
         return file instanceof File && file.path === this.path;
     }
-}
-
-;// CONCATENATED MODULE: ./src/utils/file-utils.ts
-var file_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-const gradleOutputSelector = {
-    primary: "build/libs/!(*-@(dev|sources)).jar",
-    secondary: "build/libs/*-@(dev|sources).jar"
-};
-function getRequiredFiles(files) {
-    return file_utils_awaiter(this, void 0, void 0, function* () {
-        const foundFiles = yield getFiles(files);
-        if (foundFiles && foundFiles.length) {
-            return foundFiles;
-        }
-        throw new Error(`Specified files ('${typeof files === "string" ? files : [files.primary, files.secondary].filter(x => x).join(", ")}') were not found`);
-    });
-}
-function getFiles(files) {
-    return file_utils_awaiter(this, void 0, void 0, function* () {
-        if (!files || typeof files !== "string" && !files.primary && !files.secondary) {
-            return [];
-        }
-        if (typeof files === "string") {
-            return (yield out_default()(files)).map(x => new File(x));
-        }
-        let results = [];
-        if (files.primary) {
-            results = (yield out_default()(files.primary)).map(x => new File(x));
-        }
-        if (files.secondary) {
-            results = results.concat((yield out_default()(files.secondary)).map(x => new File(x)));
-        }
-        return results.filter((x, i, self) => self.findIndex(y => x.equals(y)) === i);
-    });
+    static getFiles(files) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!files || typeof files !== "string" && !files.primary && !files.secondary) {
+                return [];
+            }
+            if (typeof files === "string") {
+                return (yield out_default()(files)).map(x => new File(x));
+            }
+            let results = [];
+            if (files.primary) {
+                results = (yield out_default()(files.primary)).map(x => new File(x));
+            }
+            if (files.secondary) {
+                results = results.concat((yield out_default()(files.secondary)).map(x => new File(x)));
+            }
+            return results.filter((x, i, self) => self.findIndex(y => x.equals(y)) === i);
+        });
+    }
+    static getRequiredFiles(files) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const foundFiles = yield File.getFiles(files);
+            if (foundFiles && foundFiles.length) {
+                return foundFiles;
+            }
+            throw new Error(`Specified files ('${typeof files === "string" ? files : [files.primary, files.secondary].filter(x => x).join(", ")}') were not found`);
+        });
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/publishing/publisher-target.ts
 var PublisherTarget;
 (function (PublisherTarget) {
-    PublisherTarget[PublisherTarget["GitHub"] = 0] = "GitHub";
+    PublisherTarget[PublisherTarget["CurseForge"] = 0] = "CurseForge";
     PublisherTarget[PublisherTarget["Modrinth"] = 1] = "Modrinth";
-    PublisherTarget[PublisherTarget["CurseForge"] = 2] = "CurseForge";
+    PublisherTarget[PublisherTarget["GitHub"] = 2] = "GitHub";
 })(PublisherTarget || (PublisherTarget = {}));
 (function (PublisherTarget) {
     function getValues() {
@@ -22550,7 +22538,7 @@ var github = __nccwpck_require__(5438);
 // EXTERNAL MODULE: ./node_modules/node-fetch/lib/index.js
 var lib = __nccwpck_require__(467);
 var lib_default = /*#__PURE__*/__nccwpck_require__.n(lib);
-;// CONCATENATED MODULE: ./src/utils/version.ts
+;// CONCATENATED MODULE: ./src/utils/versioning/version.ts
 class Version {
     constructor(major, minor, build) {
         if (typeof major === "string") {
@@ -22568,10 +22556,14 @@ class Version {
         }
         return typeof version === "string" && this.equals(new Version(version));
     }
+    static fromName(name) {
+        const match = name.match(/[a-z]{0,2}\d+\.\d+.*/i);
+        return match ? match[0] : name;
+    }
 }
 
-;// CONCATENATED MODULE: ./src/utils/minecraft-utils.ts
-var minecraft_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+;// CONCATENATED MODULE: ./src/utils/minecraft/index.ts
+var minecraft_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -22608,7 +22600,7 @@ class MinecraftVersion {
 }
 let cachedVersionsById = null;
 function getVersionMap() {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         if (!cachedVersionsById) {
             cachedVersionsById = yield loadVersions();
         }
@@ -22616,7 +22608,7 @@ function getVersionMap() {
     });
 }
 function loadVersions() {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         const response = yield (yield lib_default()("https://launchermeta.mojang.com/mc/game/version_manifest.json")).json();
         const versionsById = new Map();
         for (let i = 0; i < response.versions.length; ++i) {
@@ -22644,17 +22636,17 @@ function getNearestReleaseVersionName(versions, start) {
     return null;
 }
 function getVersions() {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         return [...(yield getVersionMap()).values()];
     });
 }
 function getVersionById(id) {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         return (yield getVersionMap()).get(id.trim()) || null;
     });
 }
 function findVersionByName(name, snapshot) {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         const versionMap = yield getVersionMap();
         snapshot !== null && snapshot !== void 0 ? snapshot : (snapshot = isSnapshot(name));
         const foundVersion = versionMap.get(name);
@@ -22692,12 +22684,12 @@ function parseVersionName(version) {
     return versionCandidates.filter(x => x.startsWith("1."))[0] || null;
 }
 function getLatestRelease() {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         return (yield getVersions()).find(x => x.isRelease) || null;
     });
 }
 function getCompatibleBuilds(build) {
-    return minecraft_utils_awaiter(this, void 0, void 0, function* () {
+    return minecraft_awaiter(this, void 0, void 0, function* () {
         if (!(build instanceof Version)) {
             build = new Version(build);
         }
@@ -22721,7 +22713,7 @@ function getCompatibleBuilds(build) {
 var core = __nccwpck_require__(2186);
 ;// CONCATENATED MODULE: external "console"
 const external_console_namespaceObject = require("console");
-;// CONCATENATED MODULE: ./src/utils/logger-utils.ts
+;// CONCATENATED MODULE: ./src/utils/logging/logger.ts
 
 
 function getDefaultLogger() {
@@ -22765,7 +22757,7 @@ class Publisher {
     }
 }
 
-;// CONCATENATED MODULE: ./src/utils/game-version-resolver.ts
+;// CONCATENATED MODULE: ./src/utils/versioning/game-version-resolver.ts
 var game_version_resolver_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -22789,7 +22781,7 @@ class GameVersionResolver {
     }
 }
 
-;// CONCATENATED MODULE: ./src/utils/minecraft-version-resolver.ts
+;// CONCATENATED MODULE: ./src/utils/minecraft/minecraft-version-resolver.ts
 
 
 class MinecraftVersionResolver extends GameVersionResolver {
@@ -23007,6 +22999,13 @@ function getDependenciesByKind(config, kind) {
     }
     return dependencies;
 }
+function getLoaders(config) {
+    var _a, _b, _c, _d;
+    if ((_b = (_a = config[package_namespaceObject.u2]) === null || _a === void 0 ? void 0 : _a.quilt) !== null && _b !== void 0 ? _b : (_d = (_c = config.custom) === null || _c === void 0 ? void 0 : _c[package_namespaceObject.u2]) === null || _d === void 0 ? void 0 : _d.quilt) {
+        return ["fabric", "quilt"];
+    }
+    return ["fabric"];
+}
 class FabricModMetadata extends ModConfig {
     constructor(config) {
         var _a, _b, _c;
@@ -23014,7 +23013,7 @@ class FabricModMetadata extends ModConfig {
         this.id = String((_a = this.config.id) !== null && _a !== void 0 ? _a : "");
         this.name = String((_b = this.config.name) !== null && _b !== void 0 ? _b : this.id);
         this.version = String((_c = this.config.version) !== null && _c !== void 0 ? _c : "*");
-        this.loaders = ["fabric"];
+        this.loaders = getLoaders(this.config);
         this.dependencies = dependency_kind.getValues().flatMap(x => getDependenciesByKind(this.config, x));
     }
     getProjectId(project) {
@@ -23236,28 +23235,28 @@ var ModMetadataReader;
 })(ModMetadataReader || (ModMetadataReader = {}));
 /* harmony default export */ const mod_metadata_reader = (ModMetadataReader);
 
-;// CONCATENATED MODULE: ./src/utils/version-utils.ts
+;// CONCATENATED MODULE: ./src/utils/versioning/version-type.ts
 var VersionType;
 (function (VersionType) {
     VersionType["Alpha"] = "alpha";
     VersionType["Beta"] = "beta";
     VersionType["Release"] = "release";
 })(VersionType || (VersionType = {}));
-function parseVersionFromName(name) {
-    const match = name.match(/[a-z]{0,2}\d+\.\d+.*/i);
-    return match ? match[0] : name;
-}
-function parseVersionTypeFromName(name) {
-    if (name.match(/[+-_]alpha/i)) {
-        return VersionType.Alpha;
+(function (VersionType) {
+    function fromName(name) {
+        if (name.match(/[+-_]alpha/i)) {
+            return VersionType.Alpha;
+        }
+        else if (name.match(/[+-_]beta/i)) {
+            return VersionType.Beta;
+        }
+        else {
+            return VersionType.Release;
+        }
     }
-    else if (name.match(/[+-_]beta/i)) {
-        return VersionType.Beta;
-    }
-    else {
-        return VersionType.Release;
-    }
-}
+    VersionType.fromName = fromName;
+})(VersionType || (VersionType = {}));
+/* harmony default export */ const version_type = (VersionType);
 
 ;// CONCATENATED MODULE: ./src/publishing/mod-publisher.ts
 var mod_publisher_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -23269,6 +23268,7 @@ var mod_publisher_awaiter = (undefined && undefined.__awaiter) || function (this
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 
 
@@ -23300,7 +23300,7 @@ function processDependenciesInput(input, inputSplitter, entrySplitter) {
 }
 function readChangelog(changelogPath) {
     return mod_publisher_awaiter(this, void 0, void 0, function* () {
-        const file = (yield getFiles(changelogPath))[0];
+        const file = (yield File.getFiles(changelogPath))[0];
         if (!file) {
             throw new Error("Changelog file was not found");
         }
@@ -23318,7 +23318,7 @@ class ModPublisher extends Publisher {
         return true;
     }
     publish(files, options) {
-        var _a, _b;
+        var _a;
         return mod_publisher_awaiter(this, void 0, void 0, function* () {
             this.validateOptions(options);
             const releaseInfo = github.context.payload.release;
@@ -23335,13 +23335,13 @@ class ModPublisher extends Publisher {
                 throw new Error(`Project id is required to publish your assets to ${publisher_target.toString(this.target)}`);
             }
             const filename = external_path_default().parse(files[0].path).name;
-            const version = (typeof options.version === "string" && options.version) || (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.tag_name) || (metadata === null || metadata === void 0 ? void 0 : metadata.version) || parseVersionFromName(filename);
-            const versionType = ((_a = options.versionType) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || parseVersionTypeFromName((metadata === null || metadata === void 0 ? void 0 : metadata.version) || filename);
+            const version = (typeof options.version === "string" && options.version) || (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.tag_name) || (metadata === null || metadata === void 0 ? void 0 : metadata.version) || Version.fromName(filename);
+            const versionType = ((_a = options.versionType) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || version_type.fromName((metadata === null || metadata === void 0 ? void 0 : metadata.version) || filename);
             const name = typeof options.name === "string" ? options.name : ((releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.name) || version);
             const changelog = typeof options.changelog === "string"
                 ? options.changelog
-                : ((_b = options.changelog) === null || _b === void 0 ? void 0 : _b.file)
-                    ? yield readChangelog(options.changelog.file)
+                : typeof options.changelogFile === "string"
+                    ? yield readChangelog(options.changelogFile)
                     : (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.body) || "";
             const loaders = processMultilineInput(options.loaders, /\s+/);
             if (!loaders.length && this.requiresModLoaders) {
@@ -23377,7 +23377,7 @@ class ModPublisher extends Publisher {
 ;// CONCATENATED MODULE: external "process"
 const external_process_namespaceObject = require("process");
 var external_process_default = /*#__PURE__*/__nccwpck_require__.n(external_process_namespaceObject);
-;// CONCATENATED MODULE: ./src/utils/input-utils.ts
+;// CONCATENATED MODULE: ./src/utils/actions/input.ts
 
 const undefinedValue = "${undefined}";
 function getInputAsObject() {
@@ -23530,19 +23530,32 @@ class GitHubPublisher extends ModPublisher {
         return github_publisher_awaiter(this, void 0, void 0, function* () {
             const repo = github.context.repo;
             const octokit = github.getOctokit(token);
+            const environmentTag = getEnvironmentTag();
             let tag = mapStringInput(options.tag, null);
-            let releaseId = tag ? yield this.getReleaseIdByTag(tag, token) : (_a = github.context.payload.release) === null || _a === void 0 ? void 0 : _a.id;
+            let releaseId = 0;
+            if (tag) {
+                releaseId = yield this.getReleaseIdByTag(tag, token);
+            }
+            else if ((_a = github.context.payload.release) === null || _a === void 0 ? void 0 : _a.id) {
+                releaseId = (_b = github.context.payload.release) === null || _b === void 0 ? void 0 : _b.id;
+            }
+            else if (environmentTag) {
+                releaseId = yield this.getReleaseIdByTag(environmentTag, token);
+            }
+            else if (version) {
+                releaseId = yield this.getReleaseIdByTag(version, token);
+            }
             const generated = !releaseId;
-            if (!releaseId && (tag !== null && tag !== void 0 ? tag : (tag = (_b = getEnvironmentTag()) !== null && _b !== void 0 ? _b : version))) {
+            if (!releaseId && (tag !== null && tag !== void 0 ? tag : (tag = environmentTag !== null && environmentTag !== void 0 ? environmentTag : version))) {
                 const generateChangelog = mapBooleanInput(options.generateChangelog, !changelog);
                 const draft = mapBooleanInput(options.draft, false);
-                const prerelease = mapBooleanInput(options.prerelease, channel !== VersionType.Release);
+                const prerelease = mapBooleanInput(options.prerelease, channel !== version_type.Release);
                 const commitish = mapStringInput(options.commitish, null);
                 const discussion = mapStringInput(options.discussion, null);
                 releaseId = yield this.createRelease(tag, name, changelog, generateChangelog, draft, prerelease, commitish, discussion, token);
             }
             if (!releaseId) {
-                throw new Error(`Cannot find or create release #${options.tag || releaseId}`);
+                throw new Error(`Cannot find or create release ${tag}`);
             }
             const existingAssets = generated ? [] : (yield octokit.rest.repos.listReleaseAssets(Object.assign(Object.assign({}, repo), { release_id: releaseId }))).data;
             for (const file of files) {
@@ -23614,8 +23627,8 @@ class SoftError extends Error {
     }
 }
 
-;// CONCATENATED MODULE: ./src/utils/modrinth-utils.ts
-var modrinth_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+;// CONCATENATED MODULE: ./src/utils/modrinth/index.ts
+var modrinth_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -23649,7 +23662,7 @@ function createVersion(modId, data, files, token) {
 function getProject(idOrSlug) {
     return processResponse(lib_default()(`${baseUrl}/project/${idOrSlug}`), { 404: () => null });
 }
-function modrinth_utils_getVersions(idOrSlug, loaders, gameVersions, featured, token) {
+function modrinth_getVersions(idOrSlug, loaders, gameVersions, featured, token) {
     const urlParams = new external_url_.URLSearchParams();
     if (loaders) {
         urlParams.append("loaders", JSON.stringify(loaders));
@@ -23666,7 +23679,7 @@ function modrinth_utils_getVersions(idOrSlug, loaders, gameVersions, featured, t
     return processResponse(response, { 404: () => [] });
 }
 function modifyVersion(id, version, token) {
-    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
+    return modrinth_awaiter(this, void 0, void 0, function* () {
         const response = yield lib_default()(`${baseUrl}/version/${id}`, {
             method: "PATCH",
             headers: {
@@ -23679,7 +23692,7 @@ function modifyVersion(id, version, token) {
     });
 }
 function processResponse(response, mappers, errorFactory) {
-    return modrinth_utils_awaiter(this, void 0, void 0, function* () {
+    return modrinth_awaiter(this, void 0, void 0, function* () {
         response = yield response;
         if (response.ok) {
             return yield response.json();
@@ -23697,14 +23710,115 @@ function processResponse(response, mappers, errorFactory) {
         }
         catch (_a) { }
         errorText = `${response.status} (${errorText})`;
-        const isServerError = response.status >= 500;
+        const isSoftError = response.status === 429 || response.status >= 500;
         if (errorFactory) {
-            throw errorFactory(isServerError, errorText, response);
+            throw errorFactory(isSoftError, errorText, response);
         }
         else {
-            throw new SoftError(isServerError, errorText);
+            throw new SoftError(isSoftError, errorText);
         }
     });
+}
+
+;// CONCATENATED MODULE: ./src/utils/diagnostics/stopwatch.ts
+var __classPrivateFieldSet = (undefined && undefined.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _Stopwatch_initialDate, _Stopwatch_isRunning, _Stopwatch_elapsedMilliseconds, _Stopwatch_onStart, _Stopwatch_onStop;
+class Stopwatch {
+    constructor(onStart, onStop) {
+        _Stopwatch_initialDate.set(this, 0);
+        _Stopwatch_isRunning.set(this, false);
+        _Stopwatch_elapsedMilliseconds.set(this, 0);
+        _Stopwatch_onStart.set(this, null);
+        _Stopwatch_onStop.set(this, null);
+        __classPrivateFieldSet(this, _Stopwatch_onStart, onStart, "f");
+        __classPrivateFieldSet(this, _Stopwatch_onStop, onStop, "f");
+    }
+    get elapsedMilliseconds() {
+        return __classPrivateFieldGet(this, _Stopwatch_isRunning, "f")
+            ? (__classPrivateFieldGet(this, _Stopwatch_elapsedMilliseconds, "f") + new Date().valueOf() - __classPrivateFieldGet(this, _Stopwatch_initialDate, "f"))
+            : __classPrivateFieldGet(this, _Stopwatch_elapsedMilliseconds, "f");
+    }
+    get isRunning() {
+        return __classPrivateFieldGet(this, _Stopwatch_isRunning, "f");
+    }
+    start() {
+        var _a;
+        if (!__classPrivateFieldGet(this, _Stopwatch_isRunning, "f")) {
+            const currentDate = new Date();
+            __classPrivateFieldSet(this, _Stopwatch_initialDate, currentDate.valueOf(), "f");
+            __classPrivateFieldSet(this, _Stopwatch_isRunning, true, "f");
+            (_a = __classPrivateFieldGet(this, _Stopwatch_onStart, "f")) === null || _a === void 0 ? void 0 : _a.call(this, currentDate, this);
+            return true;
+        }
+        return false;
+    }
+    stop() {
+        var _a;
+        if (__classPrivateFieldGet(this, _Stopwatch_isRunning, "f")) {
+            const currentDate = new Date();
+            __classPrivateFieldSet(this, _Stopwatch_elapsedMilliseconds, __classPrivateFieldGet(this, _Stopwatch_elapsedMilliseconds, "f") + (currentDate.valueOf() - __classPrivateFieldGet(this, _Stopwatch_initialDate, "f")), "f");
+            __classPrivateFieldSet(this, _Stopwatch_isRunning, false, "f");
+            (_a = __classPrivateFieldGet(this, _Stopwatch_onStop, "f")) === null || _a === void 0 ? void 0 : _a.call(this, __classPrivateFieldGet(this, _Stopwatch_elapsedMilliseconds, "f"), currentDate, this);
+            return true;
+        }
+        return false;
+    }
+    reset() {
+        this.stop();
+        __classPrivateFieldSet(this, _Stopwatch_elapsedMilliseconds, 0, "f");
+    }
+    restart() {
+        this.reset();
+        this.start();
+    }
+    static startNew(onStart, onStop) {
+        const stopwatch = new Stopwatch(onStart, onStop);
+        stopwatch.start();
+        return stopwatch;
+    }
+}
+_Stopwatch_initialDate = new WeakMap(), _Stopwatch_isRunning = new WeakMap(), _Stopwatch_elapsedMilliseconds = new WeakMap(), _Stopwatch_onStart = new WeakMap(), _Stopwatch_onStop = new WeakMap();
+
+;// CONCATENATED MODULE: ./src/utils/logging/logging-stopwatch.ts
+
+function toCallback(func) {
+    if (typeof func === "string") {
+        return (() => func);
+    }
+    return func;
+}
+function loggingCallbackToVoidCallback(logger, func) {
+    if (!func) {
+        return func;
+    }
+    return (...args) => {
+        const msg = func(...args);
+        if (typeof msg === "string") {
+            logger === null || logger === void 0 ? void 0 : logger.info(msg);
+        }
+    };
+}
+// eslint-disable-next-line
+// @ts-ignore: ts2417
+class LoggingStopwatch extends Stopwatch {
+    constructor(logger, onStart, onStop) {
+        super(loggingCallbackToVoidCallback(logger, toCallback(onStart)), loggingCallbackToVoidCallback(logger, toCallback(onStop)));
+    }
+    static startNew(logger, onStart, onStop) {
+        const stopwatch = new LoggingStopwatch(logger, onStart, onStop);
+        stopwatch.start();
+        return stopwatch;
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/publishing/modrinth/modrinth-publisher.ts
@@ -23717,6 +23831,7 @@ var modrinth_publisher_awaiter = (undefined && undefined.__awaiter) || function 
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 
 
@@ -23742,7 +23857,7 @@ const modrinthDependencyKinds = new Map([
     [dependency_kind.Depends, "required"],
     [dependency_kind.Recommends, "optional"],
     [dependency_kind.Suggests, "optional"],
-    [dependency_kind.Includes, "optional"],
+    [dependency_kind.Includes, "embedded"],
     [dependency_kind.Breaks, "incompatible"],
 ]);
 class ModrinthPublisher extends ModPublisher {
@@ -23781,12 +23896,11 @@ class ModrinthPublisher extends ModPublisher {
     }
     unfeatureOlderVersions(id, token, unfeatureMode, loaders, gameVersions) {
         return modrinth_publisher_awaiter(this, void 0, void 0, function* () {
-            this.logger.info("Unfeaturing older Modrinth versions...");
-            const start = new Date();
-            const unfeaturedVersions = [];
+            const unfeaturedVersions = new Array();
+            const stopwatch = LoggingStopwatch.startNew(this.logger, "📝 Unfeaturing older Modrinth versions...", ms => `✅ Successfully unfeatured: ${unfeaturedVersions.join(", ")} (in ${ms} ms)`);
             const versionSubset = hasFlag(unfeatureMode, UnfeatureMode.VersionSubset);
             const loaderSubset = hasFlag(unfeatureMode, UnfeatureMode.LoaderSubset);
-            const olderVersions = yield modrinth_utils_getVersions(id, hasFlag(unfeatureMode, UnfeatureMode.LoaderAny) ? null : loaders, hasFlag(unfeatureMode, UnfeatureMode.VersionAny) ? null : gameVersions, true, token);
+            const olderVersions = yield modrinth_getVersions(id, hasFlag(unfeatureMode, UnfeatureMode.LoaderAny) ? null : loaders, hasFlag(unfeatureMode, UnfeatureMode.VersionAny) ? null : gameVersions, true, token);
             for (const olderVersion of olderVersions) {
                 if (loaderSubset && !olderVersion.loaders.every(x => loaders.includes(x))) {
                     continue;
@@ -23798,22 +23912,21 @@ class ModrinthPublisher extends ModPublisher {
                     unfeaturedVersions.push(olderVersion.id);
                 }
                 else {
-                    this.logger.warn(`Cannot unfeature version ${olderVersion.id}`);
+                    this.logger.warn(`⚠️ Cannot unfeature version ${olderVersion.id}`);
                 }
             }
             if (unfeaturedVersions.length) {
-                const end = new Date();
-                this.logger.info(`Successfully unfeatured versions ${unfeaturedVersions.join(", ")} (in ${end.getTime() - start.getTime()} ms)`);
+                stopwatch.stop();
             }
             else {
-                this.logger.info("No versions to unfeature were found");
+                this.logger.info("✅ No versions to unfeature were found");
             }
         });
     }
 }
 
-;// CONCATENATED MODULE: ./src/utils/curseforge-utils.ts
-var curseforge_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+;// CONCATENATED MODULE: ./src/utils/curseforge/index.ts
+var curseforge_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -23826,7 +23939,7 @@ var curseforge_utils_awaiter = (undefined && undefined.__awaiter) || function (t
 
 
 
-const curseforge_utils_baseUrl = "https://minecraft.curseforge.com/api";
+const curseforge_baseUrl = "https://minecraft.curseforge.com/api";
 class CurseForgeUploadError extends SoftError {
     constructor(soft, message, info) {
         super(soft, message);
@@ -23834,11 +23947,11 @@ class CurseForgeUploadError extends SoftError {
     }
 }
 function fetchJsonArray(url) {
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
         const response = yield lib_default()(url);
         if (!response.ok) {
-            const isServerError = response.status >= 500;
-            throw new SoftError(isServerError, `${response.status} (${response.statusText})`);
+            const isSoft = response.status === 429 || response.status >= 500;
+            throw new SoftError(isSoft, `${response.status} (${response.statusText})`);
         }
         let array;
         try {
@@ -23855,7 +23968,7 @@ function fetchJsonArray(url) {
 }
 let cachedCurseForgeVersions = null;
 function getCurseForgeVersions(token) {
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
         if (!cachedCurseForgeVersions) {
             cachedCurseForgeVersions = yield loadCurseForgeVersions(token);
         }
@@ -23863,12 +23976,12 @@ function getCurseForgeVersions(token) {
     });
 }
 function loadCurseForgeVersions(token) {
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
-        const versionTypes = yield fetchJsonArray(`${curseforge_utils_baseUrl}/game/version-types?token=${token}`);
+    return curseforge_awaiter(this, void 0, void 0, function* () {
+        const versionTypes = yield fetchJsonArray(`${curseforge_baseUrl}/game/version-types?token=${token}`);
         const javaVersionTypes = versionTypes.filter(x => x.slug.startsWith("java")).map(x => x.id);
         const minecraftVersionTypes = versionTypes.filter(x => x.slug.startsWith("minecraft")).map(x => x.id);
         const loaderVersionTypes = versionTypes.filter(x => x.slug.startsWith("modloader")).map(x => x.id);
-        const versions = yield fetchJsonArray(`${curseforge_utils_baseUrl}/game/versions?token=${token}`);
+        const versions = yield fetchJsonArray(`${curseforge_baseUrl}/game/versions?token=${token}`);
         return versions.reduce((container, version) => {
             if (javaVersionTypes.includes(version.gameVersionTypeID)) {
                 container.java.push(version);
@@ -23884,7 +23997,7 @@ function loadCurseForgeVersions(token) {
     });
 }
 function unifyGameVersion(gameVersion) {
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
         gameVersion = gameVersion.trim();
         const minecraftVersion = yield findVersionByName(gameVersion);
         if (minecraftVersion) {
@@ -23902,7 +24015,7 @@ function unifyJava(java) {
     return java;
 }
 function addVersionIntersectionToSet(curseForgeVersions, versions, unify, comparer, intersection) {
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
         for (const version of versions) {
             const unifiedVersion = yield unify(version);
             const curseForgeVersion = curseForgeVersions.find(x => comparer(x, unifiedVersion));
@@ -23913,7 +24026,7 @@ function addVersionIntersectionToSet(curseForgeVersions, versions, unify, compar
     });
 }
 function convertToCurseForgeVersions(gameVersions, loaders, java, token) {
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
         const versions = new Set();
         const curseForgeVersions = yield getCurseForgeVersions(token);
         yield addVersionIntersectionToSet(curseForgeVersions.gameVersions, gameVersions, unifyGameVersion, (cfv, v) => cfv.name === v, versions);
@@ -23924,7 +24037,7 @@ function convertToCurseForgeVersions(gameVersions, loaders, java, token) {
 }
 function uploadFile(id, data, file, token) {
     var _a;
-    return curseforge_utils_awaiter(this, void 0, void 0, function* () {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
         if (Array.isArray((_a = data.relations) === null || _a === void 0 ? void 0 : _a.projects) && (!data.relations.projects.length || data.parentFileID)) {
             delete data.relations;
         }
@@ -23934,7 +24047,7 @@ function uploadFile(id, data, file, token) {
         const form = new (form_data_default())();
         form.append("file", file.getStream(), file.name);
         form.append("metadata", JSON.stringify(data));
-        const response = yield lib_default()(`${curseforge_utils_baseUrl}/projects/${id}/upload-file?token=${token}`, {
+        const response = yield lib_default()(`${curseforge_baseUrl}/projects/${id}/upload-file?token=${token}`, {
             method: "POST",
             headers: form.getHeaders(),
             body: form
@@ -23947,8 +24060,8 @@ function uploadFile(id, data, file, token) {
                 errorText += `, ${JSON.stringify(info)}`;
             }
             catch (_b) { }
-            const isServerError = response.status >= 500;
-            throw new CurseForgeUploadError(isServerError, `Failed to upload file: ${response.status} (${errorText})`, info);
+            const isSoftError = response.status === 429 || response.status >= 500;
+            throw new CurseForgeUploadError(isSoftError, `Failed to upload file: ${response.status} (${errorText})`, info);
         }
         return (yield response.json()).id;
     });
@@ -24058,8 +24171,8 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-;// CONCATENATED MODULE: ./src/utils/function-utils.ts
-var function_utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+;// CONCATENATED MODULE: ./src/utils/retry.ts
+var retry_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -24070,7 +24183,7 @@ var function_utils_awaiter = (undefined && undefined.__awaiter) || function (thi
 };
 
 function retry({ func, delay = 0, maxAttempts = -1, softErrorPredicate, errorCallback }) {
-    return function_utils_awaiter(this, void 0, void 0, function* () {
+    return retry_awaiter(this, void 0, void 0, function* () {
         let attempts = 0;
         while (true) {
             try {
@@ -24090,6 +24203,159 @@ function retry({ func, delay = 0, maxAttempts = -1, softErrorPredicate, errorCal
     });
 }
 
+;// CONCATENATED MODULE: ./node_modules/indent-string/index.js
+function indentString(string, count = 1, options = {}) {
+	const {
+		indent = ' ',
+		includeEmptyLines = false
+	} = options;
+
+	if (typeof string !== 'string') {
+		throw new TypeError(
+			`Expected \`input\` to be a \`string\`, got \`${typeof string}\``
+		);
+	}
+
+	if (typeof count !== 'number') {
+		throw new TypeError(
+			`Expected \`count\` to be a \`number\`, got \`${typeof count}\``
+		);
+	}
+
+	if (count < 0) {
+		throw new RangeError(
+			`Expected \`count\` to be at least 0, got \`${count}\``
+		);
+	}
+
+	if (typeof indent !== 'string') {
+		throw new TypeError(
+			`Expected \`options.indent\` to be a \`string\`, got \`${typeof indent}\``
+		);
+	}
+
+	if (count === 0) {
+		return string;
+	}
+
+	const regex = includeEmptyLines ? /^/gm : /^(?!\s*$)/gm;
+
+	return string.replace(regex, indent.repeat(count));
+}
+
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(2037);
+;// CONCATENATED MODULE: ./node_modules/clean-stack/node_modules/escape-string-regexp/index.js
+function escapeStringRegexp(string) {
+	if (typeof string !== 'string') {
+		throw new TypeError('Expected a string');
+	}
+
+	// Escape characters with special meaning either inside or outside character sets.
+	// Use a simple backslash escape when it’s always valid, and a `\xnn` escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.
+	return string
+		.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+		.replace(/-/g, '\\x2d');
+}
+
+;// CONCATENATED MODULE: ./node_modules/clean-stack/index.js
+
+
+
+const extractPathRegex = /\s+at.*[(\s](.*)\)?/;
+const pathRegex = /^(?:(?:(?:node|node:[\w/]+|(?:(?:node:)?internal\/[\w/]*|.*node_modules\/(?:babel-polyfill|pirates)\/.*)?\w+)(?:\.js)?:\d+:\d+)|native)/;
+const homeDir = typeof external_os_.homedir === 'undefined' ? '' : external_os_.homedir().replace(/\\/g, '/');
+
+function cleanStack(stack, {pretty = false, basePath} = {}) {
+	const basePathRegex = basePath && new RegExp(`(at | \\()${escapeStringRegexp(basePath.replace(/\\/g, '/'))}`, 'g');
+
+	if (typeof stack !== 'string') {
+		return undefined;
+	}
+
+	return stack.replace(/\\/g, '/')
+		.split('\n')
+		.filter(line => {
+			const pathMatches = line.match(extractPathRegex);
+			if (pathMatches === null || !pathMatches[1]) {
+				return true;
+			}
+
+			const match = pathMatches[1];
+
+			// Electron
+			if (
+				match.includes('.app/Contents/Resources/electron.asar') ||
+				match.includes('.app/Contents/Resources/default_app.asar') ||
+				match.includes('node_modules/electron/dist/resources/electron.asar') ||
+				match.includes('node_modules/electron/dist/resources/default_app.asar')
+			) {
+				return false;
+			}
+
+			return !pathRegex.test(match);
+		})
+		.filter(line => line.trim() !== '')
+		.map(line => {
+			if (basePathRegex) {
+				line = line.replace(basePathRegex, '$1');
+			}
+
+			if (pretty) {
+				line = line.replace(extractPathRegex, (m, p1) => m.replace(p1, p1.replace(homeDir, '~')));
+			}
+
+			return line;
+		})
+		.join('\n');
+}
+
+;// CONCATENATED MODULE: ./node_modules/aggregate-error/index.js
+
+
+
+const cleanInternalStack = stack => stack.replace(/\s+at .*aggregate-error\/index.js:\d+:\d+\)?/g, '');
+
+class AggregateError extends Error {
+	#errors;
+
+	name = 'AggregateError';
+
+	constructor(errors) {
+		if (!Array.isArray(errors)) {
+			throw new TypeError(`Expected input to be an Array, got ${typeof errors}`);
+		}
+
+		errors = errors.map(error => {
+			if (error instanceof Error) {
+				return error;
+			}
+
+			if (error !== null && typeof error === 'object') {
+				// Handle plain error objects with message property and/or possibly other metadata
+				return Object.assign(new Error(error.message), error);
+			}
+
+			return new Error(error);
+		});
+
+		let message = errors
+			.map(error => {
+				// The `stack` property is not standardized, so we can't assume it exists
+				return typeof error.stack === 'string' && error.stack.length > 0 ? cleanInternalStack(cleanStack(error.stack)) : String(error);
+			})
+			.join('\n');
+		message = '\n' + indentString(message, 4);
+		super(message);
+
+		this.#errors = errors;
+	}
+
+	get errors() {
+		return this.#errors.slice();
+	}
+}
+
 ;// CONCATENATED MODULE: ./src/index.ts
 var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -24106,13 +24372,21 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 
 
 
+
+
+var FailMode;
+(function (FailMode) {
+    FailMode[FailMode["Fail"] = 0] = "Fail";
+    FailMode[FailMode["Warn"] = 1] = "Warn";
+    FailMode[FailMode["Skip"] = 2] = "Skip";
+})(FailMode || (FailMode = {}));
 function main() {
-    var _a, _b;
     return src_awaiter(this, void 0, void 0, function* () {
         const commonOptions = getInputAsObject();
         const publisherFactory = new PublisherFactory();
         const logger = getDefaultLogger();
         const publishedTo = new Array();
+        const errors = new Array();
         for (const target of publisher_target.getValues()) {
             const targetName = publisher_target.toString(target);
             const publisherOptions = commonOptions[targetName.toLowerCase()];
@@ -24120,35 +24394,53 @@ function main() {
                 continue;
             }
             const options = Object.assign(Object.assign({}, commonOptions), publisherOptions);
-            const fileSelector = options.files && (typeof (options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
-            const files = yield getRequiredFiles(fileSelector);
-            const retryAttempts = mapNumberInput((_a = options.retry) === null || _a === void 0 ? void 0 : _a["attempts"]);
-            const retryDelay = mapNumberInput((_b = options.retry) === null || _b === void 0 ? void 0 : _b["delay"]);
+            const fileSelector = typeof options.filesPrimary === "string" ? { primary: options.filesPrimary, secondary: typeof options.filesSecondary === "string" ? options.filesSecondary : gradleOutputSelector.secondary } : typeof options.files === "string" ? options.files : gradleOutputSelector;
+            const files = yield File.getRequiredFiles(fileSelector);
+            const retryAttempts = mapNumberInput(options.retryAttempts);
+            const retryDelay = mapNumberInput(options.retryDelay);
+            const failMode = mapEnumInput(options.failMode, FailMode, FailMode.Fail);
             const publisher = publisherFactory.create(target, logger);
-            logger.info(`Publishing assets to ${targetName}...`);
-            const start = new Date();
-            yield retry({
+            const func = {
                 func: () => publisher.publish(files, options),
                 maxAttempts: retryAttempts,
                 delay: retryDelay,
-                errorCallback: e => {
-                    logger.error(`${e}`);
-                    logger.info(`Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
+                errorCallback: (e) => {
+                    logger.error(e);
+                    logger.info(`🔂 Retrying to publish assets to ${targetName} in ${retryDelay} ms...`);
                 }
-            });
-            const end = new Date();
-            logger.info(`Successfully published assets to ${targetName} (in ${end.getTime() - start.getTime()} ms)`);
+            };
+            const stopwatch = LoggingStopwatch.startNew(logger, `📤 Publishing assets to ${targetName}...`, ms => `✅ Successfully published assets to ${targetName} (in ${ms} ms)`);
+            try {
+                yield retry(func);
+            }
+            catch (e) {
+                switch (failMode) {
+                    case FailMode.Warn:
+                        logger.warn(e);
+                        continue;
+                    case FailMode.Skip:
+                        logger.warn(`☢️ An error occurred while uploading assets to ${targetName}`);
+                        errors.push(e);
+                        continue;
+                    default:
+                        throw e;
+                }
+            }
+            stopwatch.stop();
             publishedTo.push(targetName);
         }
         if (publishedTo.length) {
-            logger.info(`Your assets have been successfully published to: ${publishedTo.join(", ")}`);
+            logger.info(`🎉 Your assets have been successfully published to: ${publishedTo.join(", ")}`);
         }
-        else {
-            logger.warn("You didn't specify any targets, your assets have not been published");
+        else if (!errors.length) {
+            logger.warn("🗿 You didn't specify any targets, your assets have not been published");
+        }
+        if (errors.length) {
+            throw new AggregateError(errors);
         }
     });
 }
-main().catch(error => getDefaultLogger().fatal(error instanceof Error ? `${error}` : `Something went horribly wrong: ${error}`));
+main().catch(error => getDefaultLogger().fatal(error instanceof Error ? error : `💀 Something went horribly wrong: ${error}`));
 
 
 /***/ }),
@@ -24371,7 +24663,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4067);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(1991);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
