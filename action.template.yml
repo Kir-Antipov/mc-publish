@@ -74,11 +74,9 @@ inputs:
   retry-attempts:
     description: The maximum number of attempts to publish assets
     default: 2
-    unique: true
   retry-delay:
     description: Time delay between attempts to publish assets (in milliseconds)
     default: 10000
-    unique: true
 runs:
   using: node12
   main: dist/index.js
