@@ -8,6 +8,34 @@ The `Publish Minecraft Mods` action helps you upload assets of your Minecraft mo
 
 ### Usage
 
+Most of the values are automatically resolved *(read further for more info)*. Therefore, here's all you really need to publish your mod:
+
+```yml
+jobs:
+  build:
+    # ...
+    steps:
+      - uses: Kir-Antipov/mc-publish@v3.0
+        with:
+          # You don't need this section if you don't want to publish
+          # your assets to Modrinth
+          modrinth-id: AANobbMI
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          # You don't need this section if you don't want to publish
+          # your assets to CurseForge
+          curseforge-id: 394468
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          # You don't need this section if you don't want to publish
+          # your assets to GitHub
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Unnecessary Verbose Example
+
+Please, **do not** consider the following example as something you should use. `mc-publish` was made to be as zero-configy as possible, you just do not need all this. It's here to show you most of the available inputs in the form of an actual configuration. It not only hurts me on a spiritual level to see configurations with hardcoded values that could be automatically resolved, but sometimes people copy-paste inputs that will break their workflows, e.g., I saw someone trying to use `github-discussion: Announcements` in repo that had neither "Announcements" discussion category, nor discussions in general. [Occam's Razor](https://en.wikipedia.org/wiki/Occam%27s_razor) in action - if you don't see a reason to use an input, just don't use it. With all that said, let's get back to our unnecessary verbose example:
+
 ```yml
 jobs:
   build:
@@ -44,14 +72,11 @@ jobs:
             forge
             quilt
           game-versions: |
-            1.16.3
-            1.17
-            1.17.1
+            1.18.2
+            1.19
             21w37a
           dependencies: |
             required-dependency | depends | *
-            required-dependency | depends
-            required-dependency
             optional-dependency | recommends | 0.1.0
             suggested-dependency | suggests | 0.2.0
             included-dependency | includes | 0.3.0
@@ -59,36 +84,11 @@ jobs:
             incompatible-dependency | breaks | *
           java: |
             8
-            16
+            17
 
           retry-attempts: 2
           retry-delay: 10000
-```
-
-### Minimalistic Example
-
-Most of the values are automatically resolved (read further for more info). Therefore, here's all you really need to publish your mod:
-
-```yml
-jobs:
-  build:
-    # ...
-    steps:
-      - uses: Kir-Antipov/mc-publish@v3.0
-        with:
-          # You don't need this section if you don't want to publish
-          # your assets to Modrinth
-          modrinth-id: AANobbMI
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-
-          # You don't need this section if you don't want to publish
-          # your assets to CurseForge
-          curseforge-id: 394468
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
-          # You don't need this section if you don't want to publish
-          # your assets to GitHub
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-mode: fail
 ```
 
 ### Inputs
@@ -102,15 +102,15 @@ jobs:
 | [curseforge-id](#user-content-curseforge-id) | The ID of the CurseForge project to upload to | A value specified in the config file | `394468` |
 | [curseforge-token](#user-content-curseforge-token) | A valid token for the CurseForge API | ❌ | `${{ secrets.CURSEFORGE_TOKEN }}` |
 | [github-tag](#user-content-github-tag) | The tag name of the release to upload assets to | A tag of the release that triggered the action, if any; otherwise it will be inferred from the `GITHUB_REF` environment variable | `mc1.17.1-0.3.2` |
-| [github-generate-changelog](#user-content-github-generate-changelog) | Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists | `true`, if [`changelog`](#user-content-changelog) and [`changelog-file`](#user-content-changelog-file) are not provided; otherwise, `false` | `false` <br> `true` |
-| [github-draft](#user-content-github-draft) | `true` to create a draft (unpublished) release, `false` to create a published one. Unused if the GitHub Release already exists | `false` | `false` <br> `true` |
-| [github-prerelease](#user-content-github-prerelease) | `true` to identify the release as a prerelease, `false` to identify the release as a full release. Unused if the GitHub Release already exists | `false`, if [`version-type`](#user-content-version-type) is `release`; otherwise, `true` | `false` <br> `true` |
-| [github-commitish](#user-content-github-commitish) | Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists | The repository's default branch | `dev` <br> `feature/86` |
-| [github-discussion](#user-content-github-discussion) | If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists | ❌ | `Announcements` |
+| [github-generate-changelog](#user-content-github-generate-changelog) | Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release) | `true`, if [`changelog`](#user-content-changelog) and [`changelog-file`](#user-content-changelog-file) are not provided; otherwise, `false` | `false` <br> `true` |
+| [github-draft](#user-content-github-draft) | `true` to create a draft (unpublished) release, `false` to create a published one. Unused if the GitHub Release already exists [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release) | `false` | `false` <br> `true` |
+| [github-prerelease](#user-content-github-prerelease) | `true` to identify the release as a prerelease, `false` to identify the release as a full release. Unused if the GitHub Release already exists [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release) | `false`, if [`version-type`](#user-content-version-type) is `release`; otherwise, `true` | `false` <br> `true` |
+| [github-commitish](#user-content-github-commitish) | Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release) | The repository's default branch | `dev` <br> `feature/86` |
+| [github-discussion](#user-content-github-discussion) | If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release) | ❌ | `Announcements` |
 | [github-token](#user-content-github-token) | A valid token for the GitHub API | ❌ | `${{ secrets.GITHUB_TOKEN }}` |
-| [files](#user-content-files) | A glob of the file(s) to upload | ❌ | `build/libs/*.jar` |
-| [files-primary](#user-content-files-primary) | A glob of the primary files to upload | `build/libs/!(*-@(dev\|sources)).jar` | `build/libs/!(*-@(dev\|sources)).jar` |
-| [files-secondary](#user-content-files-secondary) | A glob of the secondary files to upload | `build/libs/*-@(dev\|sources).jar` | `build/libs/*-@(dev\|sources).jar` |
+| [files](#user-content-files) | A [glob](https://www.digitalocean.com/community/tools/glob) of the file(s) to upload | ❌ | `build/libs/*.jar` |
+| [files-primary](#user-content-files-primary) | A [glob](https://www.digitalocean.com/community/tools/glob) of the primary files to upload | `build/libs/!(*-@(dev\|sources)).jar` | `build/libs/!(*-@(dev\|sources)).jar` |
+| [files-secondary](#user-content-files-secondary) | A [glob](https://www.digitalocean.com/community/tools/glob) of the secondary files to upload | `build/libs/*-@(dev\|sources).jar` | `build/libs/*-@(dev\|sources).jar` |
 | [name](#user-content-name) | The name of the version | A title of the release that triggered the action | `Sodium 0.3.2 for Minecraft 1.17.1` |
 | [version](#user-content-version) | The version number | A tag of the release that triggered the action | `mc1.17.1-0.3.2` |
 | [version-type](#user-content-version-type) | The type of the release | Will be parsed from the [`version`](#user-content-version) value | `alpha` <br> `beta` <br> `release` |
@@ -413,7 +413,7 @@ github-tag: mc1.17.1-0.3.2
 
 #### github-generate-changelog
 
-Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists. Default value is `true`, if [`changelog`](#user-content-changelog) and [`changelog-file`](#user-content-changelog-file) are not provided; otherwise, `false`.
+Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists. Default value is `true`, if [`changelog`](#user-content-changelog) and [`changelog-file`](#user-content-changelog-file) are not provided; otherwise, `false`. [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release)
 
 ```yaml
 github-generate-changelog: false
@@ -421,7 +421,7 @@ github-generate-changelog: false
 
 #### github-draft
 
-`true` to create a draft (unpublished) release, `false` to create a published one. Unused if the GitHub Release already exists. Default value is `false`.
+`true` to create a draft (unpublished) release, `false` to create a published one. Unused if the GitHub Release already exists. Default value is `false`. [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release)
 
 ```yaml
 github-draft: false
@@ -429,7 +429,7 @@ github-draft: false
 
 #### github-prerelease
 
-`true` to identify the release as a prerelease, `false` to identify the release as a full release. Unused if the GitHub Release already exists. Default value is `false`, if [`version-type`](#user-content-version-type) is `release`; otherwise, `true`.
+`true` to identify the release as a prerelease, `false` to identify the release as a full release. Unused if the GitHub Release already exists. Default value is `false`, if [`version-type`](#user-content-version-type) is `release`; otherwise, `true`. [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release)
 
 ```yaml
 github-prerelease: true
@@ -437,7 +437,7 @@ github-prerelease: true
 
 #### github-commitish
 
-Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default value is the repository's default branch.
+Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default value is the repository's default branch. [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release)
 
 ```yaml
 github-commitish: 347040cd637363613e56a6b333f09eaa5be3a196
@@ -445,7 +445,7 @@ github-commitish: 347040cd637363613e56a6b333f09eaa5be3a196
 
 #### github-discussion
 
-If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists.
+If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists. [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release)
 
 ```yaml
 github-discussion: Announcements
