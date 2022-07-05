@@ -1,10 +1,10 @@
-import { getRequiredFiles, gradleOutputSelector } from "./utils/file-utils";
+import File, { gradleOutputSelector } from "./utils/io/file";
 import PublisherFactory from "./publishing/publisher-factory";
 import PublisherTarget from "./publishing/publisher-target";
-import { getInputAsObject, mapEnumInput, mapNumberInput } from "./utils/input-utils";
-import { getDefaultLogger } from "./utils/logger-utils";
-import { retry } from "./utils/function-utils";
-import LoggingStopwatch from "./utils/logging-stopwatch";
+import { getInputAsObject, mapEnumInput, mapNumberInput } from "./utils/actions/input";
+import { getDefaultLogger } from "./utils/logging/logger";
+import retry from "./utils/retry";
+import LoggingStopwatch from "./utils/logging/logging-stopwatch";
 import AggregateError from "aggregate-error";
 
 enum FailMode {
@@ -28,8 +28,8 @@ async function main() {
         }
 
         const options = { ...commonOptions, ...publisherOptions };
-        const fileSelector = typeof options.filesPrimary === "string" ? { primary: options.filesPrimary, secondary: typeof options.filesSecondary === "string" ? options.filesSecondary : gradleOutputSelector["secondary"] } : typeof options.files === "string" ? options.files : gradleOutputSelector;
-        const files = await getRequiredFiles(fileSelector);
+        const fileSelector = typeof options.filesPrimary === "string" ? { primary: options.filesPrimary, secondary: typeof options.filesSecondary === "string" ? options.filesSecondary : gradleOutputSelector.secondary } : typeof options.files === "string" ? options.files : gradleOutputSelector;
+        const files = await File.getRequiredFiles(fileSelector);
         const retryAttempts = mapNumberInput(options.retryAttempts);
         const retryDelay = mapNumberInput(options.retryDelay);
         const failMode = mapEnumInput(options.failMode, FailMode, FailMode.Fail as FailMode);

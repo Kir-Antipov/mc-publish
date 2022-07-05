@@ -3,7 +3,7 @@ import PublisherTarget from "./publisher-target";
 import GitHubPublisher from "./github/github-publisher";
 import ModrinthPublisher from "./modrinth/modrinth-publisher";
 import CurseForgePublisher from "./curseforge/curseforge-publisher";
-import Logger from "../utils/logger";
+import Logger from "../utils/logging/logger";
 
 export default class PublisherFactory {
     public create(target: PublisherTarget, logger?: Logger): Publisher<unknown> {

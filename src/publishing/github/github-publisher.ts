@@ -1,10 +1,10 @@
 import PublisherTarget from "../publisher-target";
 import * as github from "@actions/github";
-import { File } from "../../utils/file";
+import File from "../../utils/io/file";
 import ModPublisher from "../../publishing/mod-publisher";
 import Dependency from "../../metadata/dependency";
-import { mapStringInput, mapBooleanInput } from "../../utils/input-utils";
-import { VersionType } from "../../utils/version-utils";
+import { mapStringInput, mapBooleanInput } from "../../utils/actions/input";
+import VersionType from "../../utils/versioning/version-type";
 import { env } from "process";
 
 function getEnvironmentTag(): string | undefined {
@@ -49,7 +49,7 @@ export default class GitHubPublisher extends ModPublisher {
         }
 
         const generated = !releaseId;
-        if (generated && (tag ??= environmentTag ?? version)) {
+        if (!releaseId && (tag ??= environmentTag ?? version)) {
             const generateChangelog = mapBooleanInput(options.generateChangelog, !changelog);
             const draft = mapBooleanInput(options.draft, false);
             const prerelease = mapBooleanInput(options.prerelease, channel !== VersionType.Release);
@@ -58,7 +58,7 @@ export default class GitHubPublisher extends ModPublisher {
             releaseId = await this.createRelease(tag, name, changelog, generateChangelog, draft, prerelease, commitish, discussion, token);
         }
         if (!releaseId) {
-            throw new Error(`Cannot find or create release ${tag || `#${releaseId}`}`);
+            throw new Error(`Cannot find or create release ${tag}`);
         }
 
         const existingAssets = generated ? [] : (await octokit.rest.repos.listReleaseAssets({ ...repo, release_id: releaseId })).data;

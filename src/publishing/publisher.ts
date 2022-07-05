@@ -1,6 +1,6 @@
-import { File } from "../utils/file";
-import Logger from "../utils/logger";
-import { getEmptyLogger } from "../utils/logger-utils";
+import File from "../utils/io/file";
+import Logger from "../utils/logging/logger";
+import { getEmptyLogger } from "../utils/logging/logger";
 import PublisherTarget from "./publisher-target";
 
 export default abstract class Publisher<TOptions> {

@@ -1,13 +1,13 @@
 import { context } from "@actions/github";
-import { parseVersionName, parseVersionNameFromFileVersion } from "../utils/minecraft-utils";
-import { File } from "../utils/file";
-import { getFiles } from "../utils/file-utils";
+import { parseVersionName, parseVersionNameFromFileVersion } from "../utils/minecraft";
+import File from "../utils/io/file";
 import Publisher from "./publisher";
 import PublisherTarget from "./publisher-target";
-import MinecraftVersionResolver from "../utils/minecraft-version-resolver";
+import MinecraftVersionResolver from "../utils/minecraft/minecraft-version-resolver";
 import ModMetadataReader from "../metadata/mod-metadata-reader";
 import Dependency from "../metadata/dependency";
-import { parseVersionFromName, parseVersionTypeFromName } from "../utils/version-utils";
+import Version from "../utils/versioning/version";
+import VersionType from "../utils/versioning/version-type";
 import DependencyKind from "../metadata/dependency-kind";
 import path from "path";
 
@@ -46,7 +46,7 @@ function processDependenciesInput(input: string | string[], inputSplitter?: RegE
 }
 
 async function readChangelog(changelogPath: string): Promise<string | never> {
-    const file = (await getFiles(changelogPath))[0];
+    const file = (await File.getFiles(changelogPath))[0];
     if (!file) {
         throw new Error("Changelog file was not found");
     }
@@ -87,8 +87,8 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         }
 
         const filename = path.parse(files[0].path).name;
-        const version = (typeof options.version === "string" && options.version) || <string>releaseInfo?.tag_name || metadata?.version || parseVersionFromName(filename);
-        const versionType = options.versionType?.toLowerCase() || parseVersionTypeFromName(metadata?.version || filename);
+        const version = (typeof options.version === "string" && options.version) || <string>releaseInfo?.tag_name || metadata?.version || Version.fromName(filename);
+        const versionType = options.versionType?.toLowerCase() || VersionType.fromName(metadata?.version || filename);
         const name = typeof options.name === "string" ? options.name : (<string>releaseInfo?.name || version);
         const changelog = typeof options.changelog === "string"
             ? options.changelog

@@ -1,11 +1,11 @@
-import { createVersion, getProject, getVersions, modifyVersion } from "../../utils/modrinth-utils";
-import { File } from "../../utils/file";
+import { createVersion, getProject, getVersions, modifyVersion } from "../../utils/modrinth";
+import File from "../../utils/io/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
 import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
-import { mapBooleanInput, mapEnumInput } from "../../utils/input-utils";
-import LoggingStopwatch from "../../utils/logging-stopwatch";
+import { mapBooleanInput, mapEnumInput } from "../../utils/actions/input";
+import LoggingStopwatch from "../../utils/logging/logging-stopwatch";
 
 enum UnfeatureMode {
     None = 0,

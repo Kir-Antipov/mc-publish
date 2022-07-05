@@ -1,7 +1,7 @@
-import { File } from "../../utils/file";
+import File from "../../utils/io/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
-import { convertToCurseForgeVersions, uploadFile } from "../../utils/curseforge-utils";
+import { convertToCurseForgeVersions, uploadFile } from "../../utils/curseforge";
 import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
 
