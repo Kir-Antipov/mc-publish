@@ -18,12 +18,12 @@ interface ModPublisherOptions {
     loaders?: string | string[];
     name?: string;
     version?: string;
-    changelog?: string | { file?: string };
+    changelog?: string;
+    changelogFile?: string;
     versionResolver?: string;
     gameVersions?: string | string[];
     java?: string | string[];
     dependencies?: string | string[];
-    files?: string | { primary?: string, secondary?: string };
 }
 
 function processMultilineInput(input: string | string[], splitter?: RegExp): string[] {
@@ -92,8 +92,8 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         const name = typeof options.name === "string" ? options.name : (<string>releaseInfo?.name || version);
         const changelog = typeof options.changelog === "string"
             ? options.changelog
-            : options.changelog?.file
-                ? await readChangelog(options.changelog.file)
+            : typeof options.changelogFile === "string"
+                ? await readChangelog(options.changelogFile)
                 : <string>releaseInfo?.body || "";
 
         const loaders = processMultilineInput(options.loaders, /\s+/);

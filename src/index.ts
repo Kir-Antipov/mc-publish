@@ -19,10 +19,10 @@ async function main() {
         }
 
         const options = { ...commonOptions, ...publisherOptions };
-        const fileSelector = options.files && (typeof(options.files) === "string" || options.files.primary) ? options.files : gradleOutputSelector;
+        const fileSelector = typeof options.filesPrimary === "string" ? { primary: options.filesPrimary, secondary: typeof options.filesSecondary === "string" ? options.filesSecondary : gradleOutputSelector["secondary"] } : typeof options.files === "string" ? options.files : gradleOutputSelector;
         const files = await getRequiredFiles(fileSelector);
-        const retryAttempts = mapNumberInput(options.retry?.["attempts"]);
-        const retryDelay = mapNumberInput(options.retry?.["delay"]);
+        const retryAttempts = mapNumberInput(options.retryAttempts);
+        const retryDelay = mapNumberInput(options.retryDelay);
 
         const publisher = publisherFactory.create(target, logger);
         logger.info(`Publishing assets to ${targetName}...`);
