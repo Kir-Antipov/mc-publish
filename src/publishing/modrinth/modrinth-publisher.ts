@@ -5,6 +5,7 @@ import PublisherTarget from "../publisher-target";
 import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
 import { mapBooleanInput, mapEnumInput } from "../../utils/input-utils";
+import LoggingStopwatch from "../../utils/logging-stopwatch";
 
 enum UnfeatureMode {
     None = 0,
@@ -68,9 +69,8 @@ export default class ModrinthPublisher extends ModPublisher {
     }
 
     private async unfeatureOlderVersions(id: string, token: string, unfeatureMode: UnfeatureMode, loaders: string[], gameVersions: string[]): Promise<void> {
-        this.logger.info("Unfeaturing older Modrinth versions...");
-        const start = new Date();
-        const unfeaturedVersions = <string[]>[];
+        const unfeaturedVersions = new Array<string>();
+        const stopwatch = LoggingStopwatch.startNew(this.logger, "Unfeaturing older Modrinth versions...", ms => `Successfully unfeatured: ${unfeaturedVersions.join(", ")} (in ${ms} ms)`);
 
         const versionSubset = hasFlag(unfeatureMode, UnfeatureMode.VersionSubset);
         const loaderSubset = hasFlag(unfeatureMode, UnfeatureMode.LoaderSubset);
@@ -92,8 +92,7 @@ export default class ModrinthPublisher extends ModPublisher {
         }
 
         if (unfeaturedVersions.length) {
-            const end = new Date();
-            this.logger.info(`Successfully unfeatured versions ${unfeaturedVersions.join(", ")} (in ${end.getTime() - start.getTime()} ms)`);
+            stopwatch.stop();
         } else {
             this.logger.info("No versions to unfeature were found");
         }

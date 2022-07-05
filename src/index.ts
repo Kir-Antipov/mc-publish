@@ -4,6 +4,7 @@ import PublisherTarget from "./publishing/publisher-target";
 import { getInputAsObject, mapNumberInput } from "./utils/input-utils";
 import { getDefaultLogger } from "./utils/logger-utils";
 import { retry } from "./utils/function-utils";
+import LoggingStopwatch from "./utils/logging-stopwatch";
 
 async function main() {
     const commonOptions = getInputAsObject();
@@ -25,8 +26,7 @@ async function main() {
         const retryDelay = mapNumberInput(options.retryDelay);
 
         const publisher = publisherFactory.create(target, logger);
-        logger.info(`Publishing assets to ${targetName}...`);
-        const start = new Date();
+        const stopwatch = LoggingStopwatch.startNew(logger, `Publishing assets to ${targetName}...`, ms => `Successfully published assets to ${targetName} (in ${ms} ms)`);
 
         await retry({
             func: () => publisher.publish(files, options),
@@ -38,8 +38,7 @@ async function main() {
             }
         });
 
-        const end = new Date();
-        logger.info(`Successfully published assets to ${targetName} (in ${end.getTime() - start.getTime()} ms)`);
+        stopwatch.stop();
         publishedTo.push(targetName);
     }
 
