@@ -5,8 +5,8 @@ import glob from "fast-glob";
 export type FileSelector = string | { primary?: string, secondary?: string };
 
 export const gradleOutputSelector = {
-    primary: "build/libs/!(*-@(dev|sources)).jar",
-    secondary: "build/libs/*-@(dev|sources).jar"
+    primary: "build/libs/!(*-@(dev|sources|javadoc)).jar",
+    secondary: "build/libs/*-@(dev|sources|javadoc).jar"
 };
 
 export default class File {
