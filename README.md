@@ -15,7 +15,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v3.1
+      - uses: Kir-Antipov/mc-publish@v3.2
         with:
           # You don't need this section if you don't want to publish
           # your assets to Modrinth
@@ -41,7 +41,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v3.1
+      - uses: Kir-Antipov/mc-publish@v3.2
         with:
           modrinth-id: AANobbMI
           modrinth-featured: true
