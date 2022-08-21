@@ -182,11 +182,11 @@ inputs:
     default: ${undefined}
   modrinth-retry-attempts:
     description: The maximum number of attempts to publish assets
-    default: 2
+    default: ${undefined}
     required: false
   modrinth-retry-delay:
     description: Time delay between attempts to publish assets (in milliseconds)
-    default: 10000
+    default: ${undefined}
     required: false
   modrinth-fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
@@ -246,11 +246,11 @@ inputs:
     default: ${undefined}
   curseforge-retry-attempts:
     description: The maximum number of attempts to publish assets
-    default: 2
+    default: ${undefined}
     required: false
   curseforge-retry-delay:
     description: Time delay between attempts to publish assets (in milliseconds)
-    default: 10000
+    default: ${undefined}
     required: false
   curseforge-fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
@@ -310,11 +310,11 @@ inputs:
     default: ${undefined}
   github-retry-attempts:
     description: The maximum number of attempts to publish assets
-    default: 2
+    default: ${undefined}
     required: false
   github-retry-delay:
     description: Time delay between attempts to publish assets (in milliseconds)
-    default: 10000
+    default: ${undefined}
     required: false
   github-fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
