@@ -59,8 +59,8 @@ jobs:
           github-discussion: Announcements
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-          files-primary: build/libs/!(*-@(dev|sources)).jar
-          files-secondary: build/libs/*-@(dev|sources).jar
+          files-primary: build/libs/!(*-@(dev|sources|javadoc)).jar
+          files-secondary: build/libs/*-@(dev|sources|javadoc).jar
 
           name: Sodium 0.3.2 for Minecraft 1.17.1
           version: mc1.17.1-0.3.2
@@ -109,8 +109,8 @@ jobs:
 | [github-discussion](#user-content-github-discussion) | If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists [🛈](https://docs.github.com/en/rest/releases/releases#create-a-release) | ❌ | `Announcements` |
 | [github-token](#user-content-github-token) | A valid token for the GitHub API | ❌ | `${{ secrets.GITHUB_TOKEN }}` |
 | [files](#user-content-files) | A [glob](https://www.digitalocean.com/community/tools/glob) of the file(s) to upload | ❌ | `build/libs/*.jar` |
-| [files-primary](#user-content-files-primary) | A [glob](https://www.digitalocean.com/community/tools/glob) of the primary files to upload | `build/libs/!(*-@(dev\|sources)).jar` | `build/libs/!(*-@(dev\|sources)).jar` |
-| [files-secondary](#user-content-files-secondary) | A [glob](https://www.digitalocean.com/community/tools/glob) of the secondary files to upload | `build/libs/*-@(dev\|sources).jar` | `build/libs/*-@(dev\|sources).jar` |
+| [files-primary](#user-content-files-primary) | A [glob](https://www.digitalocean.com/community/tools/glob) of the primary files to upload | `build/libs/!(*-@(dev\|sources\|javadoc)).jar` | `build/libs/!(*-@(dev\|sources\|javadoc)).jar` |
+| [files-secondary](#user-content-files-secondary) | A [glob](https://www.digitalocean.com/community/tools/glob) of the secondary files to upload | `build/libs/*-@(dev\|sources\|javadoc).jar` | `build/libs/*-@(dev\|sources\|javadoc).jar` |
 | [name](#user-content-name) | The name of the version | A title of the release that triggered the action | `Sodium 0.3.2 for Minecraft 1.17.1` |
 | [version](#user-content-version) | The version number | A tag of the release that triggered the action | `mc1.17.1-0.3.2` |
 | [version-type](#user-content-version-type) | The type of the release | Will be parsed from the [`version`](#user-content-version) value | `alpha` <br> `beta` <br> `release` |
@@ -129,14 +129,14 @@ Note, that you can use any top-level property *(`name`, `version`, `dependencies
 
 ```yaml
 # It is a good idea to share the same primary file among different targets
-files-primary: build/libs/!(*-@(dev\|sources)).jar
+files-primary: build/libs/!(*-@(dev\|sources\|javadoc)).jar
 
 modrinth-id: aaaAAAaa
 modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 # Modrinth-specific name for your mod
 modrinth-name: Modrinth Mod
 # Modrinth-specific secondary files
-modrinth-files-secondary: build/libs/*-@(dev\|sources).jar
+modrinth-files-secondary: build/libs/*-@(dev\|sources\|javadoc).jar
 # Modrinth-specific dependencies
 # It is possible to use project ids instead of slugs
 modrinth-dependencies: |
@@ -469,18 +469,18 @@ files: build/libs/*.jar
 
 #### files-primary
 
-A glob of the primary files to upload. Default value is `build/libs/!(*-@(dev|sources)).jar`.
+A glob of the primary files to upload. Default value is `build/libs/!(*-@(dev|sources|javadoc)).jar`.
 
 ```yaml
-files-primary: build/libs/!(*-@(dev|sources)).jar
+files-primary: build/libs/!(*-@(dev|sources|javadoc)).jar
 ```
 
 #### files-secondary
 
-A glob of the secondary files to upload. Default value is `build/libs/*-@(dev|sources).jar`.
+A glob of the secondary files to upload. Default value is `build/libs/*-@(dev|sources|javadocs).jar`.
 
 ```yaml
-files-secondary: build/libs/*-@(dev|sources).jar
+files-secondary: build/libs/*-@(dev|sources|javadoc).jar
 ```
 
 #### name
