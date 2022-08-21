@@ -46,7 +46,10 @@ function processInputs(inputs: Record<string, ActionInput>) {
 
     for (const publisher of publishers) {
         for (const [name, input] of nestedInputs) {
-            inputs[`${publisher}-${name}`] = { ...input };
+            inputs[`${publisher}-${name}`] = {
+                ...input,
+                default: "${undefined}"
+            };
         }
     }
 
