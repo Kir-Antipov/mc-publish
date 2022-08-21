@@ -477,7 +477,7 @@ files-primary: build/libs/!(*-@(dev|sources|javadoc)).jar
 
 #### files-secondary
 
-A glob of the secondary files to upload. Default value is `build/libs/*-@(dev|source|javadocs).jar`.
+A glob of the secondary files to upload. Default value is `build/libs/*-@(dev|sources|javadocs).jar`.
 
 ```yaml
 files-secondary: build/libs/*-@(dev|sources|javadoc).jar
