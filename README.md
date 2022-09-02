@@ -168,7 +168,7 @@ Can be automatically retrieved from the config file of your mod:
 - `fabric.mod.json` (Fabric)
 
   - Custom `mc-publish` field *(recommended)*:
-      ```json
+      ```jsonc
       {
         // ...
         "custom": {
@@ -180,7 +180,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
-      ```json
+      ```jsonc
       {
         // ...
         "custom": {
@@ -192,7 +192,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom `projects` field:
-      ```json
+      ```jsonc
       {
         // ...
         "custom": {
@@ -204,7 +204,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```jsonc
       {
         // ...
         "projects": {
@@ -236,7 +236,7 @@ Can be automatically retrieved from the config file of your mod:
 - `quilt.mod.json` (Quilt)
 
   - `mc-publish` field *(recommended)*:
-      ```json
+      ```jsonc
       {
         // ...
         "mc-publish": {
@@ -246,7 +246,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```jsonc
       {
         // ...
         "projects": {
@@ -308,7 +308,7 @@ Can be automatically retrieved from the config file of your mod:
 - `fabric.mod.json` (Fabric)
 
   - Custom `mc-publish` field *(recommended)*:
-      ```json
+      ```jsonc
       {
         // ...
         "custom": {
@@ -320,7 +320,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
-      ```json
+      ```jsonc
       {
         // ...
         "custom": {
@@ -332,7 +332,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom `projects` field:
-      ```json
+      ```jsonc
       {
         // ...
         "custom": {
@@ -344,7 +344,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```jsonc
       {
         // ...
         "projects": {
@@ -376,7 +376,7 @@ Can be automatically retrieved from the config file of your mod:
 - `quilt.mod.json` (Quilt)
 
   - `mc-publish` field *(recommended)*:
-      ```json
+      ```jsonc
       {
         // ...
         "mc-publish": {
@@ -386,7 +386,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
-      ```json
+      ```jsonc
       {
         // ...
         "projects": {
@@ -530,7 +530,7 @@ A list of supported mod loaders. If no value is provided, `fabric` will be used 
 Fabric mods can be marked as Quilt-compatible like so:
 
 - `fabric.mod.json`
-  ```json
+  ```jsonc
   {
     // ...
     "custom": {
@@ -607,7 +607,7 @@ Available dependency kinds:
 Can be automatically retrieved from the config file of your mod:
 
 - `fabric.mod.json` (Fabric)
-  ```json
+  ```jsonc
   "depends": {
     "required-dependency": "*"
   },
@@ -676,7 +676,7 @@ Can be automatically retrieved from the config file of your mod:
   ```
 
 - `quilt.mod.json` (Quilt)
-  ```json
+  ```jsonc
   "depends": [
     "required-dependency",
     {
