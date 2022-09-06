@@ -1,12 +1,14 @@
-name: "ExamplePlugin" # Automatically acts as ID too
+name: "ExamplePlugin"
 version: "1.0.0"
+
 description: "Description"
-authors: ["author"] # There is also "author" that accepts a single String
+authors: ["Author"]
+website: "https://github.com"
 
-api-version: "1.19" # Plugin was made using the 1.19 version of Spigot's API
+api-version: "1.19"
 
-depends: ["RequiredPlugin"] # Required dependencies
-softDepends: ["OptionalPlugin"] # Optional dependencies
+depends: ["RequiredPlugin"]
+softdepends: ["OptionalPlugin"]
 
 main: "example.ExamplePlugin"
 
