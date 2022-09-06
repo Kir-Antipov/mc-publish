@@ -1,0 +1,24 @@
+{
+  "id": "exampleplugin",
+  "name": "ExamplePlugin",
+  "version": "1.0.0",
+  "description": "Description",
+  "authors": [
+    "author"
+  ],
+  "dependencies": [
+    {
+      "id": "optional",
+      "optional": true
+    },
+    {
+      "id": "required",
+      "optional": false
+    }
+  ],
+  "main": "example.ExamplePlugin",
+  "mc-publish": {
+    "modrinth": "AAAA"
+    "curseforge": 123456
+  }
+}
