@@ -10,7 +10,7 @@ describe("ModMetadataReader.readMetadata", () => {
     describe("Fabric", () => {
         beforeAll(() => new Promise(resolve => {
             const zip = new ZipFile();
-            zip.addFile("./test/content/fabric.mod.json", "fabric.mod.json");
+            zip.addFile("./test/content/fabric/fabric.mod.json", "fabric.mod.json");
             zip.end();
             zip.outputStream.pipe(fs.createWriteStream("example-mod.fabric.jar")).on("close", resolve);
         }));
@@ -97,7 +97,7 @@ describe("ModMetadataReader.readMetadata", () => {
     describe("Forge", () => {
         beforeAll(() => new Promise(resolve => {
             const zip = new ZipFile();
-            zip.addFile("./test/content/mods.toml", "META-INF/mods.toml");
+            zip.addFile("./test/content/forge/mods.toml", "META-INF/mods.toml");
             zip.end();
             zip.outputStream.pipe(fs.createWriteStream("example-mod.forge.jar")).on("close", resolve);
         }));
@@ -173,7 +173,7 @@ describe("ModMetadataReader.readMetadata", () => {
     describe("Quilt", () => {
         beforeAll(() => new Promise(resolve => {
             const zip = new ZipFile();
-            zip.addFile("./test/content/quilt.mod.json", "quilt.mod.json");
+            zip.addFile("./test/content/quilt/quilt.mod.json", "quilt.mod.json");
             zip.end();
             zip.outputStream.pipe(fs.createWriteStream("example-mod.quilt.jar")).on("close", resolve);
         }));
