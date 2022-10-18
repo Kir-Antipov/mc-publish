@@ -32,7 +32,7 @@ async function main() {
         const files = await File.getRequiredFiles(fileSelector);
         const retryAttempts = mapNumberInput(options.retryAttempts);
         const retryDelay = mapNumberInput(options.retryDelay);
-        const failMode = mapEnumInput(options.failMode, FailMode, FailMode.Fail as FailMode);
+        const failMode = mapEnumInput<FailMode>(options.failMode, FailMode, FailMode.Fail);
         const publisher = publisherFactory.create(target, logger);
         const func = {
             func: () => publisher.publish(files, options),

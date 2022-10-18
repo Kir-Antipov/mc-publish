@@ -90,6 +90,10 @@ function findEnumValueByName<T extends EnumLike<U>, U>(enumClass: T, name: strin
     return undefined;
 }
 
+export function mapEnumInput<T>(value: any, enumClass: any, defaultValue?: T): T;
+
+export function mapEnumInput<T extends EnumLike<U>, U>(value: any, enumClass: T, defaultValue?: U): U;
+
 export function mapEnumInput<T extends EnumLike<U>, U>(value: any, enumClass: T, defaultValue: U = null): U | null {
     return mapInput(value, defaultValue, {
         string: (x: string) => {
