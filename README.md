@@ -193,21 +193,9 @@ Can be automatically retrieved from the config file of your mod:
 
 - `mods.toml` (Forge)
 
-  - Custom `mc-publish` field *(recommended)*:
+  - Custom `mc-publish` field:
       ```toml
-      [custom.mc-publish]
-          modrinth="AANobbMI"
-      ```
-
-  - Custom `projects` field:
-      ```toml
-      [custom.projects]
-          modrinth="AANobbMI"
-      ```
-
-  - `projects` field:
-      ```toml
-      [projects]
+      [mc-publish]
           modrinth="AANobbMI"
       ```
 
@@ -311,21 +299,9 @@ Can be automatically retrieved from the config file of your mod:
 
 - `mods.toml` (Forge)
 
-  - Custom `mc-publish` field *(recommended)*:
+  - Custom `mc-publish` field:
       ```toml
-      [custom.mc-publish]
-          curseforge=394468
-      ```
-
-  - Custom `projects` field:
-      ```toml
-      [custom.projects]
-          curseforge=394468
-      ```
-
-  - `projects` field:
-      ```toml
-      [projects]
+      [mc-publish]
           curseforge=394468
       ```
 
@@ -617,7 +593,7 @@ Can be automatically retrieved from the config file of your mod:
     versionRange="0.3.0"
     ordering="NONE"
     side="BOTH"
-    [dependencies.mod-id.custom.mc-publish]
+    [dependencies.mod-id.mc-publish]
         ignore=false # `mc-publish` will ignore this dependency, if `ignore` is set to true
         modrinth="included-dependency-forge" # Modrinth's project slug
         curseforge="included-dependency-forge" # CurseForge's project slug

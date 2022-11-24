@@ -1,18 +1,21 @@
-import ModMetadata from "../../metadata/mod-metadata";
+import ModMetadata from "../mod-metadata";
 import toml from "toml";
-import ZippedModMetadataReader from "../../metadata/zipped-mod-metadata-reader";
+import ZippedModMetadataReader from "../zipped-mod-metadata-reader";
 import ForgeModMetadata from "./forge-mod-metadata";
+import ForgeModConfig from "./forge-mod-config";
 
-export default class ForgeModMetadataReader extends ZippedModMetadataReader {
+class ForgeModMetadataReader extends ZippedModMetadataReader<ForgeModConfig> {
     constructor() {
-        super("META-INF/mods.toml");
+        super(ForgeModConfig.FILENAME);
     }
 
-    protected loadConfig(buffer: Buffer): Record<string, unknown> {
+    protected loadConfig(buffer: Buffer): ForgeModConfig {
         return toml.parse(buffer.toString("utf8"));
     }
 
-    protected createMetadataFromConfig(config: Record<string, unknown>): ModMetadata {
+    protected createMetadataFromConfig(config: ForgeModConfig): ModMetadata {
         return new ForgeModMetadata(config);
     }
 }
+
+export default ForgeModMetadataReader;

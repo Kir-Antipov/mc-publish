@@ -13,7 +13,7 @@ license="MIT"
     Example mod
     '''
 
-[projects]
+[mc-publish]
     modrinth="AANobbMI"
 [custom.projects]
     curseforge=394468
@@ -46,13 +46,12 @@ license="MIT"
     versionRange="0.2.0"
     ordering="NONE"
     side="BOTH"
-    [dependencies.example-mod.projects]
+    [dependencies.example-mod.mc-publish]
         modrinth="AAAA"
-    [dependencies.example-mod.custom.projects]
         curseforge=42
+        ignore=true
     [dependencies.example-mod.custom.mc-publish]
         github="v0.2.0"
-        ignore=true
 
 
 [[dependencies.example-mod]]

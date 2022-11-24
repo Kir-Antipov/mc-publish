@@ -1,29 +1,74 @@
-import ModConfig from "../../metadata/mod-config";
-import ModConfigDependency from "../../metadata/mod-config-dependency";
-import Dependency from "../../metadata/dependency";
-import DependencyKind from "../../metadata/dependency-kind";
+import action from "../../../package.json";
+import Dependency from "../dependency";
+import DependencyKind from "../dependency-kind";
+import ForgeModConfig from "./forge-mod-config";
+import ModMetadata from "../mod-metadata";
+import PublisherTarget from "../../publishing/publisher-target";
 
-const ignoredByDefault = ["minecraft", "java", "forge"];
-function createDependency(body: any): Dependency {
-    return new ModConfigDependency({
-        ignore: ignoredByDefault.includes(body.modId),
-        ...body,
-        id: body.modId,
-        version: body.versionRange,
-        kind: body.incompatible && DependencyKind.Breaks || body.embedded && DependencyKind.Includes || body.mandatory && DependencyKind.Depends || DependencyKind.Recommends
-    });
+type ForgeDependency = ForgeModConfig["dependencies"][string][number];
+
+function getDependencies(config: ForgeModConfig): Dependency[] {
+    return Object
+        .values(config.dependencies || {})
+        .filter(x => Array.isArray(x))
+        .flatMap(x => x)
+        .map(parseDependency)
+        .filter((x, i, self) => self.findIndex(y => x.id === y.id && x.kind === y.kind) === i);
 }
 
-export default class ForgeModMetadata extends ModConfig {
-    public readonly id: string;
-    public readonly name: string;
-    public readonly version: string;
-    public readonly loaders: string[];
-    public readonly dependencies: Dependency[];
+function parseDependency(body: ForgeDependency): Dependency {
+    const id = body.modId;
+    const kind = body.incompatible && DependencyKind.Breaks || body.embedded && DependencyKind.Includes || body.mandatory && DependencyKind.Depends || DependencyKind.Recommends;
+    const version = body.versionRange;
+    const ignore = body[action.name]?.ignore ?? body.custom?.[action.name]?.ignore ?? body.ignore ?? isDependencyIgnoredByDefault(id);
+    const aliases = new Map<PublisherTarget, string>();
+    for (const target of PublisherTarget.getValues()) {
+        const targetName = PublisherTarget.toString(target).toLowerCase();
+        const alias = body[action.name]?.[targetName] ?? body.custom?.[action.name]?.[targetName];
+        if (alias) {
+            aliases.set(target, String(alias));
+        }
+    }
 
-    constructor(config: Record<string, unknown>) {
-        super(config);
-        const mods = Array.isArray(this.config.mods) && <any[]>this.config.mods || [];
+    return Dependency.create({ id, kind, version, ignore, aliases });
+}
+
+const ignoredByDefault = [
+    "minecraft",
+    "java",
+    "forge",
+];
+function isDependencyIgnoredByDefault(id: string): boolean {
+    return ignoredByDefault.includes(id);
+}
+
+function getProjects(config: ForgeModConfig): Map<PublisherTarget, string> {
+    const projects = new Map();
+    for (const target of PublisherTarget.getValues()) {
+        const targetName = PublisherTarget.toString(target).toLowerCase();
+        const projectId = config[action.name]?.[targetName]
+            ?? config.custom?.[action.name]?.[targetName]
+            ?? config.projects?.[targetName]
+            ?? config.custom?.projects?.[targetName];
+
+        if (projectId) {
+            projects.set(target, String(projectId));
+        }
+    }
+    return projects;
+}
+
+class ForgeModMetadata implements ModMetadata {
+    readonly id: string;
+    readonly name: string;
+    readonly version: string;
+    readonly loaders: string[];
+    readonly dependencies: Dependency[];
+
+    private readonly _projects: Map<PublisherTarget, string>;
+
+    constructor(config: ForgeModConfig) {
+        const mods = Array.isArray(config.mods) && config.mods || [];
         const mod = mods[0];
         if (!mod) {
             throw new Error("At least one mod should be specified");
@@ -33,11 +78,14 @@ export default class ForgeModMetadata extends ModConfig {
         this.name = mod.displayName || this.id;
         this.version = mod.version || "*";
         this.loaders = ["forge"];
-        this.dependencies = Object
-            .values(this.config.dependencies || {})
-            .filter(Array.isArray)
-            .flatMap(x => x)
-            .map(createDependency)
-            .filter((x, i, self) => self.findIndex(y => x.id === y.id && x.kind === y.kind) === i);
+        this.dependencies = getDependencies(config);
+
+        this._projects = getProjects(config);
+    }
+
+    getProjectId(project: PublisherTarget): string | undefined {
+        return this._projects.get(project);
     }
 }
+
+export default ForgeModMetadata;
