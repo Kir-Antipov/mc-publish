@@ -1,17 +1,20 @@
-import ModMetadata from "../../metadata/mod-metadata";
-import ZippedModMetadataReader from "../../metadata/zipped-mod-metadata-reader";
+import ModMetadata from "../mod-metadata";
+import ZippedModMetadataReader from "../zipped-mod-metadata-reader";
+import FabricModConfig from "./fabric-mod-config";
 import FabricModMetadata from "./fabric-mod-metadata";
 
-export default class FabricModMetadataReader extends ZippedModMetadataReader {
+class FabricModMetadataReader extends ZippedModMetadataReader<FabricModConfig> {
     constructor() {
-        super("fabric.mod.json");
+        super(FabricModConfig.FILENAME);
     }
 
-    protected loadConfig(buffer: Buffer): Record<string, unknown> {
+    protected loadConfig(buffer: Buffer): FabricModConfig {
         return JSON.parse(buffer.toString("utf8"));
     }
 
-    protected createMetadataFromConfig(config: Record<string, unknown>): ModMetadata {
+    protected createMetadataFromConfig(config: FabricModConfig): ModMetadata {
         return new FabricModMetadata(config);
     }
 }
+
+export default FabricModMetadataReader;

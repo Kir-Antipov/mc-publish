@@ -167,7 +167,7 @@ Can be automatically retrieved from the config file of your mod:
 
 - `fabric.mod.json` (Fabric)
 
-  - Custom `mc-publish` field *(recommended)*:
+  - Custom `mc-publish` field:
       ```json
       {
         // ...
@@ -179,7 +179,7 @@ Can be automatically retrieved from the config file of your mod:
       }
       ```
 
-  - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
+  - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field:
       ```json
       {
         // ...
@@ -187,28 +187,6 @@ Can be automatically retrieved from the config file of your mod:
           "modmanager": {
             "modrinth": "AANobbMI"
           }
-        },
-      }
-      ```
-
-  - Custom `projects` field:
-      ```json
-      {
-        // ...
-        "custom": {
-          "projects": {
-            "modrinth": "AANobbMI"
-          }
-        },
-      }
-      ```
-
-  - `projects` field:
-      ```json
-      {
-        // ...
-        "projects": {
-          "modrinth": "AANobbMI"
         },
       }
       ```
@@ -307,7 +285,7 @@ Can be automatically retrieved from the config file of your mod:
 
 - `fabric.mod.json` (Fabric)
 
-  - Custom `mc-publish` field *(recommended)*:
+  - Custom `mc-publish` field:
       ```json
       {
         // ...
@@ -319,7 +297,7 @@ Can be automatically retrieved from the config file of your mod:
       }
       ```
 
-  - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
+  - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field:
       ```json
       {
         // ...
@@ -327,28 +305,6 @@ Can be automatically retrieved from the config file of your mod:
           "modmanager": {
             "curseforge": 394468
           }
-        },
-      }
-      ```
-
-  - Custom `projects` field:
-      ```json
-      {
-        // ...
-        "custom": {
-          "projects": {
-            "curseforge": 394468
-          }
-        },
-      }
-      ```
-
-  - `projects` field:
-      ```json
-      {
-        // ...
-        "projects": {
-          "curseforge": 394468
         },
       }
       ```

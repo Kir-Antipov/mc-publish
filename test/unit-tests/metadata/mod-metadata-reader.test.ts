@@ -65,6 +65,12 @@ describe("ModMetadataReader.readMetadata", () => {
             }
         });
 
+        test("version array is supported", async () => {
+            const metadata = (await ModMetadataReader.readMetadata("example-mod.fabric.jar"))!;
+            const minecraft = metadata.dependencies.find(x => x.id === "minecraft");
+            expect(minecraft.version).toStrictEqual("1.17 || 1.17.1");
+        });
+
         test("custom metadata can be attached to dependency entry", async () => {
             const metadata = (await ModMetadataReader.readMetadata("example-mod.fabric.jar"))!;
             const recommended = metadata.dependencies.find(x => x.id === "recommended-mod")!;

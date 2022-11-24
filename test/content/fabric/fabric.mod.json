@@ -23,10 +23,10 @@
       "example-mod.mixins.json"
     ],
 
-    "projects": {
-      "modrinth": "AANobbMI"
-    },
     "custom": {
+      "modmanager": {
+        "modrinth": "AANobbMI"
+      },
       "projects": {
         "curseforge": 394468
       },
@@ -38,20 +38,19 @@
     "depends": {
       "fabricloader": ">=0.11.3",
       "fabric": ">=0.40.0",
-      "minecraft": "1.17.x",
+      "minecraft": [
+        "1.17",
+        "1.17.1"
+      ],
       "java": ">=16"
     },
     "recommends": {
       "recommended-mod": {
         "version": "0.2.0",
-        "projects": {
-          "modrinth": "AAAA"
-        },
         "custom": {
-          "projects": {
-            "curseforge": 42
-          },
           "mc-publish": {
+            "modrinth": "AAAA",
+            "curseforge": 42,
             "github": "v0.2.0",
             "ignore": true
           }
