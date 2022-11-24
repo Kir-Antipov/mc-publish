@@ -1,20 +1,11 @@
-import ModMetadata from "../mod-metadata";
 import toml from "toml";
-import ZippedModMetadataReader from "../zipped-mod-metadata-reader";
+import ZippedModTextMetadataReader from "../zipped-mod-text-metadata-reader";
 import ForgeModMetadata from "./forge-mod-metadata";
 import ForgeModConfig from "./forge-mod-config";
 
-class ForgeModMetadataReader extends ZippedModMetadataReader<ForgeModConfig> {
+class ForgeModMetadataReader extends ZippedModTextMetadataReader<ForgeModConfig> {
     constructor() {
-        super(ForgeModConfig.FILENAME);
-    }
-
-    protected loadConfig(buffer: Buffer): ForgeModConfig {
-        return toml.parse(buffer.toString("utf8"));
-    }
-
-    protected createMetadataFromConfig(config: ForgeModConfig): ModMetadata {
-        return new ForgeModMetadata(config);
+        super(ForgeModConfig.FILENAME, x => new ForgeModMetadata(x), toml.parse);
     }
 }
 
