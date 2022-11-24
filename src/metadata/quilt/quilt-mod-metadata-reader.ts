@@ -1,17 +1,20 @@
-import ModMetadata from "../../metadata/mod-metadata";
-import ZippedModMetadataReader from "../../metadata/zipped-mod-metadata-reader";
+import ModMetadata from "../mod-metadata";
+import ZippedModMetadataReader from "../zipped-mod-metadata-reader";
+import QuiltModConfig from "./quilt-mod-config";
 import QuiltModMetadata from "./quilt-mod-metadata";
 
-export default class QuiltModMetadataReader extends ZippedModMetadataReader {
+class QuiltModMetadataReader extends ZippedModMetadataReader<QuiltModConfig> {
     constructor() {
-        super("quilt.mod.json");
+        super(QuiltModConfig.FILENAME);
     }
 
-    protected loadConfig(buffer: Buffer): Record<string, unknown> {
+    protected loadConfig(buffer: Buffer): QuiltModConfig {
         return JSON.parse(buffer.toString("utf8"));
     }
 
-    protected createMetadataFromConfig(config: Record<string, unknown>): ModMetadata {
+    protected createMetadataFromConfig(config: QuiltModConfig): ModMetadata {
         return new QuiltModMetadata(config);
     }
 }
+
+export default QuiltModMetadataReader;

@@ -27,35 +27,32 @@
     "depends": [
       {
         "id": "quilt_loader",
-        "version": ">=0.11.3"
+        "versions": ">=0.11.3"
       },
       {
         "id": "quilt_base",
-        "version": ">=0.40.0"
+        "versions": ">=0.40.0"
       },
       {
         "id": "minecraft",
-        "version": "1.17.x"
+        "versions": [
+          "1.17",
+          "1.17.1"
+        ]
       },
       {
         "id": "java",
-        "version": ">=16"
+        "versions": ">=16"
       },
       {
         "id": "recommended-mod",
-        "version": "0.2.0",
+        "versions": "0.2.0",
         "optional": true,
         "mc-publish": {
+          "curseforge": 42,
+          "github": "v0.2.0",
           "modrinth": "AAAA",
           "ignore": true
-        },
-        "projects": {
-          "curseforge": 42
-        },
-        "custom": {
-          "projects": {
-            "github": "v0.2.0"
-          }
         }
       }
     ],
@@ -66,21 +63,17 @@
       "breaking-mod",
       {
         "id": "conflicting:conflicting-mod",
-        "version": "<0.40.0",
+        "versions": "<0.40.0",
         "unless": "fix-conflicting-mod"
       }
     ]
   },
   "mc-publish": {
+    "github": "mc1.18-0.4.0-alpha5",
     "modrinth": "AANobbMI"
   },
   "projects": {
     "curseforge": 394468
-  },
-  "custom": {
-    "projects": {
-      "github": "mc1.18-0.4.0-alpha5"
-    }
   },
   "mixins": [
     "example-mod.mixins.json"

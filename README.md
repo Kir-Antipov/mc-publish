@@ -201,21 +201,11 @@ Can be automatically retrieved from the config file of your mod:
 
 - `quilt.mod.json` (Quilt)
 
-  - `mc-publish` field *(recommended)*:
+  - Custom `mc-publish` field:
       ```json
       {
         // ...
         "mc-publish": {
-          "modrinth": "AANobbMI"
-        },
-      }
-      ```
-
-  - `projects` field:
-      ```json
-      {
-        // ...
-        "projects": {
           "modrinth": "AANobbMI"
         },
       }
@@ -307,21 +297,11 @@ Can be automatically retrieved from the config file of your mod:
 
 - `quilt.mod.json` (Quilt)
 
-  - `mc-publish` field *(recommended)*:
+  - Custom `mc-publish` field:
       ```json
       {
         // ...
         "mc-publish": {
-          "curseforge": 394468
-        },
-      }
-      ```
-
-  - `projects` field:
-      ```json
-      {
-        // ...
-        "projects": {
           "curseforge": 394468
         },
       }
@@ -613,7 +593,7 @@ Can be automatically retrieved from the config file of your mod:
     "required-dependency",
     {
       "id": "optional-dependency",
-      "version": "0.1.0",
+      "versions": "0.1.0",
       "optional": true
     }
   ],
@@ -631,11 +611,11 @@ Can be automatically retrieved from the config file of your mod:
   "breaks": [
     {
       "id": "incompatible-dependency",
-      "version": "*"
+      "versions": "*"
     },
     {
       "id": "conflicting-dependency",
-      "version": "*",
+      "versions": "*",
       "unless": "some-mod-that-fixes-conflict"
     }
   ],
