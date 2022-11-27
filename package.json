@@ -31,6 +31,7 @@
     "@babel/preset-typescript": "^7.18.6",
     "@types/node": "^18.7.8",
     "@types/node-fetch": "^2.6.2",
+    "@types/semver": "^7.3.13",
     "@types/yazl": "^2.4.2",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
@@ -46,6 +47,7 @@
     "fast-glob": "^3.2.11",
     "node-fetch": "^3.3.1",
     "node-stream-zip": "^1.15.0",
+    "semver": "^7.5.0",
     "toml": "^3.0.0"
   }
 }
