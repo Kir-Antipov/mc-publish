@@ -1,7 +1,7 @@
 ## Publish Minecraft Mods - GitHub Action
 
 [![GitHub tag](https://img.shields.io/github/tag/Kir-Antipov/mc-publish.svg?cacheSeconds=3600)](https://github.com/Kir-Antipov/mc-publish/releases/latest)
-[![GitHub build status](https://img.shields.io/github/workflow/status/Kir-Antipov/mc-publish/ci/master?cacheSeconds=3600)](https://github.com/Kir-Antipov/mc-publish/actions/workflows/ci.yml)
+[![GitHub build status](https://img.shields.io/github/actions/workflow/status/Kir-Antipov/mc-publish/ci.yml?branch=master)](https://github.com/Kir-Antipov/mc-publish/actions/workflows/ci.yml)
 [![GitHub license](https://img.shields.io/github/license/Kir-Antipov/mc-publish.svg?cacheSeconds=36000)](https://github.com/Kir-Antipov/mc-publish#readme)
 
 The `Publish Minecraft Mods` action helps you upload assets of your Minecraft mods to GitHub Releases, Modrinth and CurseForge. This is a cross-platform action that runs on any environment.
