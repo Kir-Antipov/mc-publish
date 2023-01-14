@@ -65,6 +65,12 @@ export default class ModrinthPublisher extends ModPublisher {
             featured,
             dependencies: projects
         };
+
+        if (this.dryRun) {
+            this.logger.info(`Would upload this data to Modrinth: ${JSON.stringify(data)}`);
+            return;
+        }
+
         await createVersion(id, data, files, token);
     }
 
@@ -81,6 +87,12 @@ export default class ModrinthPublisher extends ModPublisher {
             }
 
             if (versionSubset && !olderVersion.game_versions.every(x => gameVersions.includes(x))) {
+                continue;
+            }
+
+            if (this.dryRun) {
+                this.logger.info(`Would unfeature ${olderVersion.id}`);
+                unfeaturedVersions.push(olderVersion.id);
                 continue;
             }
 

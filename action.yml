@@ -128,6 +128,11 @@ inputs:
     description: Determines how errors that occur during mod publishing process are handled
     required: false
     default: ${undefined}
+  dry-run:
+    description: Indicates whether to run the action in dry-run mode (without
+      publishing anything)
+    required: false
+    default: ${undefined}
   modrinth-files:
     description: A glob of the files to upload
     required: false
@@ -190,6 +195,11 @@ inputs:
     required: false
   modrinth-fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+  modrinth-dry-run:
+    description: Indicates whether to run the action in dry-run mode (without
+      publishing anything)
     required: false
     default: ${undefined}
   curseforge-files:
@@ -256,6 +266,11 @@ inputs:
     description: Determines how errors that occur during mod publishing process are handled
     required: false
     default: ${undefined}
+  curseforge-dry-run:
+    description: Indicates whether to run the action in dry-run mode (without
+      publishing anything)
+    required: false
+    default: ${undefined}
   github-files:
     description: A glob of the files to upload
     required: false
@@ -318,6 +333,11 @@ inputs:
     required: false
   github-fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+  github-dry-run:
+    description: Indicates whether to run the action in dry-run mode (without
+      publishing anything)
     required: false
     default: ${undefined}
 runs:

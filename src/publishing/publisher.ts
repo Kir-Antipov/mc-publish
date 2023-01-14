@@ -5,8 +5,10 @@ import PublisherTarget from "./publisher-target";
 
 export default abstract class Publisher<TOptions> {
     protected readonly logger: Logger;
+    protected readonly dryRun: boolean;
 
-    public constructor(logger?: Logger) {
+    public constructor(dryRun?: boolean, logger?: Logger) {
+        this.dryRun = dryRun ?? false;
         this.logger = logger || getEmptyLogger();
     }
 

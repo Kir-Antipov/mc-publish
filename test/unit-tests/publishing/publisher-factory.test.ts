@@ -8,7 +8,7 @@ describe("PublisherFactory.create", () => {
         const factory = new PublisherFactory();
         for (const target of PublisherTarget.getValues()) {
             const logger = getConsoleLogger();
-            const publisher = factory.create(target, logger);
+            const publisher = factory.create(target, true, logger);
             expect(publisher.target).toStrictEqual(target);
             expect((publisher as any).logger).toStrictEqual(logger);
         }

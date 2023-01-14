@@ -57,15 +57,20 @@ export default class GitHubPublisher extends ModPublisher {
             const discussion = mapStringInput(options.discussion, null);
             releaseId = await this.createRelease(tag, name, changelog, generateChangelog, draft, prerelease, commitish, discussion, token);
         }
-        if (!releaseId) {
+        if (!releaseId && !this.dryRun) {
             throw new Error(`Cannot find or create release ${tag}`);
         }
 
-        const existingAssets = generated ? [] : (await octokit.rest.repos.listReleaseAssets({ ...repo, release_id: releaseId })).data;
+        const existingAssets = generated || this.dryRun ? [] : (await octokit.rest.repos.listReleaseAssets({ ...repo, release_id: releaseId })).data;
         for (const file of files) {
             const existingAsset = existingAssets.find(x => x.name === file.name || x.name === file.path);
             if (existingAsset) {
-                await octokit.rest.repos.deleteReleaseAsset({ ...repo, asset_id: existingAsset.id })
+                await octokit.rest.repos.deleteReleaseAsset({...repo, asset_id: existingAsset.id});
+            }
+
+            if (this.dryRun) {
+                this.logger.info(`Would upload asset ${file.name}`);
+                continue;
             }
 
             await octokit.rest.repos.uploadReleaseAsset({
@@ -95,7 +100,7 @@ export default class GitHubPublisher extends ModPublisher {
     private async createRelease(tag: string, name: string, body: string, generateReleaseNotes: boolean, draft: boolean, prerelease: boolean, targetCommitish: string, discussionCategoryName: string, token: string): Promise<number | undefined> {
         const octokit = github.getOctokit(token);
         try {
-            const response = await octokit.rest.repos.createRelease({
+            const data = {
                 tag_name: tag,
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
@@ -106,7 +111,12 @@ export default class GitHubPublisher extends ModPublisher {
                 prerelease,
                 discussion_category_name: discussionCategoryName || undefined,
                 generate_release_notes: generateReleaseNotes,
-            });
+            };
+            if (this.dryRun) {
+                this.logger.info(`Would create GitHub release: ${JSON.stringify(data)}`);
+                return undefined;
+            }
+            const response = await octokit.rest.repos.createRelease(data);
             return response.status >= 200 && response.status < 300 ? response.data.id : undefined;
         } catch {
             return undefined;

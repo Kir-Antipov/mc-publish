@@ -40,6 +40,11 @@ export default class CurseForgePublisher extends ModPublisher {
                 relations: (parentFileId || !projects.length) ? undefined : { projects }
             };
 
+            if (this.dryRun) {
+                this.logger.info(`Would upload this data to CurseForge: ${JSON.stringify(data)}`);
+                continue;
+            }
+
             const fileId = await this.upload(id, data, file, token);
             if (!parentFileId) {
                 parentFileId = fileId;

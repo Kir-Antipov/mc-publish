@@ -23473,7 +23473,8 @@ function getEmptyLogger() {
 ;// CONCATENATED MODULE: ./src/publishing/publisher.ts
 
 class Publisher {
-    constructor(logger) {
+    constructor(dryRun, logger) {
+        this.dryRun = dryRun !== null && dryRun !== void 0 ? dryRun : false;
         this.logger = logger || getEmptyLogger();
     }
     validateOptions(options) {
@@ -24280,14 +24281,18 @@ class GitHubPublisher extends ModPublisher {
                 const discussion = mapStringInput(options.discussion, null);
                 releaseId = yield this.createRelease(tag, name, changelog, generateChangelog, draft, prerelease, commitish, discussion, token);
             }
-            if (!releaseId) {
+            if (!releaseId && !this.dryRun) {
                 throw new Error(`Cannot find or create release ${tag}`);
             }
-            const existingAssets = generated ? [] : (yield octokit.rest.repos.listReleaseAssets(Object.assign(Object.assign({}, repo), { release_id: releaseId }))).data;
+            const existingAssets = generated || this.dryRun ? [] : (yield octokit.rest.repos.listReleaseAssets(Object.assign(Object.assign({}, repo), { release_id: releaseId }))).data;
             for (const file of files) {
                 const existingAsset = existingAssets.find(x => x.name === file.name || x.name === file.path);
                 if (existingAsset) {
                     yield octokit.rest.repos.deleteReleaseAsset(Object.assign(Object.assign({}, repo), { asset_id: existingAsset.id }));
+                }
+                if (this.dryRun) {
+                    this.logger.info(`Would upload asset ${file.name}`);
+                    continue;
                 }
                 yield octokit.rest.repos.uploadReleaseAsset({
                     owner: repo.owner,
@@ -24319,7 +24324,7 @@ class GitHubPublisher extends ModPublisher {
         return github_publisher_awaiter(this, void 0, void 0, function* () {
             const octokit = github.getOctokit(token);
             try {
-                const response = yield octokit.rest.repos.createRelease({
+                const data = {
                     tag_name: tag,
                     owner: github.context.repo.owner,
                     repo: github.context.repo.repo,
@@ -24330,7 +24335,12 @@ class GitHubPublisher extends ModPublisher {
                     prerelease,
                     discussion_category_name: discussionCategoryName || undefined,
                     generate_release_notes: generateReleaseNotes,
-                });
+                };
+                if (this.dryRun) {
+                    this.logger.info(`Would create GitHub release: ${JSON.stringify(data)}`);
+                    return undefined;
+                }
+                const response = yield octokit.rest.repos.createRelease(data);
                 return response.status >= 200 && response.status < 300 ? response.data.id : undefined;
             }
             catch (_a) {
@@ -24617,6 +24627,10 @@ class ModrinthPublisher extends ModPublisher {
                 featured,
                 dependencies: projects
             };
+            if (this.dryRun) {
+                this.logger.info(`Would upload this data to Modrinth: ${JSON.stringify(data)}`);
+                return;
+            }
             yield createVersion(id, data, files, token);
         });
     }
@@ -24632,6 +24646,11 @@ class ModrinthPublisher extends ModPublisher {
                     continue;
                 }
                 if (versionSubset && !olderVersion.game_versions.every(x => gameVersions.includes(x))) {
+                    continue;
+                }
+                if (this.dryRun) {
+                    this.logger.info(`Would unfeature ${olderVersion.id}`);
+                    unfeaturedVersions.push(olderVersion.id);
                     continue;
                 }
                 if (yield modifyVersion(olderVersion.id, { featured: false }, token)) {
@@ -24839,6 +24858,10 @@ class CurseForgePublisher extends ModPublisher {
                     gameVersions: parentFileId ? undefined : versions,
                     relations: (parentFileId || !projects.length) ? undefined : { projects }
                 };
+                if (this.dryRun) {
+                    this.logger.info(`Would upload this data to CurseForge: ${JSON.stringify(data)}`);
+                    continue;
+                }
                 const fileId = yield this.upload(id, data, file, token);
                 if (!parentFileId) {
                     parentFileId = fileId;
@@ -24878,14 +24901,14 @@ class CurseForgePublisher extends ModPublisher {
 
 
 class PublisherFactory {
-    create(target, logger) {
+    create(target, dryRun, logger) {
         switch (target) {
             case publisher_target.GitHub:
-                return new GitHubPublisher(logger);
+                return new GitHubPublisher(dryRun, logger);
             case publisher_target.Modrinth:
-                return new ModrinthPublisher(logger);
+                return new ModrinthPublisher(dryRun, logger);
             case publisher_target.CurseForge:
-                return new CurseForgePublisher(logger);
+                return new CurseForgePublisher(dryRun, logger);
             default:
                 throw new Error(`Unknown target "${publisher_target.toString(target)}"`);
         }
@@ -25125,7 +25148,8 @@ function main() {
             const retryAttempts = mapNumberInput(options.retryAttempts);
             const retryDelay = mapNumberInput(options.retryDelay);
             const failMode = mapEnumInput(options.failMode, FailMode, FailMode.Fail);
-            const publisher = publisherFactory.create(target, logger);
+            const dryRun = mapBooleanInput(options.dryRun);
+            const publisher = publisherFactory.create(target, dryRun, logger);
             const func = {
                 func: () => publisher.publish(files, options),
                 maxAttempts: retryAttempts,

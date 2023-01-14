@@ -79,6 +79,8 @@ inputs:
     default: 10000
   fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
+  dry-run:
+    description: Indicates whether to run the action in dry-run mode (without publishing anything)
 runs:
   using: node12
   main: dist/index.js

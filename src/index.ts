@@ -1,7 +1,7 @@
 import File, { gradleOutputSelector } from "./utils/io/file";
 import PublisherFactory from "./publishing/publisher-factory";
 import PublisherTarget from "./publishing/publisher-target";
-import { getInputAsObject, mapEnumInput, mapNumberInput } from "./utils/actions/input";
+import { getInputAsObject, mapBooleanInput, mapEnumInput, mapNumberInput } from "./utils/actions/input";
 import { getDefaultLogger } from "./utils/logging/logger";
 import retry from "./utils/retry";
 import LoggingStopwatch from "./utils/logging/logging-stopwatch";
@@ -33,7 +33,8 @@ async function main() {
         const retryAttempts = mapNumberInput(options.retryAttempts);
         const retryDelay = mapNumberInput(options.retryDelay);
         const failMode = mapEnumInput(options.failMode, FailMode, FailMode.Fail as FailMode);
-        const publisher = publisherFactory.create(target, logger);
+        const dryRun = mapBooleanInput(options.dryRun);
+        const publisher = publisherFactory.create(target, dryRun, logger);
         const func = {
             func: () => publisher.publish(files, options),
             maxAttempts: retryAttempts,
