@@ -25196,7 +25196,10 @@ function main() {
             };
             const stopwatch = LoggingStopwatch.startNew(logger, `📤 Publishing assets to ${targetName}...`, ms => `✅ Successfully published assets to ${targetName} (in ${ms} ms)`);
             try {
-                core.setOutput(`${targetName}_link`, (yield retry(func)).link);
+                const publishResult = yield retry(func);
+                core.setOutput(`${targetName}-link`, publishResult.link);
+                delete publishResult.link;
+                core.setOutput(`${targetName}-data`, publishResult);
             }
             catch (e) {
                 switch (failMode) {
@@ -25220,7 +25223,7 @@ function main() {
         else if (!errors.length) {
             logger.warn("🗿 You didn't specify any targets, your assets have not been published");
         }
-        core.setOutput("publishedTo", publishedTo);
+        core.setOutput("published-to", publishedTo);
         if (errors.length) {
             throw new AggregateError(errors);
         }

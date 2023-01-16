@@ -343,11 +343,17 @@ inputs:
 outputs:
   curseforge-link:
     description: The link to the uploaded version on CurseForge
+  curseforge-data:
+    description: The data returned by the CurseForge API after uploading the version as JSON
   modrinth-link:
     description: The link to the uploaded version on Modrinth
+  modrinth-data:
+    description: The data returned by the Modrinth API after uploading the version as JSON
   github-link:
     description: The link to the uploaded version on GitHub
-  publishedTo:
+  github-data:
+    description: The data returned by the GitHub API after uploading the version as JSON
+  published-to:
     description: A list of platforms that the mod was published to
 runs:
   using: node12
