@@ -11,11 +11,16 @@ interface ModrinthProject {
     slug: string;
 }
 
-interface ModrinthVersion {
+export interface ModrinthVersion {
     id: string;
+    name: string;
+    version_number: string;
     loaders: string[];
     game_versions: string[];
+    version_type: "release" | "beta" | "alpha";
     featured: boolean;
+    project_id: string;
+    changelog?: string;
 }
 
 export function createVersion(modId: string, data: Record<string, any>, files: File[], token: string): Promise<ModrinthVersion> {

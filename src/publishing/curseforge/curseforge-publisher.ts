@@ -1,7 +1,7 @@
 import File from "../../utils/io/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
-import { convertToCurseForgeVersions, uploadFile } from "../../utils/curseforge";
+import {convertToCurseForgeVersions, getModSlug, uploadFile} from "../../utils/curseforge";
 import Dependency from "../../metadata/dependency";
 import DependencyKind from "../../metadata/dependency-kind";
 
@@ -18,7 +18,7 @@ export default class CurseForgePublisher extends ModPublisher {
         return PublisherTarget.CurseForge;
     }
 
-    protected async publishMod(id: string, token: string, name: string, _version: string, channel: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[]): Promise<void> {
+    protected async publishMod(id: string, token: string, name: string, _version: string, channel: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[]): Promise<{ file_id: number, project_slug: string }> {
         let parentFileId = undefined;
         const versions = await convertToCurseForgeVersions(gameVersions, loaders, java, token);
         const projects = dependencies
@@ -50,6 +50,14 @@ export default class CurseForgePublisher extends ModPublisher {
                 parentFileId = fileId;
             }
         }
+        return {
+            project_slug: await getModSlug(Number(id)),
+            file_id: parentFileId
+        };
+    }
+
+    protected makeLink(ret: { project_slug: string, file_id: number }): string {
+        return `https://www.curseforge.com/minecraft/mc-mods/${ret.project_slug}/files/${ret.file_id}`;
     }
 
     private async upload(id: string, data: Record<string, any>, file: File, token: string): Promise<number | never> {

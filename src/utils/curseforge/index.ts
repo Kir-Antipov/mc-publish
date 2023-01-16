@@ -5,6 +5,8 @@ import { findVersionByName } from "../minecraft";
 import SoftError from "../soft-error";
 
 const baseUrl = "https://minecraft.curseforge.com/api";
+const newAPIBaseUrl = "https://api.curseforge.com";
+const apiKey = "$2a$10$Eie/MzKO6B13/AhuQVs9ieNc.LV8dooZENuK2594vSW9AXAdN59vK";
 
 interface CurseForgeVersion {
     id: number;
@@ -33,8 +35,8 @@ class CurseForgeUploadError extends SoftError {
     }
 }
 
-async function fetchJsonArray<T>(url: string): Promise<T[] | never> {
-    const response = await fetch(url);
+async function fetchJsonArray<T>(url: string, headers?: Record<string, string>): Promise<T[] | never> {
+    const response = await fetch(url, { headers });
     if (!response.ok) {
         const isSoft = response.status === 429 || response.status >= 500;
         throw new SoftError(isSoft, `${response.status} (${response.statusText})`);
@@ -62,12 +64,12 @@ async function getCurseForgeVersions(token: string): Promise<CurseForgeVersions>
 }
 
 async function loadCurseForgeVersions(token: string): Promise<CurseForgeVersions> {
-    const versionTypes = await fetchJsonArray<{ id: number, slug: string }>(`${baseUrl}/game/version-types?token=${token}`);
+    const versionTypes = await fetchJsonArray<{ id: number, slug: string }>(`${baseUrl}/game/version-types`, { "X-Api-Token": token });
     const javaVersionTypes = versionTypes.filter(x => x.slug.startsWith("java")).map(x => x.id);
     const minecraftVersionTypes = versionTypes.filter(x => x.slug.startsWith("minecraft")).map(x => x.id);
     const loaderVersionTypes = versionTypes.filter(x => x.slug.startsWith("modloader")).map(x => x.id);
 
-    const versions = await fetchJsonArray<CurseForgeVersion>(`${baseUrl}/game/versions?token=${token}`);
+    const versions = await fetchJsonArray<CurseForgeVersion>(`${baseUrl}/game/versions`, { "X-Api-Token": token });
     return versions.reduce((container, version) => {
         if (javaVersionTypes.includes(version.gameVersionTypeID)) {
             container.java.push(version);
@@ -132,9 +134,11 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
     form.append("file", file.getStream(), file.name);
     form.append("metadata", JSON.stringify(data));
 
-    const response = await fetch(`${baseUrl}/projects/${id}/upload-file?token=${token}`, {
+    const response = await fetch(`${baseUrl}/projects/${id}/upload-file`, {
         method: "POST",
-        headers: form.getHeaders(),
+        headers: form.getHeaders({
+            "X-Api-Token": token
+        }),
         body: <any>form
     });
 
@@ -150,4 +154,18 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
     }
 
     return (<{ id: number }>await response.json()).id;
+}
+
+export async function getModSlug(modId: number): Promise<string> {
+    const response = await fetch(`${newAPIBaseUrl}/v1/mods/${modId}`, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json",
+            "x-api-key": apiKey
+        }
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to get mod slug: ${response.status} (${response.statusText})`);
+    }
+    return (<{ slug: string }>await response.json()).slug;
 }

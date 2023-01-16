@@ -1,5 +1,6 @@
 import PublisherTarget from "../publisher-target";
 import * as github from "@actions/github";
+import { Endpoints } from "@octokit/types";
 import File from "../../utils/io/file";
 import ModPublisher from "../../publishing/mod-publisher";
 import Dependency from "../../metadata/dependency";
@@ -13,6 +14,8 @@ function getEnvironmentTag(): string | undefined {
     }
     return undefined;
 }
+
+type Release = Endpoints["GET /repos/{owner}/{repo}/releases/{release_id}"]["response"]["data"];
 
 export default class GitHubPublisher extends ModPublisher {
     public get target(): PublisherTarget {
@@ -31,7 +34,7 @@ export default class GitHubPublisher extends ModPublisher {
         return false;
     }
 
-    protected async publishMod(_id: string, token: string, name: string, version: string, channel: string, _loaders: string[], _gameVersions: string[], _java: string[], changelog: string, files: File[], _dependencies: Dependency[], options: Record<string, unknown>): Promise<void> {
+    protected async publishMod(_id: string, token: string, name: string, version: string, channel: string, _loaders: string[], _gameVersions: string[], _java: string[], changelog: string, files: File[], _dependencies: Dependency[], options: Record<string, unknown>): Promise<Release> {
         const repo = github.context.repo;
         const octokit = github.getOctokit(token);
         const environmentTag = getEnvironmentTag();
@@ -81,6 +84,8 @@ export default class GitHubPublisher extends ModPublisher {
                 data: <any>await file.getBuffer()
             });
         }
+
+        return (await octokit.rest.repos.getRelease({ owner: repo.owner, repo: repo.repo, release_id: releaseId })).data;
     }
 
     private async getReleaseIdByTag(tag: string, token: string): Promise<number | undefined> {
@@ -121,5 +126,9 @@ export default class GitHubPublisher extends ModPublisher {
         } catch {
             return undefined;
         }
+    }
+
+    protected makeLink(ret: Release): string {
+        return ret.html_url;
     }
 }

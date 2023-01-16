@@ -340,6 +340,15 @@ inputs:
       publishing anything)
     required: false
     default: ${undefined}
+outputs:
+  curseforge-link:
+    description: The link to the uploaded version on CurseForge
+  modrinth-link:
+    description: The link to the uploaded version on Modrinth
+  github-link:
+    description: The link to the uploaded version on GitHub
+  publishedTo:
+    description: A list of platforms that the mod was published to
 runs:
   using: node12
   main: dist/index.js

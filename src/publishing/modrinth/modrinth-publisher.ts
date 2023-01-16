@@ -1,4 +1,4 @@
-import { createVersion, getProject, getVersions, modifyVersion } from "../../utils/modrinth";
+import {createVersion, getProject, getVersions, modifyVersion, ModrinthVersion} from "../../utils/modrinth";
 import File from "../../utils/io/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
@@ -40,7 +40,7 @@ export default class ModrinthPublisher extends ModPublisher {
         return PublisherTarget.Modrinth;
     }
 
-    protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<void> {
+    protected async publishMod(id: string, token: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<ModrinthVersion> {
         const featured = mapBooleanInput(options.featured, true);
         const unfeatureMode = mapEnumInput(options.unfeatureMode, UnfeatureMode, featured ? UnfeatureMode.Subset : UnfeatureMode.None);
         const projects = (await Promise.all(dependencies
@@ -71,7 +71,7 @@ export default class ModrinthPublisher extends ModPublisher {
             return;
         }
 
-        await createVersion(id, data, files, token);
+        return await createVersion(id, data, files, token);
     }
 
     private async unfeatureOlderVersions(id: string, token: string, unfeatureMode: UnfeatureMode, loaders: string[], gameVersions: string[]): Promise<void> {
@@ -108,5 +108,9 @@ export default class ModrinthPublisher extends ModPublisher {
         } else {
             this.logger.info("✅ No versions to unfeature were found");
         }
+    }
+
+    protected makeLink(ret: ModrinthVersion): string {
+        return `https://modrinth.com/mod/${ret.project_id}/version/${ret.version_number}`;
     }
 }

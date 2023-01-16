@@ -10,6 +10,7 @@ import Version from "../utils/versioning/version";
 import VersionType from "../utils/versioning/version-type";
 import DependencyKind from "../metadata/dependency-kind";
 import path from "path";
+import PublishResult from "./publish-result";
 
 interface ModPublisherOptions {
     id: string;
@@ -66,7 +67,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         return true;
     }
 
-    public async publish(files: File[], options: ModPublisherOptions): Promise<void> {
+    public async publish(files: File[], options: ModPublisherOptions): Promise<PublishResult> {
         this.validateOptions(options);
         const releaseInfo = <any>context.payload.release;
 
@@ -127,8 +128,14 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
             : metadata?.dependencies || [];
         const uniqueDependencies = dependencies.filter((x, i, self) => !x.ignore && self.findIndex(y => y.id === x.id && y.kind === x.kind) === i);
 
-        await this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, <Record<string, unknown>><unknown>options);
+        const ret = await this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, <Record<string, unknown>><unknown>options);
+        return {
+            ...ret,
+            link: this.makeLink(ret)
+        };
     }
 
-    protected abstract publishMod(id: string, token: string, name: string, version: string, versionType: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<void>;
+    protected abstract publishMod(id: string, token: string, name: string, version: string, versionType: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<any>;
+
+    protected abstract makeLink(ret: any);
 }

@@ -6,6 +6,7 @@ import { getDefaultLogger } from "./utils/logging/logger";
 import retry from "./utils/retry";
 import LoggingStopwatch from "./utils/logging/logging-stopwatch";
 import AggregateError from "aggregate-error";
+import * as core from "@actions/core";
 
 enum FailMode {
     Fail,
@@ -47,7 +48,7 @@ async function main() {
 
         const stopwatch = LoggingStopwatch.startNew(logger, `📤 Publishing assets to ${targetName}...`, ms => `✅ Successfully published assets to ${targetName} (in ${ms} ms)`);
         try {
-            await retry(func);
+            core.setOutput(`${targetName}_link`, (await retry(func)).link);
         } catch(e: any) {
             switch (failMode) {
                 case FailMode.Warn:
@@ -70,6 +71,8 @@ async function main() {
     } else if (!errors.length) {
         logger.warn("🗿 You didn't specify any targets, your assets have not been published");
     }
+
+    core.setOutput("publishedTo", publishedTo);
 
     if (errors.length) {
         throw new AggregateError(errors);

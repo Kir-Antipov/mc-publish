@@ -24096,7 +24096,8 @@ class ModPublisher extends Publisher {
                 ? processDependenciesInput(options.dependencies)
                 : (metadata === null || metadata === void 0 ? void 0 : metadata.dependencies) || [];
             const uniqueDependencies = dependencies.filter((x, i, self) => !x.ignore && self.findIndex(y => y.id === x.id && y.kind === x.kind) === i);
-            yield this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, options);
+            const ret = yield this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, options);
+            return Object.assign(Object.assign({}, ret), { link: this.makeLink(ret) });
         });
     }
 }
@@ -24302,6 +24303,7 @@ class GitHubPublisher extends ModPublisher {
                     data: yield file.getBuffer()
                 });
             }
+            return (yield octokit.rest.repos.getRelease({ owner: repo.owner, repo: repo.repo, release_id: releaseId })).data;
         });
     }
     getReleaseIdByTag(tag, token) {
@@ -24347,6 +24349,9 @@ class GitHubPublisher extends ModPublisher {
                 return undefined;
             }
         });
+    }
+    makeLink(ret) {
+        return ret.html_url;
     }
 }
 
@@ -24631,7 +24636,7 @@ class ModrinthPublisher extends ModPublisher {
                 this.logger.info(`Would upload this data to Modrinth: ${JSON.stringify(data)}`);
                 return;
             }
-            yield createVersion(id, data, files, token);
+            return yield createVersion(id, data, files, token);
         });
     }
     unfeatureOlderVersions(id, token, unfeatureMode, loaders, gameVersions) {
@@ -24668,6 +24673,9 @@ class ModrinthPublisher extends ModPublisher {
             }
         });
     }
+    makeLink(ret) {
+        return `https://modrinth.com/mod/${ret.project_id}/version/${ret.version_number}`;
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/utils/curseforge/index.ts
@@ -24685,15 +24693,17 @@ var curseforge_awaiter = (undefined && undefined.__awaiter) || function (thisArg
 
 
 const curseforge_baseUrl = "https://minecraft.curseforge.com/api";
+const newAPIBaseUrl = "https://api.curseforge.com";
+const apiKey = "$2a$10$Eie/MzKO6B13/AhuQVs9ieNc.LV8dooZENuK2594vSW9AXAdN59vK";
 class CurseForgeUploadError extends SoftError {
     constructor(soft, message, info) {
         super(soft, message);
         this.info = info;
     }
 }
-function fetchJsonArray(url) {
+function fetchJsonArray(url, headers) {
     return curseforge_awaiter(this, void 0, void 0, function* () {
-        const response = yield lib_default()(url);
+        const response = yield lib_default()(url, { headers });
         if (!response.ok) {
             const isSoft = response.status === 429 || response.status >= 500;
             throw new SoftError(isSoft, `${response.status} (${response.statusText})`);
@@ -24722,11 +24732,11 @@ function getCurseForgeVersions(token) {
 }
 function loadCurseForgeVersions(token) {
     return curseforge_awaiter(this, void 0, void 0, function* () {
-        const versionTypes = yield fetchJsonArray(`${curseforge_baseUrl}/game/version-types?token=${token}`);
+        const versionTypes = yield fetchJsonArray(`${curseforge_baseUrl}/game/version-types`, { "X-Api-Token": token });
         const javaVersionTypes = versionTypes.filter(x => x.slug.startsWith("java")).map(x => x.id);
         const minecraftVersionTypes = versionTypes.filter(x => x.slug.startsWith("minecraft")).map(x => x.id);
         const loaderVersionTypes = versionTypes.filter(x => x.slug.startsWith("modloader")).map(x => x.id);
-        const versions = yield fetchJsonArray(`${curseforge_baseUrl}/game/versions?token=${token}`);
+        const versions = yield fetchJsonArray(`${curseforge_baseUrl}/game/versions`, { "X-Api-Token": token });
         return versions.reduce((container, version) => {
             if (javaVersionTypes.includes(version.gameVersionTypeID)) {
                 container.java.push(version);
@@ -24792,9 +24802,11 @@ function uploadFile(id, data, file, token) {
         const form = new (form_data_default())();
         form.append("file", file.getStream(), file.name);
         form.append("metadata", JSON.stringify(data));
-        const response = yield lib_default()(`${curseforge_baseUrl}/projects/${id}/upload-file?token=${token}`, {
+        const response = yield lib_default()(`${curseforge_baseUrl}/projects/${id}/upload-file`, {
             method: "POST",
-            headers: form.getHeaders(),
+            headers: form.getHeaders({
+                "X-Api-Token": token
+            }),
             body: form
         });
         if (!response.ok) {
@@ -24809,6 +24821,21 @@ function uploadFile(id, data, file, token) {
             throw new CurseForgeUploadError(isSoftError, `Failed to upload file: ${response.status} (${errorText})`, info);
         }
         return (yield response.json()).id;
+    });
+}
+function getModSlug(modId) {
+    return curseforge_awaiter(this, void 0, void 0, function* () {
+        const response = yield lib_default()(`${newAPIBaseUrl}/v1/mods/${modId}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "x-api-key": apiKey
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to get mod slug: ${response.status} (${response.statusText})`);
+        }
+        return (yield response.json()).slug;
     });
 }
 
@@ -24867,7 +24894,14 @@ class CurseForgePublisher extends ModPublisher {
                     parentFileId = fileId;
                 }
             }
+            return {
+                project_slug: yield getModSlug(Number(id)),
+                file_id: parentFileId
+            };
         });
+    }
+    makeLink(ret) {
+        return `https://www.curseforge.com/minecraft/mc-mods/${ret.project_slug}/files/${ret.file_id}`;
     }
     upload(id, data, file, token) {
         var _a, _b;
@@ -25123,6 +25157,7 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 
 
 
+
 var FailMode;
 (function (FailMode) {
     FailMode[FailMode["Fail"] = 0] = "Fail";
@@ -25161,7 +25196,7 @@ function main() {
             };
             const stopwatch = LoggingStopwatch.startNew(logger, `📤 Publishing assets to ${targetName}...`, ms => `✅ Successfully published assets to ${targetName} (in ${ms} ms)`);
             try {
-                yield retry(func);
+                core.setOutput(`${targetName}_link`, (yield retry(func)).link);
             }
             catch (e) {
                 switch (failMode) {
@@ -25185,6 +25220,7 @@ function main() {
         else if (!errors.length) {
             logger.warn("🗿 You didn't specify any targets, your assets have not been published");
         }
+        core.setOutput("publishedTo", publishedTo);
         if (errors.length) {
             throw new AggregateError(errors);
         }
