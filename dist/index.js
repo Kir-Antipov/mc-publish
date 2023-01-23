@@ -24835,7 +24835,7 @@ function getModSlug(modId) {
         if (!response.ok) {
             throw new Error(`Failed to get mod slug: ${response.status} (${response.statusText})`);
         }
-        return (yield response.json()).slug;
+        return (yield response.json()).data.slug;
     });
 }
 
