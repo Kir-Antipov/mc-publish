@@ -1,3 +1,6 @@
+import * as semver from "semver";
+import {MavenRange} from "./maven-range";
+
 export default class Version {
     public readonly major: number;
     public readonly minor: number;
@@ -24,8 +27,31 @@ export default class Version {
         return typeof version === "string" && this.equals(new Version(version));
     }
 
+    public toString(): string {
+        return `${this.major}.${this.minor}.${this.build}`;
+    }
+
+    public matches(range: string | Version): boolean {
+        if (range instanceof Version) {
+            return true;
+        }
+        return Version.matches(this.toString(), range);
+    }
+
     public static fromName(name: string): string {
         const match = name.match(/[a-z]{0,2}\d+\.\d+.*/i);
         return match ? match[0] : name;
+    }
+
+    public static matches(version: string, range: string): boolean {
+        let semverRange;
+        if (!semver.validRange(range)) {
+            // Convert the Maven version range to a semantic version range
+            semverRange = MavenRange.toSemver(range);
+        } else {
+            semverRange = range;
+        }
+        // Use semver to check if the version satisfies the range
+        return semver.satisfies(version, semverRange);
     }
 }

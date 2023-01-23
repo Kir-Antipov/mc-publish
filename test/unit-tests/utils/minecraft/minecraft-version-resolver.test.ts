@@ -109,6 +109,18 @@ describe("MinecraftVersionResolver.releasesIfAny", () => {
         expect(versions).toContain("1.17.1");
     });
 
+    test("all releases matching the maven version range are returned", async () => {
+        const versions = (await MinecraftVersionResolver.releasesIfAny.resolve("[1.19.2,1.19.3)")).map(x => x.id);
+        expect(versions).toHaveLength(1);
+        expect(versions).toContain("1.19.2");
+    });
+
+    test("all releases matching the semver range are returned", async () => {
+        const versions = (await MinecraftVersionResolver.releasesIfAny.resolve(">=1.19.2 <1.19.3")).map(x => x.id);
+        expect(versions).toHaveLength(1);
+        expect(versions).toContain("1.19.2");
+    });
+
     test("empty array is returned if no versions were found", async () => {
         expect(await MinecraftVersionResolver.releasesIfAny.resolve("42.0")).toHaveLength(0);
     });

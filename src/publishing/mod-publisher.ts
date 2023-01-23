@@ -109,13 +109,13 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
 
         const gameVersions = processMultilineInput(options.gameVersions);
         if (!gameVersions.length && this.requiresGameVersions) {
-            const minecraftVersion =
-                metadata?.dependencies.filter(x => x.id === "minecraft").map(x => parseVersionName(x.version))[0] ||
+            const minecraftVersionRange =
+                metadata?.dependencies.filter(x => x.id === "minecraft").map(x => x.version)[0] ||
                 parseVersionNameFromFileVersion(version);
 
-            if (minecraftVersion) {
+            if (minecraftVersionRange) {
                 const resolver = options.versionResolver && MinecraftVersionResolver.byName(options.versionResolver) || MinecraftVersionResolver.releasesIfAny;
-                gameVersions.push(...(await resolver.resolve(minecraftVersion)).map(x => x.id));
+                gameVersions.push(...(await resolver.resolve(minecraftVersionRange)).map(x => x.id));
             }
             if (!gameVersions.length) {
                 throw new Error("At least one game version should be specified");

@@ -1,5 +1,7 @@
 import { describe, test, expect } from "@jest/globals";
+import * as semver from "semver";
 import Version from "../../../../src/utils/versioning/version";
+import {MavenRange} from "../../../../src/utils/versioning/maven-range";
 
 describe("Version", () => {
     describe("fromName", () => {
@@ -14,4 +16,37 @@ describe("Version", () => {
             expect(Version.fromName("sync-mc1.17.x-1.2")).toStrictEqual("mc1.17.x-1.2");
         });
     });
+    describe("matches", () => {
+        test("maven and semver versions are correctly matched", () => {
+            expect(Version.matches("1.5.2", "[1.0,2.0)")).toBe(true);
+            expect(Version.matches("2.5.2", "[1.0,2.0)")).toBe(false);
+            expect(Version.matches("1.5.2", "[1.0,2.0],[3.0,4.0]")).toBe(true);
+            expect(Version.matches("1.5.2", ">=1.5.2 <1.6.0")).toBe(true);
+            expect(Version.matches("1.5.2", ">=1.5.2 <1.5.3")).toBe(true);
+            expect(Version.matches("1.5.3", ">=1.5.2 <1.5.3")).toBe(false);
+        });
+    });
 });
+
+describe("MavenRange", () => {
+    describe("toString", () => {
+        test("maven ranges are correctly converted to string", () => {
+            expect(MavenRange.toString("[1.0,2.0)")).toBe("[1.0.0,2.0.0)");
+            expect(MavenRange.toString("[1.0,2.0]")).toBe("[1.0.0,2.0.0]");
+            expect(MavenRange.toString("[1.0,2.0[")).toBe("[1.0.0,2.0.0)");
+            expect(MavenRange.toString("[1.0,2.0],[3.0,4.0]")).toBe("[1.0.0,2.0.0],[3.0.0,4.0.0]");
+            expect(MavenRange.toString("[1.0,2.0],[3.0,4.0)")).toBe("[1.0.0,2.0.0],[3.0.0,4.0.0)");
+        });
+    });
+    describe("toSemver", () => {
+        test("maven ranges are correctly converted to semver ranges", () => {
+            expect(MavenRange.toSemver("[1.0,2.0)")).toBe(">=1.0.0 <2.0.0");
+            expect(semver.validRange(MavenRange.toSemver("[1.0,2.0)"))).not.toBeNull();
+            expect(MavenRange.toSemver("[1.0,2.0]")).toBe(">=1.0.0 <=2.0.0");
+            expect(semver.validRange(MavenRange.toSemver("[1.0,2.0]"))).not.toBeNull();
+            expect(MavenRange.toSemver("[1.0,2.0],[3.0,4.0]")).toBe(">=1.0.0 <=2.0.0 || >=3.0.0 <=4.0.0");
+            expect(semver.validRange(MavenRange.toSemver("[1.0,2.0],[3.0,4.0]"))).not.toBeNull();
+        });
+    });
+});
+

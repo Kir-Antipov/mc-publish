@@ -138,7 +138,7 @@ export async function getLatestRelease(): Promise<MinecraftVersion | null> {
 
 export async function getCompatibleBuilds(build: string | Version): Promise<MinecraftVersion[]> {
     if (!(build instanceof Version)) {
-        build = new Version(build);
+        build = new Version(parseVersionName(build));
     }
     const versions = new Array<MinecraftVersion>();
     for (const version of await getVersions()) {
