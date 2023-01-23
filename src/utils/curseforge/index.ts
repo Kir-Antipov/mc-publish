@@ -167,5 +167,5 @@ export async function getModSlug(modId: number): Promise<string> {
     if (!response.ok) {
         throw new Error(`Failed to get mod slug: ${response.status} (${response.statusText})`);
     }
-    return (<{ slug: string }>await response.json()).slug;
+    return (<{data: {slug: string}}>await response.json()).data.slug;
 }
