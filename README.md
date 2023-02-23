@@ -1,10 +1,14 @@
 # Publish Minecraft Plugins & Mods - GitHub Action
 
-[![GitHub tag](https://img.shields.io/github/tag/Kir-Antipov/mc-publish.svg?cacheSeconds=3600)](https://github.com/Kir-Antipov/mc-publish/releases/latest)
-[![GitHub build status](https://img.shields.io/github/workflow/status/Kir-Antipov/mc-publish/ci/master?cacheSeconds=3600)](https://github.com/Kir-Antipov/mc-publish/actions/workflows/ci.yml)
-[![GitHub license](https://img.shields.io/github/license/Kir-Antipov/mc-publish.svg?cacheSeconds=36000)](https://github.com/Kir-Antipov/mc-publish#readme)
+> This action is a fork [mod-publish](https://github.com/Kir-Antipov/mc-publish) we never plan to merge back into upstream as it was conisdered out of scope for their project.
 
-This action helps you upload assets of your Minecraft mods & plugins to GitHub Releases, Modrinth, CurseForge, Polymart, MCM, and hopefully Hangar soon. This is a fork of mc-publish, with it losing it's cross platform functionality and adding the ability to automatically publish plugins to their respective platorms and it converts your Markdown to BBCode when necessary. 
+> Also, the plugin functionality is currently not implemented yet. Also, as we use mc-plugin as a upstream, we will continue to support mods along as it's convenient.
+
+[![GitHub tag](https://img.shields.io/github/tag/BrycensRanch/plugin-publish.svg?cacheSeconds=3600)](https://github.com/BrycensRanch/plugin-publish/releases/latest)
+[![GitHub build status](https://img.shields.io/github/workflow/status/BrycensRanch/plugin-publish/ci/master?cacheSeconds=3600)](https://github.com/BrycensRanch/plugin-publish/actions/workflows/ci.yml)
+[![GitHub license](https://img.shields.io/github/license/BrycensRanch/plugin-publish.svg?cacheSeconds=36000)](https://github.com/BrycensRanch/plugin-publish#readme)
+
+This action helps you upload assets of your Minecraft mods & plugins to GitHub Releases, Modrinth, CurseForge, Polymart, MCM, and hopefully Hangar soon. This is a fork of mc-publish, with it losing it's cross platform functionality and adding the ability to automatically publish plugins to their respective platorms and it converts your Markdown to BBCode when necessary.
 
 Some plugin platforms do not have functionatlity to upload assets/updates to their platform. So, we act like a regular user and upload it ourselves.
 
@@ -17,7 +21,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v3.2
+      - uses: BrycensRanch/plugin-publish@v3.2
         with:
           # You don't need this section if you don't want to publish
           # your assets to Modrinth
@@ -43,7 +47,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v3.2
+      - uses: BrycensRanch/plugin-publish@v3.2
         with:
           modrinth-id: AANobbMI
           modrinth-featured: true
