@@ -21,6 +21,7 @@ jobs:
         CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
 
     - name: Upload coverage reports to Codecov
+      if: always()
       uses: codecov/codecov-action@v3
 
     - name: Build action
