@@ -17,7 +17,7 @@ export default class ModMetadataReaderFactory {
                 return new QuiltModMetadataReader();
 
             default:
-                throw new Error(`Unknown mod loader "${ModLoaderType.toString(loaderType)}"`);
+                throw new Error(`Unknown mod/plugin loader "${ModLoaderType.toString(loaderType)}"`);
         }
     }
 }

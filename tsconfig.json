@@ -1,12 +1,17 @@
 {
     "include": ["./src/**/*"],
     "exclude": ["node_modules", "./test/**/*"],
+
     "compilerOptions": {
-        "target": "ES6",
+        "module":"ESNext",
+        "target": "ESNext",
         "esModuleInterop": true,
+        "allowJs":true,
+        "experimentalDecorators": true,
         "moduleResolution": "node",
         "baseUrl": "./src",
         "outDir": "./dist",
         "resolveJsonModule": true,
+        "sourceMap": true
     },
 }

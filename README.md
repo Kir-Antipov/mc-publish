@@ -1,10 +1,12 @@
-## Publish Minecraft Mods - GitHub Action
+# Publish Minecraft Plugins & Mods - GitHub Action
 
 [![GitHub tag](https://img.shields.io/github/tag/Kir-Antipov/mc-publish.svg?cacheSeconds=3600)](https://github.com/Kir-Antipov/mc-publish/releases/latest)
 [![GitHub build status](https://img.shields.io/github/workflow/status/Kir-Antipov/mc-publish/ci/master?cacheSeconds=3600)](https://github.com/Kir-Antipov/mc-publish/actions/workflows/ci.yml)
 [![GitHub license](https://img.shields.io/github/license/Kir-Antipov/mc-publish.svg?cacheSeconds=36000)](https://github.com/Kir-Antipov/mc-publish#readme)
 
-The `Publish Minecraft Mods` action helps you upload assets of your Minecraft mods to GitHub Releases, Modrinth and CurseForge. This is a cross-platform action that runs on any environment.
+This action helps you upload assets of your Minecraft mods & plugins to GitHub Releases, Modrinth, CurseForge, Polymart, MCM, and hopefully Hangar soon. This is a fork of mc-publish, with it losing it's cross platform functionality and adding the ability to automatically publish plugins to their respective platorms and it converts your Markdown to BBCode when necessary. 
+
+Some plugin platforms do not have functionatlity to upload assets/updates to their platform. So, we act like a regular user and upload it ourselves.
 
 ### 📖 Usage
 
@@ -168,6 +170,7 @@ Can be automatically retrieved from the config file of your mod:
 - `fabric.mod.json` (Fabric)
 
   - Custom `mc-publish` field *(recommended)*:
+
       ```json
       {
         // ...
@@ -180,6 +183,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
+
       ```json
       {
         // ...
@@ -192,6 +196,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom `projects` field:
+
       ```json
       {
         // ...
@@ -204,6 +209,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
+
       ```json
       {
         // ...
@@ -216,18 +222,21 @@ Can be automatically retrieved from the config file of your mod:
 - `mods.toml` (Forge)
 
   - Custom `mc-publish` field *(recommended)*:
+
       ```toml
       [custom.mc-publish]
           modrinth="AANobbMI"
       ```
 
   - Custom `projects` field:
+
       ```toml
       [custom.projects]
           modrinth="AANobbMI"
       ```
 
   - `projects` field:
+
       ```toml
       [projects]
           modrinth="AANobbMI"
@@ -236,6 +245,7 @@ Can be automatically retrieved from the config file of your mod:
 - `quilt.mod.json` (Quilt)
 
   - `mc-publish` field *(recommended)*:
+
       ```json
       {
         // ...
@@ -246,6 +256,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
+
       ```json
       {
         // ...
@@ -281,19 +292,19 @@ modrinth-unfeature-mode: version-intersection | loader-subset
 
 Available presets:
 
- - `none` - no Modrinth versions will be unfeatured
- - `subset` - only those Modrinth versions which are considered a subset of the new one *(i.e., new release suports all of the version's mod loaders **and** game versions)* will be unfeatured
- - `intersection` - only those Modrinth versions which intersects with the new one *(i.e., support at least one of the mod loaders and one of the game versions supported by the new release)* will be unfeatured
- - `any` - all Modrinth versions will be unfeatured
+- `none` - no Modrinth versions will be unfeatured
+- `subset` - only those Modrinth versions which are considered a subset of the new one *(i.e., new release suports all of the version's mod loaders **and** game versions)* will be unfeatured
+- `intersection` - only those Modrinth versions which intersects with the new one *(i.e., support at least one of the mod loaders and one of the game versions supported by the new release)* will be unfeatured
+- `any` - all Modrinth versions will be unfeatured
 
  If none of the given presets suits your needs, you can construct a new one from the following values via bitwise `OR`, like so - `version-intersection | loaders-subset`:
 
- - `version-subset`
- - `version-intersection`
- - `version-any`
- - `loader-subset`
- - `loader-intersection`
- - `loader-any`
+- `version-subset`
+- `version-intersection`
+- `version-any`
+- `loader-subset`
+- `loader-intersection`
+- `loader-any`
 
 #### curseforge-id
 
@@ -308,6 +319,7 @@ Can be automatically retrieved from the config file of your mod:
 - `fabric.mod.json` (Fabric)
 
   - Custom `mc-publish` field *(recommended)*:
+
       ```json
       {
         // ...
@@ -320,6 +332,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom [`modmanager`](https://github.com/DeathsGun/ModManager) field *(recommended)*:
+
       ```json
       {
         // ...
@@ -332,6 +345,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - Custom `projects` field:
+
       ```json
       {
         // ...
@@ -344,6 +358,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
+
       ```json
       {
         // ...
@@ -356,18 +371,21 @@ Can be automatically retrieved from the config file of your mod:
 - `mods.toml` (Forge)
 
   - Custom `mc-publish` field *(recommended)*:
+
       ```toml
       [custom.mc-publish]
           curseforge=394468
       ```
 
   - Custom `projects` field:
+
       ```toml
       [custom.projects]
           curseforge=394468
       ```
 
   - `projects` field:
+
       ```toml
       [projects]
           curseforge=394468
@@ -376,6 +394,7 @@ Can be automatically retrieved from the config file of your mod:
 - `quilt.mod.json` (Quilt)
 
   - `mc-publish` field *(recommended)*:
+
       ```json
       {
         // ...
@@ -386,6 +405,7 @@ Can be automatically retrieved from the config file of your mod:
       ```
 
   - `projects` field:
+
       ```json
       {
         // ...
@@ -530,6 +550,7 @@ A list of supported mod loaders. If no value is provided, `fabric` will be used 
 Fabric mods can be marked as Quilt-compatible like so:
 
 - `fabric.mod.json`
+
   ```json
   {
     // ...
@@ -572,11 +593,11 @@ version-resolver: latest
 
 Available values:
 
- - `exact` - exact game version *(`1.16` -> `1.16`)*
- - `latest` - the latest release of the given minor *(`1.16` -> `1.16.5`)*
- - `all` - all versions of the given minor starting with the specified build *(`1.16.5` -> `[20w45a, 20w46a, 20w48a, 20w49a, 20w51a, 1.16.5-rc1, 1.16.5]`)*
- - `releases` - all releases of the given minor starting with the specified build *(`1.16.3` -> `[1.16.3, 1.16.4, 1.16.5]`)*
- - `releasesIfAny` - all releases of the given minor starting with the specified build, if any; otherwise, all versions
+- `exact` - exact game version *(`1.16` -> `1.16`)*
+- `latest` - the latest release of the given minor *(`1.16` -> `1.16.5`)*
+- `all` - all versions of the given minor starting with the specified build *(`1.16.5` -> `[20w45a, 20w46a, 20w48a, 20w49a, 20w51a, 1.16.5-rc1, 1.16.5]`)*
+- `releases` - all releases of the given minor starting with the specified build *(`1.16.3` -> `[1.16.3, 1.16.4, 1.16.5]`)*
+- `releasesIfAny` - all releases of the given minor starting with the specified build, if any; otherwise, all versions
 
 #### dependencies
 
@@ -597,16 +618,18 @@ dependencies: |
 As you can see, each dependency should be written on a new line using the following format - `{id} | {kind=depends} | {version=*}`.
 
 Available dependency kinds:
- - `depends` - for dependencies required to run. Without them a game will crash.
- - `recommends` - for dependencies not required to run. Without them a game will log a warning.
- - `suggests` - for dependencies not required to run. Can be used as a kind of metadata.
- - `includes` - for dependencies embedded into the mod. Can be used as a kind of metadata.
- - `conflicts` - for mods whose together with yours cause some kind of bugs, etc. With them a game will log a warning.
- - `breaks` - for mods whose together with yours might cause a game crash. With them a game will crash.
+
+- `depends` - for dependencies required to run. Without them a game will crash.
+- `recommends` - for dependencies not required to run. Without them a game will log a warning.
+- `suggests` - for dependencies not required to run. Can be used as a kind of metadata.
+- `includes` - for dependencies embedded into the mod. Can be used as a kind of metadata.
+- `conflicts` - for mods whose together with yours cause some kind of bugs, etc. With them a game will log a warning.
+- `breaks` - for mods whose together with yours might cause a game crash. With them a game will crash.
 
 Can be automatically retrieved from the config file of your mod:
 
 - `fabric.mod.json` (Fabric)
+
   ```json
   "depends": {
     "required-dependency": "*"
@@ -639,6 +662,7 @@ Can be automatically retrieved from the config file of your mod:
   ```
 
 - `mods.toml` (Forge)
+
   ```toml
   [[dependencies.mod-id]]
     modId="required-dependency"
@@ -676,6 +700,7 @@ Can be automatically retrieved from the config file of your mod:
   ```
 
 - `quilt.mod.json` (Quilt)
+
   ```json
   "depends": [
     "required-dependency",
@@ -746,6 +771,6 @@ fail-mode: fail
 
 Available values:
 
- - `fail` - immediately sets the action status to **failed** and terminates its execution
- - `warn` - warns about errors. The action won't be terminated, nor its status will be set to **failed**
- - `skip` - warns about errors. The action won't be terminated, but its status will be set to **failed** after all specified targets have been processed
+- `fail` - immediately sets the action status to **failed** and terminates its execution
+- `warn` - warns about errors. The action won't be terminated, nor its status will be set to **failed**
+- `skip` - warns about errors. The action won't be terminated, but its status will be set to **failed** after all specified targets have been processed

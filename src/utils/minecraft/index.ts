@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import got from 'got'
 import Version from "../versioning/version";
 
 export enum MinecraftVersionType {
@@ -53,7 +53,7 @@ async function getVersionMap(): Promise<Map<string, MinecraftVersion>> {
 }
 
 async function loadVersions(): Promise<Map<string, MinecraftVersion>> {
-    const response = <{ versions: ParsedMinecraftVersion[] }>await (await fetch("https://launchermeta.mojang.com/mc/game/version_manifest.json")).json();
+    const response = <{ versions: ParsedMinecraftVersion[] }>await got("https://launchermeta.mojang.com/mc/game/version_manifest.json").json();
     const versionsById = new Map<string, MinecraftVersion>();
     for (let i = 0; i < response.versions.length; ++i) {
         const version = response.versions[i];

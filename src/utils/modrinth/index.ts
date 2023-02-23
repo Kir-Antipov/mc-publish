@@ -1,5 +1,6 @@
 import FormData from "form-data";
-import fetch, { Response } from "node-fetch";
+// import fetch, { Response } from "node-fetch";
+import got, {CancelableRequest, Response} from 'got'
 import { URLSearchParams } from "url";
 import File from "../io/file";
 import SoftError from "../soft-error";
@@ -35,7 +36,7 @@ export function createVersion(modId: string, data: Record<string, any>, files: F
         form.append(i.toString(), file.getStream(), file.name);
     }
 
-    const response = fetch(`${baseUrl}/version`, {
+    const response = got(`${baseUrl}/version`, {
         method: "POST",
         headers: form.getHeaders({
             Authorization: token,
@@ -47,7 +48,7 @@ export function createVersion(modId: string, data: Record<string, any>, files: F
 }
 
 export function getProject(idOrSlug: string): Promise<ModrinthProject> {
-    return processResponse(fetch(`${baseUrl}/project/${idOrSlug}`), { 404: () => <ModrinthProject>null });
+    return processResponse(got.get(`${baseUrl}/project/${idOrSlug}`), { 404: () => <ModrinthProject>null });
 }
 
 export function getVersions(idOrSlug: string, loaders?: string[], gameVersions?: string[], featured?: boolean, token?: string): Promise<ModrinthVersion[]> {
@@ -62,14 +63,14 @@ export function getVersions(idOrSlug: string, loaders?: string[], gameVersions?:
         urlParams.append("featured", String(featured));
     }
 
-    const response = fetch(`${baseUrl}/project/${idOrSlug}/version?${urlParams}`, token ? {
+    const response = got(`${baseUrl}/project/${idOrSlug}/version?${urlParams}`, token ? {
         headers: { Authorization: token }
     } : undefined);
     return processResponse(response, { 404: () => <ModrinthVersion[]>[] });
 }
 
 export async function modifyVersion(id: string, version: Partial<ModrinthVersion>, token: string): Promise<boolean> {
-    const response = await fetch(`${baseUrl}/version/${id}`, {
+    const response = await got(`${baseUrl}/version/${id}`, {
         method: "PATCH",
         headers: {
             "Authorization": token,
@@ -81,13 +82,19 @@ export async function modifyVersion(id: string, version: Partial<ModrinthVersion
     return response.ok;
 }
 
-async function processResponse<T>(response: Response | Promise<Response>, mappers?: Record<number, (response: Response) => T | Promise<T>>, errorFactory?: (isServerError: boolean, message: string, response: Response) => Error | Promise<Error>): Promise<T | never> {
+async function processResponse<T>(response: CancelableRequest<Response<string>> | Response<unknown>, mappers?: Record<number, (response: Response) => T | Promise<T>>, errorFactory?: (isServerError: boolean, message: string, response: any) => Error | Promise<Error>): Promise<T | never> {
     response = await response;
-    if (response.ok) {
-        return <T>await response.json();
+
+    if (response.statusCode === 404) {
+        return mappers? mappers[response.statusCode](response) : null;
+    }
+    
+    if (response.ok) { 
+        // @ts-expect-error
+        return JSON.parse(response.body);
     }
 
-    const mapper = mappers?.[response.status];
+    const mapper = mappers?.[(await response).statusCode];
     if (mapper) {
         const mapped = await mapper(response);
         if (mapped !== undefined) {
@@ -95,12 +102,12 @@ async function processResponse<T>(response: Response | Promise<Response>, mapper
         }
     }
 
-    let errorText = response.statusText;
+    let errorText = response.statusMessage;
     try {
-        errorText += `, ${await response.text()}`;
+        errorText += `, ${response.body}`;
     } catch { }
-    errorText = `${response.status} (${errorText})`;
-    const isSoftError = response.status === 429 || response.status >= 500;
+    errorText = `${response.statusCode} (${errorText})`;
+    const isSoftError = response.statusCode === 429 || response.statusCode >= 500;
     if (errorFactory) {
         throw errorFactory(isSoftError, errorText, response);
     } else {

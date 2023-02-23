@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import got from 'got';
 import FormData from "form-data";
 import File from "../io/file";
 import { findVersionByName } from "../minecraft";
@@ -34,15 +34,15 @@ class CurseForgeUploadError extends SoftError {
 }
 
 async function fetchJsonArray<T>(url: string): Promise<T[] | never> {
-    const response = await fetch(url);
+    const response = await got(url);
     if (!response.ok) {
-        const isSoft = response.status === 429 || response.status >= 500;
-        throw new SoftError(isSoft, `${response.status} (${response.statusText})`);
+        const isSoft = response.statusCode === 429 || response.statusCode >= 500;
+        throw new SoftError(isSoft, `${response.statusCode} (${response.statusMessage})`);
     }
 
     let array: T[];
     try {
-        array = await response.json();
+        array = JSON.parse(response.body);
     } catch {
         array = null;
     }
@@ -132,22 +132,22 @@ export async function uploadFile(id: string, data: Record<string, any>, file: Fi
     form.append("file", file.getStream(), file.name);
     form.append("metadata", JSON.stringify(data));
 
-    const response = await fetch(`${baseUrl}/projects/${id}/upload-file?token=${token}`, {
+    const response = await got(`${baseUrl}/projects/${id}/upload-file?token=${token}`, {
         method: "POST",
         headers: form.getHeaders(),
         body: <any>form
     });
 
     if (!response.ok) {
-        let errorText = response.statusText;
+        let errorText = response.statusMessage;
         let info: CurseForgeUploadErrorInfo;
         try {
-            info = <CurseForgeUploadErrorInfo>await response.json();
+            info = <CurseForgeUploadErrorInfo>JSON.parse(response.body);
             errorText += `, ${JSON.stringify(info)}`;
         } catch { }
-        const isSoftError = response.status === 429 || response.status >= 500;
-        throw new CurseForgeUploadError(isSoftError, `Failed to upload file: ${response.status} (${errorText})`, info);
+        const isSoftError = response.statusCode === 429 || response.statusCode >= 500;
+        throw new CurseForgeUploadError(isSoftError, `Failed to upload file: ${response.statusCode} (${errorText})`, info);
     }
 
-    return (<{ id: number }>await response.json()).id;
+    return (<{ id: number }>JSON.parse(response.body)).id;
 }
