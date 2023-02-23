@@ -7,6 +7,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/BrycensRanch/plugin-publish.svg?cacheSeconds=3600)](https://github.com/BrycensRanch/plugin-publish/releases/latest)
 [![GitHub build status](https://img.shields.io/github/workflow/status/BrycensRanch/plugin-publish/ci/master?cacheSeconds=3600)](https://github.com/BrycensRanch/plugin-publish/actions/workflows/ci.yml)
 [![GitHub license](https://img.shields.io/github/license/BrycensRanch/plugin-publish.svg?cacheSeconds=36000)](https://github.com/BrycensRanch/plugin-publish#readme)
+[![CodeCov](https://codecov.io/gh/BrycensRanch/plugin-publish/branch/master/graph/badge.svg?token=gBszno95Jm)](https://codecov.io/gh/BrycensRanch/plugin-publish)
 
 This action helps you upload assets of your Minecraft mods & plugins to GitHub Releases, Modrinth, CurseForge, Polymart, MCM, and hopefully Hangar soon. This is a fork of mc-publish, with it losing it's cross platform functionality and adding the ability to automatically publish plugins to their respective platorms and it converts your Markdown to BBCode when necessary.
 
