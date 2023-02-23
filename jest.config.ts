@@ -5,6 +5,7 @@ const jestConfig: JestConfigWithTsJest = {
     clearMocks: true,
     extensionsToTreatAsEsm: ['.ts'],
     moduleFileExtensions: ["js", "ts"],
+    collectCoverage: true,
     testMatch: ["**/*.test.ts"],
     transformIgnorePatterns: ["/node_modules/(?!node-fetch|fetch-blob|got).+\\.js$"],
     moduleNameMapper: {

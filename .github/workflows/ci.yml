@@ -19,6 +19,9 @@ jobs:
       run: npm run test
       env:
         CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
 
     - name: Build artifacts
       run: npm run build
