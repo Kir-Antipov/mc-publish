@@ -1,0 +1,73 @@
+modLoader="javafml"
+loaderVersion="[34,)"
+issueTrackerURL="https://github.com/"
+displayURL="https://github.com/"
+authors="Author"
+license="MIT"
+
+[[mods]]
+    modId="example-mod"
+    version="0.1.0"
+    displayName="Example Mod"
+    description='''
+    Example mod
+    '''
+
+[[dependencies.example-mod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17, 1.18)"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[34,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="java"
+    mandatory=true
+    versionRange="[16,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="suggested-mod"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+    [dependencies.example-mod.mc-publish]
+        modrinth="BBBB"
+        curseforge=43
+        github="v0.3.0"
+        ignore=["curseforge"]
+
+
+[[dependencies.example-mod]]
+    modId="included-mod"
+    mandatory=false
+    embedded=true
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.example-mod]]
+    modId="breaking-mod"
+    mandatory=false
+    incompatible=true
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+
+[mc-publish]
+    modrinth="AANobbMI"
+    curseforge=394468
+    github="mc1.18-0.4.0-alpha5"
+    loaders=["forge", "forge2"]
+    dependencies=[
+        "recommended-mod@0.2.0(recommended){modrinth:AAAA}{curseforge:42}{github:v0.2.0}#(ignore)",
+        "conflicting-mod@<0.40.0(conflicting)",
+    ]
