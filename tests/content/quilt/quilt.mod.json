@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "com.example",
+    "id": "example-mod",
+    "version": "0.1.0",
+    "metadata": {
+      "name": "Example Mod",
+      "description": "Description",
+      "contributors": {
+        "Author": "Owner"
+      },
+      "contact": {
+        "homepage": "https://github.com/",
+        "issues": "https://github.com/",
+        "sources": "https://github.com/"
+      },
+      "license": "MIT",
+      "icon": "assets/example-mod/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "main": "example.ExampleMod"
+    },
+
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.11.3"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=0.40.0"
+      },
+      {
+        "id": "minecraft",
+        "versions": [
+          "1.17",
+          "1.17.1"
+        ]
+      },
+      {
+        "id": "java",
+        "versions": ">=16"
+      },
+      {
+        "id": "suggested-mod",
+        "optional": true,
+        "mc-publish": {
+          "modrinth": "BBBB",
+          "curseforge": 43,
+          "github": "v0.3.0",
+          "ignore": ["curseforge"]
+        }
+      }
+    ],
+    "provides": [
+      "included:included-mod"
+    ],
+    "breaks": [
+      "breaking-mod",
+      {
+        "id": "conflicting:conflicting-mod",
+        "versions": "<0.40.0",
+        "unless": "fix-conflicting-mod"
+      }
+    ]
+
+  },
+  "minecraft": {
+    "environment": "*"
+  },
+  "mc-publish": {
+    "github": "mc1.18-0.4.0-alpha5",
+    "curseforge": 394468,
+    "modrinth": "AANobbMI",
+
+    "loaders": ["quilt", "fabric"],
+    "dependencies": [
+      "recommended-mod@0.2.0(recommended){modrinth:AAAA}{curseforge:42}{github:v0.2.0}#(ignore)"
+    ]
+  }
+}
