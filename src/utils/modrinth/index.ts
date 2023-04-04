@@ -39,6 +39,7 @@ export function createVersion(modId: string, data: Record<string, any>, files: F
         method: "POST",
         headers: form.getHeaders({
             Authorization: token,
+            "User-Agent": "mc-publish (+https://github.com/Kir-Antipov/mc-publish)"
         }),
         body: <any>form
     });
@@ -74,6 +75,7 @@ export async function modifyVersion(id: string, version: Partial<ModrinthVersion
         headers: {
             "Authorization": token,
             "Content-Type": "application/json",
+            "User-Agent": "mc-publish (+https://github.com/Kir-Antipov/mc-publish)"
         },
         body: JSON.stringify(version)
     });
