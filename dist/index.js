@@ -23152,7 +23152,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 1991:
+/***/ 7144:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -23245,7 +23245,8 @@ var PublisherTarget;
 (function (PublisherTarget) {
     PublisherTarget[PublisherTarget["CurseForge"] = 0] = "CurseForge";
     PublisherTarget[PublisherTarget["Modrinth"] = 1] = "Modrinth";
-    PublisherTarget[PublisherTarget["GitHub"] = 2] = "GitHub";
+    PublisherTarget[PublisherTarget["Hangar"] = 2] = "Hangar";
+    PublisherTarget[PublisherTarget["GitHub"] = 3] = "GitHub";
 })(PublisherTarget || (PublisherTarget = {}));
 (function (PublisherTarget) {
     function getValues() {
@@ -24651,6 +24652,123 @@ class ModrinthPublisher extends ModPublisher {
     }
 }
 
+;// CONCATENATED MODULE: ./src/utils/hangar/index.ts
+var hangar_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+const hangar_baseUrl = "https://hangar.papermc.io/api/v1";
+var HangarPlatform;
+(function (HangarPlatform) {
+    HangarPlatform["Paper"] = "PAPER";
+    HangarPlatform["Waterfall"] = "WATERFALL";
+    HangarPlatform["Velocity"] = "VELOCITY";
+})(HangarPlatform || (HangarPlatform = {}));
+function hangar_createVersion(author, slug, data, files, loaders, gameVersions, token) {
+    data = Object.assign({ files: files.map(x => { platforms: Object.values(HangarPlatform).filter(p => p.toLowerCase() === loaders[files.indexOf(x)].toLowerCase()); }), platformDependencies: files.map(x => loaders[files.indexOf(x)].toLowerCase() !== "paper" ? ["*"] : gameVersions) }, data);
+    const form = new (form_data_default())();
+    form.append("versionUpload", JSON.stringify(data));
+    files.forEach(x => form.append("files", x.getStream(), x.name));
+    const response = lib_default()(`${hangar_baseUrl}/projects/${author}/${slug}/upload`, {
+        method: "POST",
+        headers: form.getHeaders({
+            Authorization: token,
+            "User-Agent": "mc-publish (+https://github.com/Kir-Antipov/mc-publish)"
+        }),
+        body: form
+    });
+    return hangar_processResponse(response, undefined, (x, msg) => new SoftError(x, `Failed to upload file: ${msg}`));
+}
+function authenticate(apiKey) {
+    return hangar_processResponse(lib_default()(`${hangar_baseUrl}/authenticate?apiKey=${apiKey}`, {
+        method: "POST",
+        headers: {
+            "User-Agent": "mc-publish (+https://github.com/Kir-Antipov/mc-publish)"
+        }
+    }));
+}
+function hangar_processResponse(response, mappers, errorFactory) {
+    return hangar_awaiter(this, void 0, void 0, function* () {
+        response = yield response;
+        if (response.ok) {
+            return yield response.json();
+        }
+        const mapper = mappers === null || mappers === void 0 ? void 0 : mappers[response.status];
+        if (mapper) {
+            const mapped = yield mapper(response);
+            if (mapped !== undefined) {
+                return mapped;
+            }
+        }
+        let errorText = response.statusText;
+        try {
+            errorText += `, ${yield response.text()}`;
+        }
+        catch (_a) { }
+        errorText = `${response.status} (${errorText})`;
+        const isSoftError = response.status === 429 || response.status >= 500;
+        if (errorFactory) {
+            throw errorFactory(isSoftError, errorText, response);
+        }
+        else {
+            throw new SoftError(isSoftError, errorText);
+        }
+    });
+}
+
+;// CONCATENATED MODULE: ./src/publishing/hangar/hangar-publisher.ts
+var hangar_publisher_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+// import DependencyKind from "../../metadata/dependency-kind";
+// Map of dependency kinds and whether { "required" = true }
+/* const hangarDependencyKinds = new Map([
+    [DependencyKind.Depends, true],
+    [DependencyKind.Recommends, false],
+    [DependencyKind.Suggests, false],
+    [DependencyKind.Includes, false],
+    [DependencyKind.Breaks, false],
+]); */
+class HangarPublisher extends ModPublisher {
+    get target() {
+        return publisher_target.Hangar;
+    }
+    publishMod(id, apiKey, name, version, channel, loaders, gameVersions, _java, changelog, files, dependencies, options) {
+        return hangar_publisher_awaiter(this, void 0, void 0, function* () {
+            if (!id.includes("/")) {
+                throw new Error("Invalid project ID. Please ensure the project ID for hangar is in the format AUTHOR/SLUG, separated by a slash.");
+            }
+            const authorId = id.split("/")[0];
+            const projectId = id.split("/")[1];
+            const { token } = yield authenticate(apiKey);
+            const data = {
+                version: version,
+                description: changelog,
+                channel: channel
+            };
+            // todo: dependencies
+            yield hangar_createVersion(authorId, projectId, data, files, loaders, gameVersions, token);
+        });
+    }
+}
+
 ;// CONCATENATED MODULE: ./src/utils/curseforge/index.ts
 var curseforge_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -24877,6 +24995,7 @@ class CurseForgePublisher extends ModPublisher {
 
 
 
+
 class PublisherFactory {
     create(target, logger) {
         switch (target) {
@@ -24886,6 +25005,8 @@ class PublisherFactory {
                 return new ModrinthPublisher(logger);
             case publisher_target.CurseForge:
                 return new CurseForgePublisher(logger);
+            case publisher_target.Hangar:
+                return new HangarPublisher(logger);
             default:
                 throw new Error(`Unknown target "${publisher_target.toString(target)}"`);
         }
@@ -25397,7 +25518,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(1991);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(7144);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()

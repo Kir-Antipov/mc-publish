@@ -31,7 +31,7 @@ inputs:
   hangar-id:
     description: The author name and slug of the project to upload to (e.g. Username/ModName)
   hangar-token:
-    description: A hangar API key with the "create_version" permission (https://hangar.papermc.io/auth/settings/api-keys)
+    description: A hangar API key with the "create_version" permission
 
   github-tag:
     description: The tag name of the release to upload assets to

@@ -30,11 +30,12 @@ inputs:
     required: false
     default: ${undefined}
   hangar-id:
-    description: The author name and slug of the project to upload to (e.g. Username/ModName)
+    description: The author name and slug of the project to upload to (e.g.
+      Username/ModName)
     required: false
     default: ${undefined}
   hangar-token:
-    description: A hangar API key with the "create_version" permission (https://hangar.papermc.io/auth/settings/api-keys)
+    description: A hangar API key with the "create_version" permission
     required: false
     default: ${undefined}
   github-tag:
@@ -200,70 +201,6 @@ inputs:
     description: Determines how errors that occur during mod publishing process are handled
     required: false
     default: ${undefined}
-  hangar-files:
-    description: A glob of the files to upload
-    required: false
-    default: ${undefined}
-  hangar-files-primary:
-    description: A glob of the primary files to upload
-    required: false
-    default: ${undefined}
-  hangar-files-secondary:
-    description: A glob of the secondary files to upload
-    required: false
-    default: ${undefined}
-  hangar-name:
-    description: The name of the version
-    required: false
-    default: ${undefined}
-  hangar-version:
-    description: The version number
-    required: false
-    default: ${undefined}
-  hangar-version-type:
-    description: The channel to publish the release to. The release channel is the default channel for all hangar projects.
-    required: false
-    default: ${undefined}
-  hangar-changelog:
-    description: The changelog for this version
-    required: false
-    default: ${undefined}
-  hangar-changelog-file:
-    description: A glob of the changelog file
-    required: false
-    default: ${undefined}
-  hangar-loaders:
-    description: A list of supported server software (paper, waterfall or velocity)
-    required: false
-    default: ${undefined}
-  hangar-game-versions:
-    description: A list of supported Minecraft versions (for paper projects)
-    required: false
-    default: ${undefined}
-  hangar-dependencies:
-    description: A list of dependencies
-    required: false
-    default: ${undefined}
-  hangar-version-resolver:
-    description: Determines the way automatic game-versions resolvement works
-    required: false
-    default: ${undefined}
-  hangar-java:
-    description: A list of supported Java versions
-    required: false
-    default: ${undefined}
-  hangar-retry-attempts:
-    description: The maximum number of attempts to publish assets
-    default: ${undefined}
-    required: false
-  hangar-retry-delay:
-    description: Time delay between attempts to publish assets (in milliseconds)
-    default: ${undefined}
-    required: false
-  hangar-fail-mode:
-    description: Determines how errors that occur during mod publishing process are handled
-    required: false
-    default: ${undefined}
   curseforge-files:
     description: A glob of the files to upload
     required: false
@@ -325,6 +262,70 @@ inputs:
     default: ${undefined}
     required: false
   curseforge-fail-mode:
+    description: Determines how errors that occur during mod publishing process are handled
+    required: false
+    default: ${undefined}
+  hangar-files:
+    description: A glob of the files to upload
+    required: false
+    default: ${undefined}
+  hangar-files-primary:
+    description: A glob of the primary files to upload
+    required: false
+    default: ${undefined}
+  hangar-files-secondary:
+    description: A glob of the secondary files to upload
+    required: false
+    default: ${undefined}
+  hangar-name:
+    description: The name of the version
+    required: false
+    default: ${undefined}
+  hangar-version:
+    description: The version number
+    required: false
+    default: ${undefined}
+  hangar-version-type:
+    description: The type of the release - alpha, beta, or release
+    required: false
+    default: ${undefined}
+  hangar-changelog:
+    description: The changelog for this version
+    required: false
+    default: ${undefined}
+  hangar-changelog-file:
+    description: A glob of the changelog file
+    required: false
+    default: ${undefined}
+  hangar-loaders:
+    description: A list of supported mod loaders
+    required: false
+    default: ${undefined}
+  hangar-game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+    default: ${undefined}
+  hangar-dependencies:
+    description: A list of dependencies
+    required: false
+    default: ${undefined}
+  hangar-version-resolver:
+    description: Determines the way automatic game-versions resolvement works
+    required: false
+    default: ${undefined}
+  hangar-java:
+    description: A list of supported Java versions
+    required: false
+    default: ${undefined}
+  hangar-retry-attempts:
+    description: The maximum number of attempts to publish assets
+    default: ${undefined}
+    required: false
+  hangar-retry-delay:
+    description: Time delay between attempts to publish assets (in milliseconds)
+    default: ${undefined}
+    required: false
+  hangar-fail-mode:
     description: Determines how errors that occur during mod publishing process are handled
     required: false
     default: ${undefined}
