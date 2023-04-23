@@ -40,7 +40,7 @@ export function createVersion(author: string, slug: string, data: Record<string,
         })
     });
     platforms.forEach((platform) => {
-        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : [ '*' ]);
+        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : [ 'X' ]);
     });
  
     console.log("[debug] " + JSON.stringify(data));
