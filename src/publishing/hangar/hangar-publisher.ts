@@ -3,16 +3,16 @@ import File from "../../utils/io/file";
 import ModPublisher from "../mod-publisher";
 import PublisherTarget from "../publisher-target";
 import Dependency from "../../metadata/dependency";
-import DependencyKind from "../../metadata/dependency-kind";
+// import DependencyKind from "../../metadata/dependency-kind";
 
 // Map of dependency kinds and whether { "required" = true }
-const hangarDependencyKinds = new Map([
+/* const hangarDependencyKinds = new Map([
     [DependencyKind.Depends, true],
     [DependencyKind.Recommends, false],
     [DependencyKind.Suggests, false],
     [DependencyKind.Includes, false],
     [DependencyKind.Breaks, false],
-]);
+]); */
 
 export default class HangarPublisher extends ModPublisher {
     public get target(): PublisherTarget {
@@ -33,7 +33,7 @@ export default class HangarPublisher extends ModPublisher {
             channel: channel
         };
 
-        //todo dependencies
+        // todo: dependencies
         await createVersion(authorId, projectId, data, files, loaders, gameVersions, token);
     }
 
