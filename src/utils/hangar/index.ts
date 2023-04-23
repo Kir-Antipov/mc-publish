@@ -33,24 +33,25 @@ export function createVersion(author: string, slug: string, data: Record<string,
     files.forEach((file) => {
         form.append('files', file.getStream(), {
             filename: file.name,
-            contentType: "application/octet-stream"
+            contentType: 'application/octet-stream'
         });
         data.files.push({
             platforms: platforms
         })
     });
     platforms.forEach((platform) => {
-        data.platformDependencies[platform] = platform === HangarPlatform.Paper ? gameVersions : [ "*" ];
+        data.platformDependencies.set(platform, platform === HangarPlatform.Paper ? gameVersions : [ '*' ]);
     });
  
     console.log("[debug] " + JSON.stringify(data));
-    form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
+    form.append('versionUpload', JSON.stringify(data), { contentType: 'application/json' });
 
     const response = fetch(`${baseUrl}/projects/${author}/${slug}/upload`, {
         method: 'POST',
         headers: form.getHeaders({
-            Authorization: token,
-            'User-Agent': 'mc-publish (+https://github.com/Kir-Antipov/mc-publish)'
+            'Authorization': token,
+            'User-Agent': 'mc-publish (+https://github.com/Kir-Antipov/mc-publish)',
+            'accept': 'application/json'
         }),
         body: <any>form
     });
