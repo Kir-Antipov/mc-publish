@@ -34,7 +34,7 @@ export default class HangarPublisher extends ModPublisher {
         };
 
         //todo dependencies
-        await createVersion(authorId, projectId, data, files, loaders, gameVersions, token );
+        await createVersion(authorId, projectId, data, files, loaders, gameVersions, token);
     }
 
 }

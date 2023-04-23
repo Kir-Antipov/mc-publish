@@ -9,6 +9,8 @@ inputs:
     publisher: true
   curseforge:
     publisher: true
+  hangar:
+    publisher: true
   github:
     publisher: true
 
@@ -25,6 +27,11 @@ inputs:
     description: The ID of the CurseForge project to upload to
   curseforge-token:
     description: A valid token for the CurseForge API
+
+  hangar-id:
+    description: The author name and slug of the project to upload to (e.g. Username/ModName)
+  hangar-token:
+    description: A hangar API key with the "create_version" permission (https://hangar.papermc.io/auth/settings/api-keys)
 
   github-tag:
     description: The tag name of the release to upload assets to
