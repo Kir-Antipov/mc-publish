@@ -28,19 +28,23 @@ export function createVersion(author: string, slug: string, data: Record<string,
     }
 
     const form = new FormData();
-    form.append("versionUpload", JSON.stringify(data));
-    files.forEach(x => form.append("files", x.getStream(), x.name));
+    const contentType = "application/java-archive";
+    files.forEach((file) => {
+        form.append('files', file, { contentType });
+    });
+    form.append('versionUpload', JSON.stringify(data));
 
     const response = fetch(`${baseUrl}/projects/${author}/${slug}/upload`, {
-        method: "POST",
+        method: 'POST',
         headers: form.getHeaders({
             Authorization: token,
-            "User-Agent": "mc-publish (+https://github.com/Kir-Antipov/mc-publish)"
+            'User-Agent': 'mc-publish (+https://github.com/Kir-Antipov/mc-publish)'
         }),
-        body: <any>form
+        body: form
     });
 
     return processResponse(response, undefined, (x, msg) => new SoftError(x, `Failed to upload file: ${msg}`));
+
 }
 
 export function authenticate(apiKey: string): Promise<HangarTokenResponse> {
