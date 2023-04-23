@@ -2,6 +2,7 @@ import Publisher from "./publisher";
 import PublisherTarget from "./publisher-target";
 import GitHubPublisher from "./github/github-publisher";
 import ModrinthPublisher from "./modrinth/modrinth-publisher";
+import HangarPublisher from "./hangar/hangar-publisher";
 import CurseForgePublisher from "./curseforge/curseforge-publisher";
 import Logger from "../utils/logging/logger";
 
@@ -16,6 +17,9 @@ export default class PublisherFactory {
 
             case PublisherTarget.CurseForge:
                 return new CurseForgePublisher(logger);
+
+            case PublisherTarget.Hangar:
+                return new HangarPublisher(logger);
 
             default:
                 throw new Error(`Unknown target "${PublisherTarget.toString(target)}"`);

@@ -1,6 +1,7 @@
 enum PublisherTarget {
     CurseForge,
     Modrinth,
+    Hangar,
     GitHub,
 }
 
