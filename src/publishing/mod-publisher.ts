@@ -5,13 +5,14 @@ import Publisher from "./publisher";
 import PublisherTarget from "./publisher-target";
 import MinecraftVersionResolver from "../utils/minecraft/minecraft-version-resolver";
 import ModMetadataReader from "../metadata/mod-metadata-reader";
+import ModMetadata from "../metadata/mod-metadata";
 import Dependency from "../metadata/dependency";
 import Version from "../utils/versioning/version";
 import VersionType from "../utils/versioning/version-type";
 import DependencyKind from "../metadata/dependency-kind";
 import path from "path";
 
-interface ModPublisherOptions {
+export interface ModPublisherOptions {
     id: string;
     token: string;
     versionType?: "alpha" | "beta" | "release";
@@ -88,7 +89,7 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
 
         const filename = path.parse(files[0].path).name;
         const version = (typeof options.version === "string" && options.version) || <string>releaseInfo?.tag_name || metadata?.version || Version.fromName(filename);
-        const versionType = options.versionType?.toLowerCase() || VersionType.fromName(metadata?.version || filename);
+        const versionType = this.getVersionType(options, metadata, filename);
         const name = typeof options.name === "string" ? options.name : (<string>releaseInfo?.name || version);
         const changelog = typeof options.changelog === "string"
             ? options.changelog
@@ -128,6 +129,10 @@ export default abstract class ModPublisher extends Publisher<ModPublisherOptions
         const uniqueDependencies = dependencies.filter((x, i, self) => !x.ignore && self.findIndex(y => y.id === x.id && y.kind === x.kind) === i);
 
         await this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, <Record<string, unknown>><unknown>options);
+    }
+
+    protected getVersionType(options: ModPublisherOptions, metadata: ModMetadata, filename: string): string {
+        return options.versionType?.toLowerCase() || VersionType.fromName(metadata?.version || filename);
     }
 
     protected abstract publishMod(id: string, token: string, name: string, version: string, versionType: string, loaders: string[], gameVersions: string[], java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<void>;
