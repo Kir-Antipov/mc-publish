@@ -24045,7 +24045,6 @@ class ModPublisher extends Publisher {
         return true;
     }
     publish(files, options) {
-        var _a;
         return mod_publisher_awaiter(this, void 0, void 0, function* () {
             this.validateOptions(options);
             const releaseInfo = github.context.payload.release;
@@ -24063,7 +24062,7 @@ class ModPublisher extends Publisher {
             }
             const filename = external_path_default().parse(files[0].path).name;
             const version = (typeof options.version === "string" && options.version) || (releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.tag_name) || (metadata === null || metadata === void 0 ? void 0 : metadata.version) || Version.fromName(filename);
-            const versionType = ((_a = options.versionType) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || version_type.fromName((metadata === null || metadata === void 0 ? void 0 : metadata.version) || filename);
+            const versionType = this.getVersionType(options, metadata, filename);
             const name = typeof options.name === "string" ? options.name : ((releaseInfo === null || releaseInfo === void 0 ? void 0 : releaseInfo.name) || version);
             const changelog = typeof options.changelog === "string"
                 ? options.changelog
@@ -24098,6 +24097,10 @@ class ModPublisher extends Publisher {
             const uniqueDependencies = dependencies.filter((x, i, self) => !x.ignore && self.findIndex(y => y.id === x.id && y.kind === x.kind) === i);
             yield this.publishMod(id, token, name, version, versionType, loaders, gameVersions, java, changelog, files, uniqueDependencies, options);
         });
+    }
+    getVersionType(options, metadata, filename) {
+        var _a;
+        return ((_a = options.versionType) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || version_type.fromName((metadata === null || metadata === void 0 ? void 0 : metadata.version) || filename);
     }
 }
 
@@ -24751,18 +24754,12 @@ var hangar_publisher_awaiter = (undefined && undefined.__awaiter) || function (t
 
 
 
-// import DependencyKind from "../../metadata/dependency-kind";
-// Map of dependency kinds and whether { "required" = true }
-/* const hangarDependencyKinds = new Map([
-    [DependencyKind.Depends, true],
-    [DependencyKind.Recommends, false],
-    [DependencyKind.Suggests, false],
-    [DependencyKind.Includes, false],
-    [DependencyKind.Breaks, false],
-]); */
 class HangarPublisher extends ModPublisher {
     get target() {
         return publisher_target.Hangar;
+    }
+    getVersionType(options, metadata, filename) {
+        return options.versionType == "release" ? "Release" : options.versionType;
     }
     publishMod(id, apiKey, name, version, channel, loaders, gameVersions, _java, changelog, files, dependencies, options) {
         return hangar_publisher_awaiter(this, void 0, void 0, function* () {
@@ -24775,7 +24772,7 @@ class HangarPublisher extends ModPublisher {
             const data = {
                 version: version,
                 description: changelog,
-                channel: channel === "release" ? "Release" : channel
+                channel: channel
             };
             // todo: dependencies
             yield hangar_createVersion(authorId, projectId, data, files, loaders, gameVersions, token);
