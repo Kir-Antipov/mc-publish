@@ -16,7 +16,7 @@ const hangarDependencyKinds = new Map([
 
 export default class HangarPublisher extends ModPublisher {
     public get target(): PublisherTarget {
-        return PublisherTarget.Modrinth;
+        return PublisherTarget.Hangar;
     }
 
     protected async publishMod(id: string, apiKey: string, name: string, version: string, channel: string, loaders: string[], gameVersions: string[], _java: string[], changelog: string, files: File[], dependencies: Dependency[], options: Record<string, unknown>): Promise<void> {
