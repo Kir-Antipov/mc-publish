@@ -22,18 +22,28 @@ interface HangarTokenResponse {
 
 export function createVersion(author: string, slug: string, data: Record<string, any>, files: File[], loaders: string[], gameVersions: string[], token: string): Promise<HangarUploadedVersion> {
     data = {
-        files: files.map(x => { platforms: Object.values(HangarPlatform).filter(p => p.toLowerCase() === loaders[files.indexOf(x)].toLowerCase()) }),
-        platformDependencies: files.map(x => loaders[files.indexOf(x)].toLowerCase() !== "paper" ? [ "*" ] : gameVersions),
+        files: [],
+        platformDependencies: [],
+        pluginDependencies: [],
         ...data,
     }
 
     const form = new FormData();
+    const platforms = Object.values(HangarPlatform).filter(platform => loaders.find((l) => l.toLowerCase() === platform.toLowerCase()));
     files.forEach((file) => {
         form.append('files', file.getStream(), {
             filename: file.name,
             contentType: "application/octet-stream"
         });
+        data.files.push({
+            platforms: platforms
+        })
     });
+    platforms.forEach((platform) => {
+        data.platformDependencies[platform] = platform === HangarPlatform.Paper ? gameVersions : [ "*" ];
+    });
+ 
+    console.log("[debug] " + JSON.stringify(data));
     form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
 
     const response = fetch(`${baseUrl}/projects/${author}/${slug}/upload`, {
