@@ -24673,7 +24673,7 @@ var HangarPlatform;
     HangarPlatform["Velocity"] = "VELOCITY";
 })(HangarPlatform || (HangarPlatform = {}));
 function hangar_createVersion(author, slug, data, files, loaders, gameVersions, token) {
-    data = Object.assign({ files: [], platformDependencies: [], pluginDependencies: [] }, data);
+    data = Object.assign({ files: [], platformDependencies: {}, pluginDependencies: {} }, data);
     const form = new (form_data_default())();
     const platforms = Object.values(HangarPlatform).filter(platform => loaders.find((l) => l.toLowerCase() === platform.toLowerCase()));
     files.forEach((file) => {
@@ -24686,7 +24686,7 @@ function hangar_createVersion(author, slug, data, files, loaders, gameVersions, 
         });
     });
     platforms.forEach((platform) => {
-        data.platformDependencies.set(platform, platform === HangarPlatform.Paper ? gameVersions : ['*']);
+        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : ['*']);
     });
     console.log("[debug] " + JSON.stringify(data));
     form.append('versionUpload', JSON.stringify(data), { contentType: 'application/json' });
