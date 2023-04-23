@@ -42,8 +42,6 @@ export function createVersion(author: string, slug: string, data: Record<string,
     platforms.forEach((platform) => {
         data.platformDependencies[platform] = gameVersions;
     });
- 
-    console.log("[debug] " + JSON.stringify(data));
     form.append('versionUpload', JSON.stringify(data), { contentType: 'application/json' });
 
     const response = fetch(`${baseUrl}/projects/${author}/${slug}/upload`, {
