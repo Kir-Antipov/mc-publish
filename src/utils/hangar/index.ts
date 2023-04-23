@@ -28,11 +28,13 @@ export function createVersion(author: string, slug: string, data: Record<string,
     }
 
     const form = new FormData();
-    const contentType = "application/java-archive";
-    files.forEach((file) => {
-        form.append('files', file, { contentType });
+    form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
+    files.forEach((file, i) => {
+        form.append('files', file.getStream(), {
+            filename: file.name,
+            contentType: "application/java-archive"
+        });
     });
-    form.append('versionUpload', JSON.stringify(data));
 
     const response = fetch(`${baseUrl}/projects/${author}/${slug}/upload`, {
         method: 'POST',
@@ -40,7 +42,7 @@ export function createVersion(author: string, slug: string, data: Record<string,
             Authorization: token,
             'User-Agent': 'mc-publish (+https://github.com/Kir-Antipov/mc-publish)'
         }),
-        body: form
+        body: <any>form
     });
 
     return processResponse(response, undefined, (x, msg) => new SoftError(x, `Failed to upload file: ${msg}`));
