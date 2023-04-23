@@ -32,6 +32,8 @@ inputs:
     description: The author name and slug of the project to upload to (e.g. Username/ModName)
   hangar-token:
     description: A hangar API key with the "create_version" permission
+  hangar-game-versions:
+    description: A list of supported Minecraft, Waterfall or Velocity versions
 
   github-tag:
     description: The tag name of the release to upload assets to

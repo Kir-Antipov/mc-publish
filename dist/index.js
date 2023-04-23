@@ -24686,7 +24686,7 @@ function hangar_createVersion(author, slug, data, files, loaders, gameVersions, 
         });
     });
     platforms.forEach((platform) => {
-        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : ['X']);
+        data.platformDependencies[platform] = gameVersions;
     });
     console.log("[debug] " + JSON.stringify(data));
     form.append('versionUpload', JSON.stringify(data), { contentType: 'application/json' });

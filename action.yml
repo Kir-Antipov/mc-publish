@@ -38,6 +38,10 @@ inputs:
     description: A hangar API key with the "create_version" permission
     required: false
     default: ${undefined}
+  hangar-game-versions:
+    description: A list of supported Minecraft versions
+    required: false
+    default: ${undefined}
   github-tag:
     description: The tag name of the release to upload assets to
     required: false
@@ -299,10 +303,6 @@ inputs:
     default: ${undefined}
   hangar-loaders:
     description: A list of supported mod loaders
-    required: false
-    default: ${undefined}
-  hangar-game-versions:
-    description: A list of supported Minecraft versions
     required: false
     default: ${undefined}
   hangar-dependencies:
