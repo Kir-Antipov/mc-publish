@@ -29,10 +29,10 @@ export function createVersion(author: string, slug: string, data: Record<string,
 
     const form = new FormData();
     form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
-    files.forEach((file, i) => {
+    files.forEach((file) => {
         form.append('files', file.getStream(), {
             filename: file.name,
-            contentType: "application/java-archive"
+            contentType: "application/octet-stream"
         });
     });
 

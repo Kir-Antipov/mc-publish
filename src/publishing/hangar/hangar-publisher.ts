@@ -25,8 +25,11 @@ export default class HangarPublisher extends ModPublisher {
         }
         const authorId = id.split("/")[0];
         const projectId = id.split("/")[1];
+
+        console.log(`[debug] Publishing to Hangar: ${id} ${version} ${channel}`);
         
         const { token } = await authenticate(apiKey);
+        console.log(`[debug] Authenticated with hangar!`);
         const data = {
             version: version,
             description: changelog,
