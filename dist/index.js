@@ -13061,7 +13061,7 @@ function percentEncode(c) {
 }
 
 function utf8PercentEncode(c) {
-  const buf = Buffer.from(c);
+  const buf = new Buffer(c);
 
   let str = "";
 
@@ -13073,7 +13073,7 @@ function utf8PercentEncode(c) {
 }
 
 function utf8PercentDecode(str) {
-  const input = Buffer.from(str);
+  const input = new Buffer(str);
   const output = [];
   for (let i = 0; i < input.length; ++i) {
     if (input[i] !== 37) {
@@ -13085,7 +13085,7 @@ function utf8PercentDecode(str) {
       output.push(input[i]);
     }
   }
-  return Buffer.from(output).toString();
+  return new Buffer(output).toString();
 }
 
 function isC0ControlPercentEncode(c) {
@@ -14090,7 +14090,7 @@ URLStateMachine.prototype["parse query"] = function parseQuery(c, cStr) {
       this.encodingOverride = "utf-8";
     }
 
-    const buffer = Buffer.from(this.buffer); // TODO: Use encoding override instead
+    const buffer = new Buffer(this.buffer); // TODO: Use encoding override instead
     for (let i = 0; i < buffer.length; ++i) {
       if (buffer[i] < 0x21 || buffer[i] > 0x7E || buffer[i] === 0x22 || buffer[i] === 0x23 ||
           buffer[i] === 0x3C || buffer[i] === 0x3E) {
@@ -22293,7 +22293,7 @@ TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
   if (connectOptions.proxyAuth) {
     connectOptions.headers = connectOptions.headers || {};
     connectOptions.headers['Proxy-Authorization'] = 'Basic ' +
-        Buffer.from(connectOptions.proxyAuth).toString('base64');
+        new Buffer(connectOptions.proxyAuth).toString('base64');
   }
 
   debug('making CONNECT request');
@@ -24686,7 +24686,7 @@ function hangar_createVersion(author, slug, data, files, loaders, gameVersions, 
         });
     });
     platforms.forEach((platform) => {
-        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : ['*']);
+        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : ['X']);
     });
     console.log("[debug] " + JSON.stringify(data));
     form.append('versionUpload', JSON.stringify(data), { contentType: 'application/json' });
