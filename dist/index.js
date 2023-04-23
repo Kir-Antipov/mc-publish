@@ -24691,7 +24691,6 @@ function hangar_createVersion(author, slug, data, files, loaders, gameVersions, 
     platforms.forEach((platform) => {
         data.platformDependencies[platform] = gameVersions;
     });
-    console.log("[debug] " + JSON.stringify(data));
     form.append('versionUpload', JSON.stringify(data), { contentType: 'application/json' });
     const response = lib_default()(`${hangar_baseUrl}/projects/${author}/${slug}/upload`, {
         method: 'POST',
