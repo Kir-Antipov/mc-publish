@@ -30,7 +30,7 @@ export default class HangarPublisher extends ModPublisher {
         const data = {
             version: version,
             description: changelog,
-            channel: channel
+            channel: channel === "release" ? "Release" : channel
         };
 
         // todo: dependencies

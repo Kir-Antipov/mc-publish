@@ -24775,7 +24775,7 @@ class HangarPublisher extends ModPublisher {
             const data = {
                 version: version,
                 description: changelog,
-                channel: channel
+                channel: channel === "release" ? "Release" : channel
             };
             // todo: dependencies
             yield hangar_createVersion(authorId, projectId, data, files, loaders, gameVersions, token);
