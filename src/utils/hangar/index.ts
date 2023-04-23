@@ -28,13 +28,13 @@ export function createVersion(author: string, slug: string, data: Record<string,
     }
 
     const form = new FormData();
-    form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
     files.forEach((file) => {
         form.append('files', file.getStream(), {
             filename: file.name,
             contentType: "application/octet-stream"
         });
     });
+    form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
 
     const response = fetch(`${baseUrl}/projects/${author}/${slug}/upload`, {
         method: 'POST',

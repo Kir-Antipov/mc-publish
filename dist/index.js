@@ -24675,13 +24675,13 @@ var HangarPlatform;
 function hangar_createVersion(author, slug, data, files, loaders, gameVersions, token) {
     data = Object.assign({ files: files.map(x => { platforms: Object.values(HangarPlatform).filter(p => p.toLowerCase() === loaders[files.indexOf(x)].toLowerCase()); }), platformDependencies: files.map(x => loaders[files.indexOf(x)].toLowerCase() !== "paper" ? ["*"] : gameVersions) }, data);
     const form = new (form_data_default())();
-    form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
     files.forEach((file) => {
         form.append('files', file.getStream(), {
             filename: file.name,
             contentType: "application/octet-stream"
         });
     });
+    form.append('versionUpload', JSON.stringify(data), { contentType: "application/json" });
     const response = lib_default()(`${hangar_baseUrl}/projects/${author}/${slug}/upload`, {
         method: 'POST',
         headers: form.getHeaders({
@@ -24762,9 +24762,7 @@ class HangarPublisher extends ModPublisher {
             }
             const authorId = id.split("/")[0];
             const projectId = id.split("/")[1];
-            console.log(`[debug] Publishing to Hangar: ${id} ${version} ${channel}`);
             const { token } = yield authenticate(apiKey);
-            console.log(`[debug] Authenticated with hangar!`);
             const data = {
                 version: version,
                 description: changelog,
