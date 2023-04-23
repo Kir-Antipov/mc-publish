@@ -23,8 +23,8 @@ interface HangarTokenResponse {
 export function createVersion(author: string, slug: string, data: Record<string, any>, files: File[], loaders: string[], gameVersions: string[], token: string): Promise<HangarUploadedVersion> {
     data = {
         files: [],
-        platformDependencies: [],
-        pluginDependencies: [],
+        platformDependencies: {},
+        pluginDependencies: {},
         ...data,
     }
 
@@ -40,7 +40,7 @@ export function createVersion(author: string, slug: string, data: Record<string,
         })
     });
     platforms.forEach((platform) => {
-        data.platformDependencies.set(platform, platform === HangarPlatform.Paper ? gameVersions : [ '*' ]);
+        data.platformDependencies[platform] = (platform === HangarPlatform.Paper ? gameVersions : [ '*' ]);
     });
  
     console.log("[debug] " + JSON.stringify(data));
