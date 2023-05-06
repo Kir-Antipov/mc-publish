@@ -5,7 +5,9 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "ncc build --source-map --license license.txt && ncc run scripts/index.ts",
+    "generate": "ncc run scripts/generate.ts -t",
+    "prebuild": "npm run generate",
+    "build": "ncc build -s --license license.txt",
     "test:lint": "eslint src/**/*.ts && eslint test/**/*.ts",
     "test:unit": "jest --testPathPattern=unit --watchAll=false",
     "test:integration": "jest --testPathPattern=integration",
