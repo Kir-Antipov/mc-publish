@@ -1,0 +1,1622 @@
+[
+  {
+    "id": 156,
+    "gameVersionTypeID": 17,
+    "name": "Beta 1.7.3",
+    "slug": "beta-1-7-3"
+  },
+  {
+    "id": 157,
+    "gameVersionTypeID": 17,
+    "name": "Beta 1.7",
+    "slug": "beta-1-7"
+  },
+  {
+    "id": 158,
+    "gameVersionTypeID": 17,
+    "name": "Beta 1.6.6",
+    "slug": "beta-1-6-6"
+  },
+  {
+    "id": 165,
+    "gameVersionTypeID": 17,
+    "name": "Beta 1.8.1",
+    "slug": "beta-1-8-1"
+  },
+  {
+    "id": 180,
+    "gameVersionTypeID": 16,
+    "name": "1.0.0",
+    "slug": "1-0-0"
+  },
+  {
+    "id": 186,
+    "gameVersionTypeID": 15,
+    "name": "1.1",
+    "slug": "1-1"
+  },
+  {
+    "id": 201,
+    "gameVersionTypeID": 14,
+    "name": "1.2.1",
+    "slug": "1-2-1"
+  },
+  {
+    "id": 202,
+    "gameVersionTypeID": 14,
+    "name": "1.2.2",
+    "slug": "1-2-2"
+  },
+  {
+    "id": 203,
+    "gameVersionTypeID": 14,
+    "name": "1.2.3",
+    "slug": "1-2-3"
+  },
+  {
+    "id": 204,
+    "gameVersionTypeID": 14,
+    "name": "1.2.5",
+    "slug": "1-2-5"
+  },
+  {
+    "id": 241,
+    "gameVersionTypeID": 13,
+    "name": "1.3.1",
+    "slug": "1-3-1"
+  },
+  {
+    "id": 246,
+    "gameVersionTypeID": 13,
+    "name": "1.3.2",
+    "slug": "1-3-2"
+  },
+  {
+    "id": 255,
+    "gameVersionTypeID": 12,
+    "name": "1.4.2",
+    "slug": "1-4-2"
+  },
+  {
+    "id": 268,
+    "gameVersionTypeID": 12,
+    "name": "1.4.6",
+    "slug": "1-4-6"
+  },
+  {
+    "id": 272,
+    "gameVersionTypeID": 12,
+    "name": "1.4.7",
+    "slug": "1-4-7"
+  },
+  {
+    "id": 279,
+    "gameVersionTypeID": 11,
+    "name": "1.5.0",
+    "slug": "1-5-0"
+  },
+  {
+    "id": 280,
+    "gameVersionTypeID": 11,
+    "name": "1.5.1",
+    "slug": "1-5-1"
+  },
+  {
+    "id": 312,
+    "gameVersionTypeID": 11,
+    "name": "1.5.2",
+    "slug": "1-5-2"
+  },
+  {
+    "id": 318,
+    "gameVersionTypeID": 6,
+    "name": "1.6.1",
+    "slug": "1-6-1"
+  },
+  {
+    "id": 320,
+    "gameVersionTypeID": 6,
+    "name": "1.6.2",
+    "slug": "1-6-2"
+  },
+  {
+    "id": 326,
+    "gameVersionTypeID": 6,
+    "name": "1.6.4",
+    "slug": "1-6-4"
+  },
+  {
+    "id": 361,
+    "gameVersionTypeID": 5,
+    "name": "1.7.2",
+    "slug": "1-7-2"
+  },
+  {
+    "id": 367,
+    "gameVersionTypeID": 5,
+    "name": "1.7.4",
+    "slug": "1-7-4"
+  },
+  {
+    "id": 4444,
+    "gameVersionTypeID": 5,
+    "name": "1.7.5",
+    "slug": "1-7-5"
+  },
+  {
+    "id": 4445,
+    "gameVersionTypeID": 5,
+    "name": "1.7.6",
+    "slug": "1-7-6"
+  },
+  {
+    "id": 4446,
+    "gameVersionTypeID": 5,
+    "name": "1.7.7",
+    "slug": "1-7-7"
+  },
+  {
+    "id": 4447,
+    "gameVersionTypeID": 5,
+    "name": "1.7.8",
+    "slug": "1-7-8"
+  },
+  {
+    "id": 4448,
+    "gameVersionTypeID": 5,
+    "name": "1.7.9",
+    "slug": "1-7-9"
+  },
+  {
+    "id": 4449,
+    "gameVersionTypeID": 5,
+    "name": "1.7.10",
+    "slug": "1-7-10"
+  },
+  {
+    "id": 4450,
+    "gameVersionTypeID": 4,
+    "name": "1.8-Snapshot",
+    "slug": "1-8-Snapshot"
+  },
+  {
+    "id": 4455,
+    "gameVersionTypeID": 4,
+    "name": "1.8",
+    "slug": "1-8"
+  },
+  {
+    "id": 4460,
+    "gameVersionTypeID": 12,
+    "name": "1.4.4",
+    "slug": "1-4-4"
+  },
+  {
+    "id": 4461,
+    "gameVersionTypeID": 12,
+    "name": "1.4.5",
+    "slug": "1-4-5"
+  },
+  {
+    "id": 4462,
+    "gameVersionTypeID": 14,
+    "name": "1.2.4",
+    "slug": "1-2-4"
+  },
+  {
+    "id": 4463,
+    "gameVersionTypeID": 4,
+    "name": "1.8.1",
+    "slug": "1-8-1"
+  },
+  {
+    "id": 4465,
+    "gameVersionTypeID": 4,
+    "name": "1.8.2",
+    "slug": "1-8-2"
+  },
+  {
+    "id": 4466,
+    "gameVersionTypeID": 4,
+    "name": "1.8.3",
+    "slug": "1-8-3"
+  },
+  {
+    "id": 4478,
+    "gameVersionTypeID": 4,
+    "name": "1.8.4",
+    "slug": "1-8-4"
+  },
+  {
+    "id": 4479,
+    "gameVersionTypeID": 4,
+    "name": "1.8.5",
+    "slug": "1-8-5"
+  },
+  {
+    "id": 4480,
+    "gameVersionTypeID": 4,
+    "name": "1.8.6",
+    "slug": "1-8-6"
+  },
+  {
+    "id": 4482,
+    "gameVersionTypeID": 16,
+    "name": "1.0",
+    "slug": "1-0"
+  },
+  {
+    "id": 5642,
+    "gameVersionTypeID": 4,
+    "name": "1.8.7",
+    "slug": "1-8-7"
+  },
+  {
+    "id": 5703,
+    "gameVersionTypeID": 4,
+    "name": "1.8.8",
+    "slug": "1-8-8"
+  },
+  {
+    "id": 5707,
+    "gameVersionTypeID": 552,
+    "name": "1.9-Snapshot",
+    "slug": "1-9-Snapshot"
+  },
+  {
+    "id": 5806,
+    "gameVersionTypeID": 4,
+    "name": "1.8.9",
+    "slug": "1-8-9"
+  },
+  {
+    "id": 5912,
+    "gameVersionTypeID": 5,
+    "name": "1.7.3",
+    "slug": "1-7-3"
+  },
+  {
+    "id": 5946,
+    "gameVersionTypeID": 552,
+    "name": "1.9",
+    "slug": "1-9"
+  },
+  {
+    "id": 5997,
+    "gameVersionTypeID": 552,
+    "name": "1.9.2",
+    "slug": "1-9-2"
+  },
+  {
+    "id": 5998,
+    "gameVersionTypeID": 552,
+    "name": "1.9.1",
+    "slug": "1-9-1"
+  },
+  {
+    "id": 6084,
+    "gameVersionTypeID": 552,
+    "name": "1.9.4",
+    "slug": "1-9-4"
+  },
+  {
+    "id": 6085,
+    "gameVersionTypeID": 552,
+    "name": "1.9.3",
+    "slug": "1-9-3"
+  },
+  {
+    "id": 6143,
+    "gameVersionTypeID": 572,
+    "name": "1.10-Snapshot",
+    "slug": "1-10-snapshot"
+  },
+  {
+    "id": 6144,
+    "gameVersionTypeID": 572,
+    "name": "1.10",
+    "slug": "1-10"
+  },
+  {
+    "id": 6160,
+    "gameVersionTypeID": 572,
+    "name": "1.10.1",
+    "slug": "1-10-1"
+  },
+  {
+    "id": 6170,
+    "gameVersionTypeID": 572,
+    "name": "1.10.2",
+    "slug": "1-10-2"
+  },
+  {
+    "id": 6239,
+    "gameVersionTypeID": 599,
+    "name": "1.11-Snapshot",
+    "slug": "1-11-snapshot"
+  },
+  {
+    "id": 6317,
+    "gameVersionTypeID": 599,
+    "name": "1.11",
+    "slug": "1-11"
+  },
+  {
+    "id": 6451,
+    "gameVersionTypeID": 599,
+    "name": "1.11.1",
+    "slug": "1-11-1"
+  },
+  {
+    "id": 6452,
+    "gameVersionTypeID": 599,
+    "name": "1.11.2",
+    "slug": "1-11-2"
+  },
+  {
+    "id": 6514,
+    "gameVersionTypeID": 628,
+    "name": "1.12-Snapshot",
+    "slug": "1-12-snapshot"
+  },
+  {
+    "id": 6580,
+    "gameVersionTypeID": 628,
+    "name": "1.12",
+    "slug": "1-12"
+  },
+  {
+    "id": 6711,
+    "gameVersionTypeID": 628,
+    "name": "1.12.1",
+    "slug": "1-12-1"
+  },
+  {
+    "id": 6756,
+    "gameVersionTypeID": 628,
+    "name": "1.12.2",
+    "slug": "1-12-2"
+  },
+  {
+    "id": 6834,
+    "gameVersionTypeID": 55023,
+    "name": "1.13-Snapshot",
+    "slug": "1-13-snapshot"
+  },
+  {
+    "id": 7081,
+    "gameVersionTypeID": 55023,
+    "name": "1.13",
+    "slug": "1-13"
+  },
+  {
+    "id": 7107,
+    "gameVersionTypeID": 55023,
+    "name": "1.13.1",
+    "slug": "1-13-1"
+  },
+  {
+    "id": 7132,
+    "gameVersionTypeID": 55023,
+    "name": "1.13.2",
+    "slug": "1-13-2"
+  },
+  {
+    "id": 7133,
+    "gameVersionTypeID": 64806,
+    "name": "1.14-Snapshot",
+    "slug": "1-14-snapshot"
+  },
+  {
+    "id": 7318,
+    "gameVersionTypeID": 64806,
+    "name": "1.14",
+    "slug": "1-14"
+  },
+  {
+    "id": 7344,
+    "gameVersionTypeID": 64806,
+    "name": "1.14.1",
+    "slug": "1-14-1"
+  },
+  {
+    "id": 7361,
+    "gameVersionTypeID": 64806,
+    "name": "1.14.2",
+    "slug": "1-14-2"
+  },
+  {
+    "id": 7413,
+    "gameVersionTypeID": 64806,
+    "name": "1.14.3",
+    "slug": "1-14-3"
+  },
+  {
+    "id": 7469,
+    "gameVersionTypeID": 64806,
+    "name": "1.14.4",
+    "slug": "1-14-4"
+  },
+  {
+    "id": 7519,
+    "gameVersionTypeID": 68722,
+    "name": "1.15-Snapshot",
+    "slug": "1-15-snapshot"
+  },
+  {
+    "id": 7664,
+    "gameVersionTypeID": 68722,
+    "name": "1.15",
+    "slug": "1-15"
+  },
+  {
+    "id": 7675,
+    "gameVersionTypeID": 68722,
+    "name": "1.15.1",
+    "slug": "1-15-1"
+  },
+  {
+    "id": 7722,
+    "gameVersionTypeID": 68722,
+    "name": "1.15.2",
+    "slug": "1-15-2"
+  },
+  {
+    "id": 7751,
+    "gameVersionTypeID": 70886,
+    "name": "1.16-Snapshot",
+    "slug": "1-15-snapshot"
+  },
+  {
+    "id": 7890,
+    "gameVersionTypeID": 70886,
+    "name": "1.16",
+    "slug": "1-16"
+  },
+  {
+    "id": 7892,
+    "gameVersionTypeID": 70886,
+    "name": "1.16.1",
+    "slug": "1-16-1"
+  },
+  {
+    "id": 8010,
+    "gameVersionTypeID": 70886,
+    "name": "1.16.2",
+    "slug": "1-16-2"
+  },
+  {
+    "id": 8056,
+    "gameVersionTypeID": 70886,
+    "name": "1.16.3",
+    "slug": "1-16-3"
+  },
+  {
+    "id": 8134,
+    "gameVersionTypeID": 70886,
+    "name": "1.16.4",
+    "slug": "1-16-4"
+  },
+  {
+    "id": 8152,
+    "gameVersionTypeID": 73242,
+    "name": "1.17",
+    "slug": "1-17"
+  },
+  {
+    "id": 8203,
+    "gameVersionTypeID": 70886,
+    "name": "1.16.5",
+    "slug": "1-16-5"
+  },
+  {
+    "id": 8282,
+    "gameVersionTypeID": 73242,
+    "name": "1.17-Snapshot",
+    "slug": "1-17-snapshot"
+  },
+  {
+    "id": 8516,
+    "gameVersionTypeID": 73242,
+    "name": "1.17.1",
+    "slug": "1-17-1"
+  },
+  {
+    "id": 8633,
+    "gameVersionTypeID": 73250,
+    "name": "1.18-Snapshot",
+    "slug": "1-18-snapshot"
+  },
+  {
+    "id": 8830,
+    "gameVersionTypeID": 73250,
+    "name": "1.18",
+    "slug": "1-18"
+  },
+  {
+    "id": 8857,
+    "gameVersionTypeID": 73250,
+    "name": "1.18.1",
+    "slug": "1-18-1"
+  },
+  {
+    "id": 8993,
+    "gameVersionTypeID": 73407,
+    "name": "1.19-Snapshot",
+    "slug": "1-19-snapshot"
+  },
+  {
+    "id": 9008,
+    "gameVersionTypeID": 73250,
+    "name": "1.18.2",
+    "slug": "1-18-2"
+  },
+  {
+    "id": 9186,
+    "gameVersionTypeID": 73407,
+    "name": "1.19",
+    "slug": "1-19"
+  },
+  {
+    "id": 9259,
+    "gameVersionTypeID": 73407,
+    "name": "1.19.1",
+    "slug": "1-19-1"
+  },
+  {
+    "id": 9366,
+    "gameVersionTypeID": 73407,
+    "name": "1.19.2",
+    "slug": "1-19-2"
+  },
+  {
+    "id": 9550,
+    "gameVersionTypeID": 73407,
+    "name": "1.19.3",
+    "slug": "1-19-3"
+  },
+  {
+    "id": 9559,
+    "gameVersionTypeID": 75125,
+    "name": "1.20-Snapshot",
+    "slug": "1-19-snapshot"
+  },
+  {
+    "id": 9776,
+    "gameVersionTypeID": 73407,
+    "name": "1.19.4",
+    "slug": "1-19-4"
+  },
+  {
+    "id": 9791,
+    "gameVersionTypeID": 11,
+    "name": "1.5.3",
+    "slug": "1-5-3"
+  },
+  {
+    "id": 9859,
+    "gameVersionTypeID": 73407,
+    "name": "1.19.3-Snapshot",
+    "slug": "1-19-3-snapshot"
+  },
+  {
+    "id": 9868,
+    "gameVersionTypeID": 73407,
+    "name": "1.19.4-Snapshot",
+    "slug": "1-19-4-snapshot"
+  },
+  {
+    "id": 159,
+    "gameVersionTypeID": 1,
+    "name": "CB 1060 ",
+    "slug": "cb-1060"
+  },
+  {
+    "id": 160,
+    "gameVersionTypeID": 1,
+    "name": "CB 1000",
+    "slug": "cb-1000"
+  },
+  {
+    "id": 161,
+    "gameVersionTypeID": 1,
+    "name": "CB 953",
+    "slug": "cb-953"
+  },
+  {
+    "id": 162,
+    "gameVersionTypeID": 1,
+    "name": "CB 935",
+    "slug": "cb-935"
+  },
+  {
+    "id": 164,
+    "gameVersionTypeID": 1,
+    "name": "CB 1185",
+    "slug": "cb-1185"
+  },
+  {
+    "id": 175,
+    "gameVersionTypeID": 1,
+    "name": "CB 1240",
+    "slug": "cb-1240"
+  },
+  {
+    "id": 176,
+    "gameVersionTypeID": 1,
+    "name": "CB 1317",
+    "slug": "cb-1317"
+  },
+  {
+    "id": 177,
+    "gameVersionTypeID": 1,
+    "name": "CB 1337",
+    "slug": "cb-1337"
+  },
+  {
+    "id": 179,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.0.1-R1",
+    "slug": "cb-1-0-1-r1"
+  },
+  {
+    "id": 187,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R1",
+    "slug": "cb-1-1-r1"
+  },
+  {
+    "id": 188,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R2",
+    "slug": "cb-1-1-r2"
+  },
+  {
+    "id": 189,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R3",
+    "slug": "cb-1-1-r3"
+  },
+  {
+    "id": 190,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R4",
+    "slug": "cb-1-1-r4"
+  },
+  {
+    "id": 193,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R6",
+    "slug": "cb-1-1-r6"
+  },
+  {
+    "id": 194,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.3-R0.1",
+    "slug": "cb-1-2-3-r0-1"
+  },
+  {
+    "id": 195,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R7",
+    "slug": "cb-1-1-r7"
+  },
+  {
+    "id": 196,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.1-R8",
+    "slug": "cb-1-1-r8"
+  },
+  {
+    "id": 197,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.3-R0.2",
+    "slug": "cb-1-2-3-r0-2"
+  },
+  {
+    "id": 198,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.4-R1.0",
+    "slug": "cb-1-2-4-r1-0"
+  },
+  {
+    "id": 200,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.5-R1.0",
+    "slug": "cb-1-2-5-r1-0"
+  },
+  {
+    "id": 207,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.5-R1.2",
+    "slug": "cb-1-2-5-r1-2"
+  },
+  {
+    "id": 208,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.5-R2.0",
+    "slug": "cb-1-2-5-r2-0"
+  },
+  {
+    "id": 209,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.5-R3.0",
+    "slug": "cb-1-2-5-r3-0"
+  },
+  {
+    "id": 235,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.5-R4.0",
+    "slug": "cb-1-2-5-r4-0"
+  },
+  {
+    "id": 239,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.2.5-R5.0",
+    "slug": "cb-1-2-5-r5-0"
+  },
+  {
+    "id": 244,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.1-R1.0",
+    "slug": "cb-1-3-1-r1-0"
+  },
+  {
+    "id": 245,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.1-R2.0",
+    "slug": "cb-1-3-1-r2-0"
+  },
+  {
+    "id": 247,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.2-R0.1",
+    "slug": "cb-1-3-2-r0-1"
+  },
+  {
+    "id": 250,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.2-R0.2",
+    "slug": "cb-1-3-2-r0-2"
+  },
+  {
+    "id": 251,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.2-R1.0",
+    "slug": "cb-1-3-2-r1-0"
+  },
+  {
+    "id": 252,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.2-R2.0",
+    "slug": "cb-1-3-2-r2-0"
+  },
+  {
+    "id": 254,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.3.2-R3.0",
+    "slug": "cb-1-3-2-r3-0"
+  },
+  {
+    "id": 256,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.2-R0.1",
+    "slug": "cb-1-4-2-r0-1"
+  },
+  {
+    "id": 257,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.2-R0.2",
+    "slug": "cb-1-4-2-r0-2"
+  },
+  {
+    "id": 261,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.5-R0.1",
+    "slug": "cb-1-4-5-r0-1"
+  },
+  {
+    "id": 262,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.5-R0.2",
+    "slug": "cb-1-4-5-r0-2"
+  },
+  {
+    "id": 266,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.5-R1.0",
+    "slug": "cb-1-4-5-r1-0"
+  },
+  {
+    "id": 269,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.6-R0.1",
+    "slug": "cb-1-4-6-r0-1"
+  },
+  {
+    "id": 270,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.6-R0.2",
+    "slug": "cb-1-4-6-r0-2"
+  },
+  {
+    "id": 271,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.6-R0.3",
+    "slug": "cb-1-4-6-r0-3"
+  },
+  {
+    "id": 275,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.7-R0.1",
+    "slug": "cb-1-4-7-r0-1"
+  },
+  {
+    "id": 276,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.4.7-R1.0",
+    "slug": "cb-1-4-7-r1-0"
+  },
+  {
+    "id": 309,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.5.1-R0.1",
+    "slug": "cb-1-5-1-r0-1"
+  },
+  {
+    "id": 310,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.5.1-R0.2",
+    "slug": "cb-1-5-1-r0-2"
+  },
+  {
+    "id": 313,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.5.2-R0.1",
+    "slug": "cb-1-5-2-r0-1"
+  },
+  {
+    "id": 316,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.5.2-R1.0",
+    "slug": "cb-1-5-2-r1-0"
+  },
+  {
+    "id": 321,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.6.2-R0.1",
+    "slug": "cb-1-6-2-r0-1"
+  },
+  {
+    "id": 324,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.6.2-R1.0",
+    "slug": "cb-1-6-2-r1-0"
+  },
+  {
+    "id": 360,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.6.4-R1.0",
+    "slug": "cb-1-6-4-r1-0"
+  },
+  {
+    "id": 362,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.6.4-R2.0",
+    "slug": "cb-1-6-4-r2-0"
+  },
+  {
+    "id": 368,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.7.2-R0.1",
+    "slug": "cb-1-7-2-r0-1"
+  },
+  {
+    "id": 369,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.7.2-R0.2",
+    "slug": "cb-1-7-2-r0-2"
+  },
+  {
+    "id": 403,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.7.2-R0.3",
+    "slug": "cb-1-7-2-r0-3"
+  },
+  {
+    "id": 473,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.7.9-R0.1",
+    "slug": "cb-1-7-9-r0-1"
+  },
+  {
+    "id": 490,
+    "gameVersionTypeID": 1,
+    "name": "CB 1.7.9-R0.2",
+    "slug": "cb-1-7-9-r0-2"
+  },
+  {
+    "id": 531,
+    "gameVersionTypeID": 1,
+    "name": "1.8",
+    "slug": "1-8"
+  },
+  {
+    "id": 532,
+    "gameVersionTypeID": 1,
+    "name": "1.8.1",
+    "slug": "1-8-1"
+  },
+  {
+    "id": 568,
+    "gameVersionTypeID": 1,
+    "name": "1.8.3",
+    "slug": "1-8-3"
+  },
+  {
+    "id": 585,
+    "gameVersionTypeID": 1,
+    "name": "1.9",
+    "slug": "1-9"
+  },
+  {
+    "id": 591,
+    "gameVersionTypeID": 1,
+    "name": "1.10",
+    "slug": "1-10"
+  },
+  {
+    "id": 630,
+    "gameVersionTypeID": 1,
+    "name": "1.11",
+    "slug": "1-11"
+  },
+  {
+    "id": 6369,
+    "gameVersionTypeID": 1,
+    "name": "Beta 1.7.3",
+    "slug": "beta-1-7-3"
+  },
+  {
+    "id": 6370,
+    "gameVersionTypeID": 1,
+    "name": "Beta 1.7",
+    "slug": "beta-1-7"
+  },
+  {
+    "id": 6371,
+    "gameVersionTypeID": 1,
+    "name": "Beta 1.6.6",
+    "slug": "beta-1-6-6"
+  },
+  {
+    "id": 6372,
+    "gameVersionTypeID": 1,
+    "name": "Beta 1.8.1",
+    "slug": "beta-1-8-1"
+  },
+  {
+    "id": 6373,
+    "gameVersionTypeID": 1,
+    "name": "1.0.0",
+    "slug": "1-0-0"
+  },
+  {
+    "id": 6374,
+    "gameVersionTypeID": 1,
+    "name": "1.1",
+    "slug": "1-1"
+  },
+  {
+    "id": 6375,
+    "gameVersionTypeID": 1,
+    "name": "1.2.1",
+    "slug": "1-2-1"
+  },
+  {
+    "id": 6376,
+    "gameVersionTypeID": 1,
+    "name": "1.2.2",
+    "slug": "1-2-2"
+  },
+  {
+    "id": 6377,
+    "gameVersionTypeID": 1,
+    "name": "1.2.3",
+    "slug": "1-2-3"
+  },
+  {
+    "id": 6378,
+    "gameVersionTypeID": 1,
+    "name": "1.2.5",
+    "slug": "1-2-5"
+  },
+  {
+    "id": 6379,
+    "gameVersionTypeID": 1,
+    "name": "1.3.1",
+    "slug": "1-3-1"
+  },
+  {
+    "id": 6380,
+    "gameVersionTypeID": 1,
+    "name": "1.3.2",
+    "slug": "1-3-2"
+  },
+  {
+    "id": 6381,
+    "gameVersionTypeID": 1,
+    "name": "1.4.2",
+    "slug": "1-4-2"
+  },
+  {
+    "id": 6382,
+    "gameVersionTypeID": 1,
+    "name": "1.4.6",
+    "slug": "1-4-6"
+  },
+  {
+    "id": 6383,
+    "gameVersionTypeID": 1,
+    "name": "1.4.7",
+    "slug": "1-4-7"
+  },
+  {
+    "id": 6384,
+    "gameVersionTypeID": 1,
+    "name": "1.5.0",
+    "slug": "1-5-0"
+  },
+  {
+    "id": 6385,
+    "gameVersionTypeID": 1,
+    "name": "1.5.1",
+    "slug": "1-5-1"
+  },
+  {
+    "id": 6386,
+    "gameVersionTypeID": 1,
+    "name": "1.5.2",
+    "slug": "1-5-2"
+  },
+  {
+    "id": 6387,
+    "gameVersionTypeID": 1,
+    "name": "1.6.1",
+    "slug": "1-6-1"
+  },
+  {
+    "id": 6388,
+    "gameVersionTypeID": 1,
+    "name": "1.6.2",
+    "slug": "1-6-2"
+  },
+  {
+    "id": 6389,
+    "gameVersionTypeID": 1,
+    "name": "1.6.4",
+    "slug": "1-6-4"
+  },
+  {
+    "id": 6390,
+    "gameVersionTypeID": 1,
+    "name": "1.7.2",
+    "slug": "1-7-2"
+  },
+  {
+    "id": 6391,
+    "gameVersionTypeID": 1,
+    "name": "1.7.4",
+    "slug": "1-7-4"
+  },
+  {
+    "id": 6588,
+    "gameVersionTypeID": 1,
+    "name": "1.12",
+    "slug": "1-12"
+  },
+  {
+    "id": 7105,
+    "gameVersionTypeID": 1,
+    "name": "1.13",
+    "slug": "1-13"
+  },
+  {
+    "id": 7330,
+    "gameVersionTypeID": 1,
+    "name": "1.14",
+    "slug": "1-14"
+  },
+  {
+    "id": 7667,
+    "gameVersionTypeID": 1,
+    "name": "1.15",
+    "slug": "1-15"
+  },
+  {
+    "id": 7915,
+    "gameVersionTypeID": 1,
+    "name": "1.16",
+    "slug": "1-16"
+  },
+  {
+    "id": 8503,
+    "gameVersionTypeID": 1,
+    "name": "1.17",
+    "slug": "1-17"
+  },
+  {
+    "id": 8849,
+    "gameVersionTypeID": 1,
+    "name": "1.18",
+    "slug": "1-18"
+  },
+  {
+    "id": 8897,
+    "gameVersionTypeID": 1,
+    "name": "1.18.1",
+    "slug": "1-18-1"
+  },
+  {
+    "id": 9016,
+    "gameVersionTypeID": 1,
+    "name": "1.18.2",
+    "slug": "1-18-2"
+  },
+  {
+    "id": 9190,
+    "gameVersionTypeID": 1,
+    "name": "1.19",
+    "slug": "1-19"
+  },
+  {
+    "id": 9261,
+    "gameVersionTypeID": 1,
+    "name": "1.19.1",
+    "slug": "1-19-1"
+  },
+  {
+    "id": 9560,
+    "gameVersionTypeID": 1,
+    "name": "1.19.2",
+    "slug": "1-19-2"
+  },
+  {
+    "id": 9561,
+    "gameVersionTypeID": 1,
+    "name": "1.19.3",
+    "slug": "1-19-3"
+  },
+  {
+    "id": 6298,
+    "gameVersionTypeID": 615,
+    "name": "0.16",
+    "slug": "0-16"
+  },
+  {
+    "id": 6875,
+    "gameVersionTypeID": 615,
+    "name": "0.16.1",
+    "slug": "0-16-1"
+  },
+  {
+    "id": 6876,
+    "gameVersionTypeID": 615,
+    "name": "0.16.2",
+    "slug": "0-16-2"
+  },
+  {
+    "id": 6877,
+    "gameVersionTypeID": 615,
+    "name": "1.0",
+    "slug": "1-0"
+  },
+  {
+    "id": 6878,
+    "gameVersionTypeID": 615,
+    "name": "1.0.1",
+    "slug": "1-0-1"
+  },
+  {
+    "id": 6879,
+    "gameVersionTypeID": 615,
+    "name": "1.0.2",
+    "slug": "1-0-2"
+  },
+  {
+    "id": 6880,
+    "gameVersionTypeID": 615,
+    "name": "1.0.3",
+    "slug": "1-0-3"
+  },
+  {
+    "id": 6881,
+    "gameVersionTypeID": 615,
+    "name": "1.2.8",
+    "slug": "1-2-8"
+  },
+  {
+    "id": 6882,
+    "gameVersionTypeID": 615,
+    "name": "1.2.7",
+    "slug": "1-2-7"
+  },
+  {
+    "id": 6883,
+    "gameVersionTypeID": 615,
+    "name": "1.2.6",
+    "slug": "1-2-6"
+  },
+  {
+    "id": 6884,
+    "gameVersionTypeID": 615,
+    "name": "1.2.5",
+    "slug": "1-2-5"
+  },
+  {
+    "id": 6885,
+    "gameVersionTypeID": 615,
+    "name": "1.2.3",
+    "slug": "1-2-3"
+  },
+  {
+    "id": 6886,
+    "gameVersionTypeID": 615,
+    "name": "1.2.2",
+    "slug": "1-2-2"
+  },
+  {
+    "id": 6887,
+    "gameVersionTypeID": 615,
+    "name": "1.2.1",
+    "slug": "1-2-1"
+  },
+  {
+    "id": 6888,
+    "gameVersionTypeID": 615,
+    "name": "1.2",
+    "slug": "1-2"
+  },
+  {
+    "id": 6889,
+    "gameVersionTypeID": 615,
+    "name": "1.0.4",
+    "slug": "1-0-4"
+  },
+  {
+    "id": 6890,
+    "gameVersionTypeID": 615,
+    "name": "1.0.5",
+    "slug": "1-0-5"
+  },
+  {
+    "id": 6891,
+    "gameVersionTypeID": 615,
+    "name": "1.0.6",
+    "slug": "1-0-6"
+  },
+  {
+    "id": 6892,
+    "gameVersionTypeID": 615,
+    "name": "1.0.7",
+    "slug": "1-0-7"
+  },
+  {
+    "id": 6893,
+    "gameVersionTypeID": 615,
+    "name": "1.0.8",
+    "slug": "1-0-8"
+  },
+  {
+    "id": 6894,
+    "gameVersionTypeID": 615,
+    "name": "1.0.9",
+    "slug": "1-0-9"
+  },
+  {
+    "id": 6895,
+    "gameVersionTypeID": 615,
+    "name": "1.1",
+    "slug": "1-1"
+  },
+  {
+    "id": 6896,
+    "gameVersionTypeID": 615,
+    "name": "1.1.1",
+    "slug": "1-1-1"
+  },
+  {
+    "id": 6897,
+    "gameVersionTypeID": 615,
+    "name": "1.1.2",
+    "slug": "1-1-2"
+  },
+  {
+    "id": 6898,
+    "gameVersionTypeID": 615,
+    "name": "1.1.3",
+    "slug": "1-1-3"
+  },
+  {
+    "id": 6899,
+    "gameVersionTypeID": 615,
+    "name": "1.1.4",
+    "slug": "1-1-4"
+  },
+  {
+    "id": 6900,
+    "gameVersionTypeID": 615,
+    "name": "1.1.5",
+    "slug": "1-1-5"
+  },
+  {
+    "id": 6901,
+    "gameVersionTypeID": 615,
+    "name": "1.1.7",
+    "slug": "1-1-7"
+  },
+  {
+    "id": 7134,
+    "gameVersionTypeID": 615,
+    "name": "1.2.9",
+    "slug": "1-2-9"
+  },
+  {
+    "id": 7135,
+    "gameVersionTypeID": 615,
+    "name": "1.2.10",
+    "slug": "1-2-10"
+  },
+  {
+    "id": 7136,
+    "gameVersionTypeID": 615,
+    "name": "1.2.11",
+    "slug": "1-2-11"
+  },
+  {
+    "id": 7137,
+    "gameVersionTypeID": 615,
+    "name": "1.2.13",
+    "slug": "1-2-13"
+  },
+  {
+    "id": 7138,
+    "gameVersionTypeID": 615,
+    "name": "1.4",
+    "slug": "1-4"
+  },
+  {
+    "id": 7139,
+    "gameVersionTypeID": 615,
+    "name": "1.5",
+    "slug": "1-5"
+  },
+  {
+    "id": 7140,
+    "gameVersionTypeID": 615,
+    "name": "1.6",
+    "slug": "1-6"
+  },
+  {
+    "id": 7141,
+    "gameVersionTypeID": 615,
+    "name": "1.7",
+    "slug": "1-7"
+  },
+  {
+    "id": 7352,
+    "gameVersionTypeID": 615,
+    "name": "1.7.1",
+    "slug": "1-7-1"
+  },
+  {
+    "id": 7430,
+    "gameVersionTypeID": 615,
+    "name": "1.8",
+    "slug": "1-8"
+  },
+  {
+    "id": 7431,
+    "gameVersionTypeID": 615,
+    "name": "1.9",
+    "slug": "1-9"
+  },
+  {
+    "id": 7432,
+    "gameVersionTypeID": 615,
+    "name": "1.10",
+    "slug": "1-10"
+  },
+  {
+    "id": 7433,
+    "gameVersionTypeID": 615,
+    "name": "1.11",
+    "slug": "1-11"
+  },
+  {
+    "id": 7434,
+    "gameVersionTypeID": 615,
+    "name": "1.12",
+    "slug": "1-12"
+  },
+  {
+    "id": 7435,
+    "gameVersionTypeID": 615,
+    "name": "1.13",
+    "slug": "1-13"
+  },
+  {
+    "id": 7436,
+    "gameVersionTypeID": 615,
+    "name": "1.14",
+    "slug": "1-14"
+  },
+  {
+    "id": 7996,
+    "gameVersionTypeID": 615,
+    "name": "1.15",
+    "slug": "1-15"
+  },
+  {
+    "id": 7997,
+    "gameVersionTypeID": 615,
+    "name": "1.16",
+    "slug": "1-16"
+  },
+  {
+    "id": 8504,
+    "gameVersionTypeID": 615,
+    "name": "1.17",
+    "slug": "1-17"
+  },
+  {
+    "id": 8899,
+    "gameVersionTypeID": 615,
+    "name": "1.18",
+    "slug": "1-18"
+  },
+  {
+    "id": 9189,
+    "gameVersionTypeID": 615,
+    "name": "1.19",
+    "slug": "1-19"
+  },
+  {
+    "id": 9260,
+    "gameVersionTypeID": 615,
+    "name": "1.19.1",
+    "slug": "1-19-1"
+  },
+  {
+    "id": 9551,
+    "gameVersionTypeID": 615,
+    "name": "1.19.2",
+    "slug": "1-19-2"
+  },
+  {
+    "id": 9552,
+    "gameVersionTypeID": 615,
+    "name": "1.19.3",
+    "slug": "1-19-3"
+  },
+  {
+    "id": 9792,
+    "gameVersionTypeID": 615,
+    "name": "1.19.4",
+    "slug": "1-19-4"
+  },
+  {
+    "id": 7498,
+    "gameVersionTypeID": 68441,
+    "name": "Forge",
+    "slug": "forge"
+  },
+  {
+    "id": 7499,
+    "gameVersionTypeID": 68441,
+    "name": "Fabric",
+    "slug": "fabric"
+  },
+  {
+    "id": 7500,
+    "gameVersionTypeID": 68441,
+    "name": "Rift",
+    "slug": "rift"
+  },
+  {
+    "id": 9153,
+    "gameVersionTypeID": 68441,
+    "name": "Quilt",
+    "slug": "quilt"
+  },
+  {
+    "id": 4456,
+    "gameVersionTypeID": 2,
+    "name": "Java 6",
+    "slug": "java-6"
+  },
+  {
+    "id": 4457,
+    "gameVersionTypeID": 2,
+    "name": "Java 7",
+    "slug": "java-7"
+  },
+  {
+    "id": 4458,
+    "gameVersionTypeID": 2,
+    "name": "Java 8",
+    "slug": "java-8"
+  },
+  {
+    "id": 6762,
+    "gameVersionTypeID": 2,
+    "name": "Java 9",
+    "slug": "java-9"
+  },
+  {
+    "id": 7113,
+    "gameVersionTypeID": 2,
+    "name": "Java 10",
+    "slug": "java-10"
+  },
+  {
+    "id": 8320,
+    "gameVersionTypeID": 2,
+    "name": "Java 11",
+    "slug": "java-11"
+  },
+  {
+    "id": 8321,
+    "gameVersionTypeID": 2,
+    "name": "Java 12",
+    "slug": "java-12"
+  },
+  {
+    "id": 8322,
+    "gameVersionTypeID": 2,
+    "name": "Java 13",
+    "slug": "java-13"
+  },
+  {
+    "id": 8323,
+    "gameVersionTypeID": 2,
+    "name": "Java 14",
+    "slug": "java-14"
+  },
+  {
+    "id": 8324,
+    "gameVersionTypeID": 2,
+    "name": "Java 15",
+    "slug": "java-15"
+  },
+  {
+    "id": 8325,
+    "gameVersionTypeID": 2,
+    "name": "Java 16",
+    "slug": "java-16"
+  },
+  {
+    "id": 8326,
+    "gameVersionTypeID": 2,
+    "name": "Java 17",
+    "slug": "java-17"
+  },
+  {
+    "id": 8634,
+    "gameVersionTypeID": 2,
+    "name": "Java 18",
+    "slug": "java-18"
+  },
+  {
+    "id": 9638,
+    "gameVersionTypeID": 75208,
+    "name": "Client",
+    "slug": "client"
+  },
+  {
+    "id": 9639,
+    "gameVersionTypeID": 75208,
+    "name": "Server",
+    "slug": "server"
+  }
+]
