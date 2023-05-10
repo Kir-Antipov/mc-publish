@@ -1,4 +1,4 @@
-import { FailMode } from "@/utils/fail-mode";
+import { FailMode } from "@/utils/errors/fail-mode";
 
 describe("FailMode", () => {
     describe("parse", () => {
