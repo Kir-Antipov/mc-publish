@@ -51,10 +51,11 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
      */
     protected async uploadCore(request: ModrinthUploadRequest): Promise<ModrinthUploadReport> {
         const api = new ModrinthApiClient({ token: request.token.unwrap() });
+        const unfeatureMode = request.unfeatureMode ?? request.featured ? ModrinthUnfeatureMode.SUBSET : ModrinthUnfeatureMode.NONE;
 
         const project = await this.getProject(request.id, api);
         const version = await this.createVersion(request, project, api);
-        await this.unfeaturePreviousVersions(version, request.unfeatureMode, api);
+        await this.unfeaturePreviousVersions(version, unfeatureMode, api);
 
         return {
             id: project.id,

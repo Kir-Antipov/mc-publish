@@ -1,9 +1,10 @@
-import { GitHubUploadRequest as UploadRequest, GitHubUploadReport as UploadReport } from "@/action";
+import { GitHubUploadReport as UploadReport, GitHubUploadRequest as UploadRequest } from "@/action";
 import { GenericPlatformUploader, GenericPlatformUploaderOptions } from "@/platforms/generic-platform-uploader";
 import { PlatformType } from "@/platforms/platform-type";
-import { GitHubContext } from "./github-context";
 import { ArgumentNullError } from "@/utils/errors";
+import { VersionType } from "@/utils/versioning";
 import { GitHubApiClient } from "./github-api-client";
+import { GitHubContext } from "./github-context";
 import { GitHubRelease } from "./github-release";
 
 /**
@@ -70,7 +71,7 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
             repo: `${repo.owner}/${repo.repo}`,
             tag: release.tag_name,
             url: release.html_url,
-            files: release.assets.map(x => ({ id: x.id, name: x.name, url: x.url })),
+            files: release.assets.map(x => ({ id: x.id, name: x.name, url: x.browser_download_url })),
         };
     }
 
@@ -104,9 +105,9 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
                 name: request.name,
                 body: request.changelog,
                 draft: request.draft,
-                prerelease: request.prerelease,
+                prerelease: request.prerelease ?? request.versionType !== VersionType.RELEASE,
                 discussion_category_name: request.discussion,
-                generate_release_notes: request.generateChangelog,
+                generate_release_notes: request.generateChangelog ?? !request.changelog,
             }))?.id;
         }
 
