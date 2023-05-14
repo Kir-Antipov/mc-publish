@@ -134,6 +134,15 @@ export class FileInfo {
     toString() {
         return this._path;
     }
+
+    /**
+     * Returns the file path.
+     *
+     * @returns The file path.
+     */
+    toJSON() {
+        return this._path;
+    }
 }
 
 /**

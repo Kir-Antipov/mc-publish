@@ -166,6 +166,12 @@ describe("FileInfo", () => {
             expect(info.toString()).toBe("path/to/test.txt");
         });
     });
+
+    test("should be converted to JSON as a file path string", () => {
+        const info = new FileInfo("path/to/test.txt");
+
+        expect(JSON.stringify(info)).toBe("\"path/to/test.txt\"");
+    });
 });
 
 describe("fileEquals", () => {
