@@ -9,6 +9,7 @@ import {
     getAllValues,
     getOwnEntries,
     getPropertyDescriptor,
+    getSafe,
     merge,
 } from "@/utils/reflection/object-reflector";
 
@@ -193,5 +194,59 @@ describe("merge", () => {
         expect(merged).toMatchObject({ a: 1, b: 2 });
         expect(Object.getOwnPropertyDescriptor(merged, "a")).toEqual(Object.getOwnPropertyDescriptor(obj1, "a"));
         expect(Object.getOwnPropertyDescriptor(merged, "b")).toEqual(Object.getOwnPropertyDescriptor(obj2, "b"));
+    });
+});
+
+describe("getSafe", () => {
+    it("returns the value of an existing property", () => {
+        const obj = {
+            name: "John",
+            age: 30,
+        };
+
+        expect(getSafe(obj, "name")).toBe("John");
+        expect(getSafe(obj, "age")).toBe(30);
+    });
+
+    it("handles array indices as keys", () => {
+        const arr = ["apple", "banana", "cherry"] as const;
+
+        expect(getSafe(arr, 0)).toBe("apple");
+        expect(getSafe(arr, 1)).toBe("banana");
+        expect(getSafe(arr, 2)).toBe("cherry");
+        expect(getSafe(arr, 3)).toBeUndefined();
+    });
+
+    it("handles Symbols as keys", () => {
+        const obj = {
+            [Symbol.toStringTag]: "Not Object",
+        };
+
+        expect(getSafe(obj, Symbol.toStringTag)).toBe("Not Object");
+    });
+
+    it("returns undefined for non-existent properties", () => {
+        const obj = {
+            name: "John",
+            age: 30,
+        };
+
+        expect(getSafe(obj, "address")).toBeUndefined();
+        expect(getSafe(obj, "salary")).toBeUndefined();
+    });
+
+    it("returns undefined if accessing the property is not possible", () => {
+        const obj = {
+            get name(): string {
+                throw new Error();
+            }
+        };
+
+        expect(getSafe(obj, "name")).toBeUndefined();
+    });
+
+    it("returns undefined when the target object is null or undefined", () => {
+        expect(getSafe(null, "name")).toBeUndefined();
+        expect(getSafe(undefined, "name")).toBeUndefined();
     });
 });

@@ -205,3 +205,26 @@ export function merge<T extends unknown[]>(...values: T): UnionToIntersection<T[
     }
     return result;
 }
+
+/**
+ * Safely retrieves a property value from an object, or returns `undefined` if the property is not accessible.
+ *
+ * @template T - The type of the object.
+ * @template K - The type of the property key.
+ *
+ * @param target - The object from which to retrieve the property value.
+ * @param key - The key of the property to retrieve.
+ *
+ * @returns The value of the property if accessible, otherwise `undefined`.
+ */
+export function getSafe<T, K extends PropertyKey>(target: T, key: K): (K extends keyof T ? T[K] : unknown) | undefined {
+    if (target === null || target === undefined) {
+        return undefined;
+    }
+
+    try {
+        return target[key as string];
+    } catch {
+        return undefined;
+    }
+}

@@ -30,4 +30,5 @@ export {
     getOwnEntries,
 
     merge,
+    getSafe,
 } from "./object-reflector";
