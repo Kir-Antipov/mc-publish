@@ -1,7 +1,8 @@
-import { stringEquals } from "@/utils/string-utils";
-import { TypeOfResult, NamedType } from "@/utils/types/type-of";
 import { $i } from "@/utils/collections/iterable";
-import { getAllNames } from "@/utils/reflection/object-reflector";
+import { Func } from "@/utils/functions/func";
+import { getAllNames, getSafe } from "@/utils/reflection/object-reflector";
+import { stringEquals } from "@/utils/string-utils";
+import { NamedType, TypeOfResult } from "@/utils/types";
 
 /**
  * Represents a function that converts a value to some target type.
@@ -295,36 +296,29 @@ type ParsableGlobalThisMember<T extends keyof GlobalThis> = ParseMethod<GlobalTh
  * Retrieves a `Converter` function from the given object, if one is defined.
  *
  * @param obj - The object to retrieve the `Converter` function from.
+ * @param prioritizeParsing - Indicates wether the parsing should be prioritized.
+ *
  * @returns A `Converter` function that can convert an unknown value to the target type `T`, or `undefined` if none was found.
  */
-function getConverter<T>(obj: unknown): Convert<T> | undefined {
-    // Attempt to retrieve a `Converter` function from the object using the conversion method prefixes.
-    const converter = getParseLikeFunction(obj, CONVERT_METHOD_PREFIXES) as Convert<T>;
+function getConverter<T>(obj: unknown, prioritizeParsing?: boolean): Convert<T> | undefined {
+    const strategies = [
+        [CONVERT_METHOD_PREFIXES],
+        [PARSE_METHOD_PREFIXES, (parser: Func) => (x: unknown) => typeof x === "string" ? parser(x) : undefined],
+    ] as const;
 
-    // If a `Converter` function was found, return it.
-    if (converter) {
-        return converter;
+    const resolvedStrategies = prioritizeParsing ? [...strategies].reverse() : strategies;
+
+    for (const [prefixes, mapper] of resolvedStrategies) {
+        const parseLike = getParseLikeFunction(obj, prefixes);
+        if (!parseLike) {
+            continue;
+        }
+
+        const mapped = mapper ? mapper(parseLike) : parseLike;
+        return mapped as Convert<T>;
     }
 
-    // Otherwise, attempt to retrieve a `Parser` function from the object and create a `Converter` function that uses it.
-    const parser = getParser<T>(obj);
-    if (parser) {
-        return x => typeof x === "string" ? parser(x) : undefined;
-    }
-
-    // If neither a `Converter` nor a `Parser` function was found, return undefined.
     return undefined;
-}
-
-/**
- * Retrieves a `Parser` function from the given object, if one is defined.
- *
- * @param obj - The object to retrieve the `Parser` function from.
- * @returns A `Parser` function that can parse a string to the target type `T`, or `undefined` if none was found.
- */
-function getParser<T>(obj: unknown): Parse<T> | undefined {
-    // Attempt to retrieve a `Parser` function from the object using the parsing method prefixes.
-    return getParseLikeFunction(obj, PARSE_METHOD_PREFIXES) as Parse<T>;
 }
 
 /**
@@ -341,9 +335,15 @@ function getParseLikeFunction(obj: unknown, prefixes: readonly string[]): (obj: 
         return undefined;
     }
 
+    // If the object has a method named exactly like one of the given prefix, we should use it.
+    const prioritizedParseMethodName = $i(prefixes).first(x => typeof getSafe(obj, x) === "function");
+    if (prioritizedParseMethodName) {
+        return x => obj[prioritizedParseMethodName](x);
+    }
+
     // Find all method names on the object that start with one of the specified prefixes.
     const propertyNames = getAllNames(obj);
-    const parseMethodNames = $i(propertyNames).filter(x => typeof obj[x] === "function" && prefixes.some(p => x.startsWith(p)));
+    const parseMethodNames = $i(propertyNames).filter(x => prefixes.some(p => x.startsWith(p) && typeof getSafe(obj, x) === "function"));
 
     // Determine the first parse-like method name by sorting them based on prefix precedence and taking the first result.
     const firstParseMethodName = $i(parseMethodNames).min(
@@ -509,7 +509,7 @@ export function toType(obj: unknown, target: unknown): unknown {
 
     try {
         // Attempt to retrieve a converter function from the target type.
-        const converter = getConverter(target);
+        const converter = getConverter(target, typeof obj === "string");
 
         // If the converter function was found, use it to convert the input object.
         if (converter !== undefined) {

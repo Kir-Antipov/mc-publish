@@ -397,6 +397,19 @@ describe("toType", () => {
     });
 
     describe("from convertible object", () => {
+        test("converts a value via the standard 'convert' function in a class", () => {
+            const convert = jest.fn().mockImplementation(o => String(o));
+            class Convertible {
+                static convert(n: number): string {
+                    return convert(n);
+                }
+            }
+
+            expect(toType(123, Convertible)).toBe("123");
+            expect(convert).toBeCalledTimes(1);
+            expect(convert).toBeCalledWith(123);
+        });
+
         test("converts a value via the standard 'convert' function", () => {
             const convertible = {
                 convert: jest.fn().mockImplementation(o => String(o)),
@@ -415,6 +428,64 @@ describe("toType", () => {
             expect(toType(123, convertible)).toBe("123");
             expect(convertible.convertObjectToNumber).toBeCalledTimes(1);
             expect(convertible.convertObjectToNumber).toBeCalledWith(123);
+        });
+
+        test("converts a value via the prioritized 'convert' function", () => {
+            const convertible = {
+                convert: jest.fn().mockImplementation(o => String(o)),
+                convertObjectToNumber: jest.fn(),
+                from: jest.fn(),
+                fromObjectTonNumber: jest.fn(),
+                parse: jest.fn(),
+                parseToNumber: jest.fn(),
+            };
+
+            expect(toType(123, convertible)).toBe("123");
+            expect(convertible.convert).toBeCalledTimes(1);
+            expect(convertible.convert).toBeCalledWith(123);
+            expect(convertible.convertObjectToNumber).not.toHaveBeenCalled();
+            expect(convertible.from).not.toHaveBeenCalled();
+            expect(convertible.fromObjectTonNumber).not.toHaveBeenCalled();
+            expect(convertible.parse).not.toHaveBeenCalled();
+            expect(convertible.parseToNumber).not.toHaveBeenCalled();
+        });
+
+        test("converts a value via the prioritized 'from' function, if 'convert' is not present", () => {
+            const convertible = {
+                convertObjectToNumber: jest.fn(),
+                from: jest.fn().mockImplementation(o => String(o)),
+                fromObjectTonNumber: jest.fn(),
+                parse: jest.fn(),
+                parseToNumber: jest.fn(),
+            };
+
+            expect(toType(123, convertible)).toBe("123");
+            expect(convertible.from).toBeCalledTimes(1);
+            expect(convertible.from).toBeCalledWith(123);
+            expect(convertible.convertObjectToNumber).not.toHaveBeenCalled();
+            expect(convertible.fromObjectTonNumber).not.toHaveBeenCalled();
+            expect(convertible.parse).not.toHaveBeenCalled();
+            expect(convertible.parseToNumber).not.toHaveBeenCalled();
+        });
+
+        test("parses a string via the prioritized 'parse' function", () => {
+            const convertible = {
+                convert: jest.fn(),
+                convertObjectToNumber: jest.fn(),
+                from: jest.fn(),
+                fromObjectTonNumber: jest.fn(),
+                parse: jest.fn().mockImplementation(x => +x),
+                parseToNumber: jest.fn(),
+            };
+
+            expect(toType("123", convertible)).toBe(123);
+            expect(convertible.parse).toBeCalledTimes(1);
+            expect(convertible.parse).toBeCalledWith("123");
+            expect(convertible.parseToNumber).not.toHaveBeenCalled();
+            expect(convertible.convert).not.toHaveBeenCalled();
+            expect(convertible.convertObjectToNumber).not.toHaveBeenCalled();
+            expect(convertible.from).not.toHaveBeenCalled();
+            expect(convertible.fromObjectTonNumber).not.toHaveBeenCalled();
         });
 
         test("returns undefined when conversion is not possible", () => {
