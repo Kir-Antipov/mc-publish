@@ -3,7 +3,7 @@ import { stringEquals } from "@/utils/string-utils";
 import { deprecate } from "node:util";
 import { GameVersion } from "./game-version";
 
-// TODO: Remove deprecated stuff in v4.0
+// _ TODO: Remove deprecated stuff in v4.0
 
 /**
  * Represents a game version filter.

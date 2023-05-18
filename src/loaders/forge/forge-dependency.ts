@@ -8,7 +8,7 @@ import { deprecate } from "node:util";
 import { ForgeEnvironmentType } from "./forge-environment-type";
 import { RawForgeMetadata } from "./raw-forge-metadata";
 
-// TODO: Remove the deprecated stuff in v4.0.
+// _ TODO: Remove the deprecated stuff in v4.0.
 
 /**
  * A dependency configuration for a Forge mod.
@@ -123,10 +123,10 @@ export function getForgeDependencies(metadata: RawForgeMetadata): ForgeDependenc
 }
 
 /**
-* Converts {@link FabricDependency} to a {@link Dependency} object.
-*
-* @returns A Dependency object representing the given Fabric dependency, or `undefined` if the input is invalid..
-*/
+ * Converts {@link FabricDependency} to a {@link Dependency} object.
+ *
+ * @returns A Dependency object representing the given Fabric dependency, or `undefined` if the input is invalid..
+ */
 export function normalizeForgeDependency(dependency: ForgeDependency): Dependency | undefined {
     const payload = getForgeDependencyCustomPayload(dependency);
 

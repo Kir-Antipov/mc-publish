@@ -7,7 +7,7 @@ import { deprecate } from "node:util";
 import { RawQuiltMetadata } from "./raw-quilt-metadata";
 import { asString } from "@/utils/string-utils";
 
-// TODO: Remove the deprecated stuff in v4.0.
+// _ TODO: Remove the deprecated stuff in v4.0.
 
 /**
  * Custom payload for Quilt metadata.

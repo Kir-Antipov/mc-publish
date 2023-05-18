@@ -1,5 +1,7 @@
-import { Blob as BlobPolyfill, blobFrom, blobFromSync } from "node-fetch";
 import { ConstructorReturnType } from "@/utils/types";
+
+/* eslint-disable-next-line no-restricted-imports */
+import { Blob as BlobPolyfill, blobFrom, blobFromSync } from "node-fetch";
 
 /**
  * A `Blob` encapsulates immutable, raw data that can be safely shared across multiple worker threads.
@@ -20,7 +22,7 @@ export type Blob = ConstructorReturnType<typeof BlobPolyfill>;
  */
 export function isBlob(blob: unknown): blob is Blob {
     const name = blob?.[Symbol.toStringTag];
-    return name === "Blob" || name  === "File";
+    return name === "Blob" || name === "File";
 }
 
 /**

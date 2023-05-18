@@ -6,7 +6,7 @@ import { QuiltLicense } from "./quilt-license";
 import { QuiltPlugin } from "./quilt-plugin";
 import { QuiltMetadataCustomPayload } from "./quilt-metadata-custom-payload";
 
-// TODO: Remove the deprecated stuff in v4.0.
+// _ TODO: Remove the deprecated stuff in v4.0.
 
 /**
  * The metadata file for a Quilt mod.

@@ -83,7 +83,12 @@ export function toBoolean(obj: unknown): boolean {
                 return false;
             }
             break;
+
+        default:
+            return undefined;
     }
+
+    // ESLint
     return undefined;
 }
 
@@ -116,7 +121,12 @@ function toNumber(obj: unknown, parser: (value: string | number) => number): num
                 return obj.getTime();
             }
             break;
+
+        default:
+            return undefined;
     }
+
+    // ESLint
     return undefined;
 }
 
@@ -165,7 +175,12 @@ export function toDate(obj: unknown): Date {
         case "number":
             const date = new Date(obj);
             return isNaN(date.getTime()) ? undefined : date;
+
+        default:
+            return undefined;
     }
+
+    // ESLint
     return undefined;
 }
 

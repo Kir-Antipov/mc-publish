@@ -180,13 +180,24 @@ describe("merge", () => {
     test("preserves getters and setters when merging objects", () => {
         const obj1 = {
             _a: 1,
-            get a() { return this._a; },
-            set a(val) { this._a = val; },
+            get a() {
+                return this._a;
+            },
+
+            set a(val) {
+                this._a = val;
+            },
         };
+
         const obj2 = {
             _b: 2,
-            get b() { return this._b; },
-            set b(val) { this._b = val; }
+            get b() {
+                return this._b;
+            },
+
+            set b(val) {
+                this._b = val;
+            },
         };
 
         const merged = merge(obj1, obj2);
@@ -239,7 +250,7 @@ describe("getSafe", () => {
         const obj = {
             get name(): string {
                 throw new Error();
-            }
+            },
         };
 
         expect(getSafe(obj, "name")).toBeUndefined();

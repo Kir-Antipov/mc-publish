@@ -172,7 +172,7 @@ export interface RawFabricMetadata {
          */
         [ACTION_NAME]?: FabricMetadataCustomPayload;
 
-        // TODO: Remove this field in v4.0.
+        // _ TODO: Remove this field in v4.0.
         /**
          * Custom `ModManager` payload.
          *

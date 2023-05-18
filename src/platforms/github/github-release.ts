@@ -361,7 +361,7 @@ export interface GitHubReleaseAssetsPatch {
  * @returns The packed {@link GitHubReleaseInitInternal} object.
  */
 export function packGitHubReleaseInit(release: GitHubReleaseInit): GitHubReleaseInitInternal {
-    return { ...{...release, owner: undefined, repo: undefined, assets: undefined } };
+    return { ...{ ...release, owner: undefined, repo: undefined, assets: undefined } };
 }
 
 /**
@@ -373,5 +373,5 @@ export function packGitHubReleaseInit(release: GitHubReleaseInit): GitHubRelease
  * @returns The packed {@link GitHubReleasePatchInternal} object.
  */
 export function packGitHubReleasePatch(release: GitHubReleasePatch): GitHubReleasePatchInternal {
-    return { ...{...release, owner: undefined, repo: undefined, id: undefined, assets: undefined } };
+    return { ...{ ...release, owner: undefined, repo: undefined, id: undefined, assets: undefined } };
 }

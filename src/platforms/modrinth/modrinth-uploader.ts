@@ -180,7 +180,7 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
             return;
         }
 
-        this._logger.info(`🔽 Initiating unfeaturing of older Modrinth project versions`);
+        this._logger.info("🔽 Initiating unfeaturing of older Modrinth project versions");
         const result = await api.unfeaturePreviousProjectVersions(version, unfeatureMode);
         const unfeaturedVersions = Object.entries(result).filter(([, success]) => success).map(([version]) => version);
         const nonUnfeaturedVersions = Object.entries(result).filter(([, success]) => !success).map(([version]) => version);

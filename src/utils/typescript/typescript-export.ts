@@ -23,7 +23,7 @@ export class TypeScriptExport extends AbstractTypeScriptNode {
      * @param exportedNode - The exported node.
      * @param isDefault - Indicates whether this is a default export. Defaults to `false`.
      */
-   private constructor(exportedNode: TypeScriptNode, isDefault?: boolean) {
+    private constructor(exportedNode: TypeScriptNode, isDefault?: boolean) {
         super();
         this._exportedNode = exportedNode;
         this._isDefault = isDefault || false;

@@ -104,7 +104,7 @@ export function parseDependency(dependency: string): Dependency | undefined {
 /**
  * A regex pattern for matching formatted dependency strings.
  */
-const DEPENDENCY_REGEX = /^\s*(?<id>[^@{(#]+)(@(?<versionRange>[^@{(#]*))?(?:\((?<type>[^@{(#]*)\))?(?<aliases>(?:\{[^:=]+(?:=|:)[^}]*\})+)?(?<ignore>#\(ignore(?::(?<ignoredPlatforms>[^\)]*))?\))?\s*$/;
+const DEPENDENCY_REGEX = /^\s*(?<id>[^@{(#]+)(@(?<versionRange>[^@{(#]*))?(?:\((?<type>[^@{(#]*)\))?(?<aliases>(?:\{[^:=]+(?:=|:)[^}]*\})+)?(?<ignore>#\(ignore(?::(?<ignoredPlatforms>[^)]*))?\))?\s*$/;
 
 /**
  * A regex pattern for matching dependency aliases in dependency strings.

@@ -7,7 +7,7 @@ const readOnlyMapLike = {
     entries: () => {},
     get: () => {},
     has: () => {},
-    [Symbol.iterator]: () => {}
+    [Symbol.iterator]: () => {},
 };
 
 const mapLike = {
@@ -269,7 +269,7 @@ describe("ArrayMap", () => {
             const map = new ArrayMap([[1, "one"]]);
             const thisArg = {};
 
-            map.forEach(function (this: typeof thisArg) {
+            map.forEach(function(this: typeof thisArg) {
                 expect(this).toBe(thisArg);
             }, thisArg);
         });
@@ -574,7 +574,7 @@ describe("MultiMap", () => {
             const map = new MultiMap([[1, ["one"]]]);
             const thisArg = {};
 
-            map.forEach(function (this: typeof thisArg) {
+            map.forEach(function(this: typeof thisArg) {
                 expect(this).toBe(thisArg);
             }, thisArg);
         });
@@ -598,7 +598,7 @@ describe("MultiMap", () => {
             const map = new MultiMap([[1, ["one"]]]);
             const thisArg = {};
 
-            map.forEachFlat(function (this: typeof thisArg) {
+            map.forEachFlat(function(this: typeof thisArg) {
                 expect(this).toBe(thisArg);
             }, thisArg);
         });

@@ -2,7 +2,9 @@ import { isPromise, sleep, run, runSafely, retry } from "@/utils/async-utils";
 
 describe("isPromise", () => {
     test("returns true when input is a Promise", () => {
-        const promise = new Promise(resolve => resolve(undefined));
+        const promise = new Promise(resolve => {
+            resolve(undefined);
+        });
         expect(isPromise(promise)).toBe(true);
     });
 

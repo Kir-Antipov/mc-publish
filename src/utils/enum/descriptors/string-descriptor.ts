@@ -63,6 +63,6 @@ export class StringDescriptor implements EnumDescriptor<string> {
         }
 
         const flags = split(value, ENUM_SEPARATORS, { trimEntries: true, removeEmptyEntries: true });
-        return flags.filter(x => x !== flag).join(DEFAULT_ENUM_SEPARATOR + " ");
+        return flags.filter(x => x !== flag).join(`${DEFAULT_ENUM_SEPARATOR} `);
     }
 }

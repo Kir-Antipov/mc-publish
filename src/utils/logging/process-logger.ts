@@ -94,14 +94,14 @@ export class ProcessLogger implements Logger {
      * @inheritdoc
      */
     error(message: string | Error): void {
-        this.log(message, "error")
+        this.log(message, "error");
     }
 
     /**
      * @inheritdoc
      */
     warn(message: string | Error): void {
-        this.log(message, "warning")
+        this.log(message, "warning");
     }
 
     /**

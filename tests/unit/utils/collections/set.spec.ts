@@ -6,7 +6,7 @@ const readOnlySetLike = {
     values: () => {},
     entries: () => {},
     has: () => {},
-    [Symbol.iterator]: () => {}
+    [Symbol.iterator]: () => {},
 };
 
 const setLike = {
@@ -65,7 +65,7 @@ describe("ArraySet", () => {
             const set = new ArraySet(["one", "two"]);
 
             expect(set.size).toBe(2);
-            expect(Array.from(set)).toEqual(["one", "two"])
+            expect(Array.from(set)).toEqual(["one", "two"]);
         });
 
         test("creates a set from an iterable of entries and a custom comparer", () => {
@@ -226,7 +226,7 @@ describe("ArraySet", () => {
             const set = new ArraySet([1, 2]);
             const thisArg = {};
 
-            set.forEach(function (this: typeof thisArg) {
+            set.forEach(function(this: typeof thisArg) {
                 expect(this).toBe(thisArg);
             }, thisArg);
         });

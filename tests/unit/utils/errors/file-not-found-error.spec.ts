@@ -24,7 +24,7 @@ describe("FileNotFoundError", () => {
 
     describe("throwIfNotFound", () => {
         beforeEach(() => {
-            mockFs({ "test": "test" });
+            mockFs({ test: "test" });
         });
 
         afterEach(() => {

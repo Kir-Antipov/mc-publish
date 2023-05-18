@@ -5,7 +5,7 @@ describe("NullLogger", () => {
         test("can be created without throwing", () => {
             expect(() => new NullLogger()).not.toThrow();
         });
-    })
+    });
 
     describe("fatal", () => {
         test("can be called without throwing", () => {

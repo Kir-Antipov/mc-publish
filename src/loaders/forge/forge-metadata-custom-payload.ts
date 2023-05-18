@@ -7,7 +7,7 @@ import { deprecate } from "node:util";
 import { RawForgeMetadata } from "./raw-forge-metadata";
 import { asString } from "@/utils/string-utils";
 
-// TODO: Remove the deprecated stuff in v4.0.
+// _ TODO: Remove the deprecated stuff in v4.0.
 
 /**
  * Custom payload for Forge metadata.

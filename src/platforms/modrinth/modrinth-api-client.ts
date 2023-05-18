@@ -126,7 +126,7 @@ export class ModrinthApiClient {
      * This method **DOES NOT** support slugs (for some reason).
      */
     async getProjects(ids: Iterable<string>): Promise<ModrinthProject[]> {
-        const response = await this._fetch(`/projects`, HttpRequest.get().with({ ids: JSON.stringify(asArray(ids)) }));
+        const response = await this._fetch("/projects", HttpRequest.get().with({ ids: JSON.stringify(asArray(ids)) }));
         return (await response.json()) ?? [];
     }
 
@@ -174,7 +174,7 @@ export class ModrinthApiClient {
      * @returns An array of versions.
      */
     async getVersions(ids: Iterable<string>): Promise<ModrinthVersion[]> {
-        const response = await this._fetch(`/versions`, HttpRequest.get().with({ ids: JSON.stringify(asArray(ids)) }));
+        const response = await this._fetch("/versions", HttpRequest.get().with({ ids: JSON.stringify(asArray(ids)) }));
         return (await response.json()) ?? [];
     }
 

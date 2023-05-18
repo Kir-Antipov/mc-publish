@@ -112,7 +112,7 @@ export function setHeader(headers: Headers, header: string, value: string): Head
         return arrayLikeHeaders;
     }
 
-    headers = headers || {};
+    headers ||= {};
     headers[header] = value;
     return headers;
 }

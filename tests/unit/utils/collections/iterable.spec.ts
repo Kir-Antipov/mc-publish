@@ -31,7 +31,9 @@ describe("filter", () => {
         const iterable = [1, 2, 3, 4, 5];
         const thisArg = { threshold: 3 };
 
-        const result = Array.from(Iterable.filter(iterable, function (x) { return x > this.threshold; }, thisArg));
+        const result = Array.from(Iterable.filter(iterable, function(x) {
+            return x > this.threshold;
+        }, thisArg));
 
         expect(result).toEqual([4, 5]);
     });
@@ -86,7 +88,9 @@ describe("map", () => {
         const iterable = [1, 2, 3];
         const thisArg = { factor: 2 };
 
-        const result = Array.from(Iterable.map(iterable, function (x) { return x * this.factor; }, thisArg));
+        const result = Array.from(Iterable.map(iterable, function(x) {
+            return x * this.factor;
+        }, thisArg));
 
         expect(result).toEqual([2, 4, 6]);
     });
@@ -105,7 +109,9 @@ describe("flatMap", () => {
         const iterable = [1, 2, 3];
         const thisArg = { factor: 2 };
 
-        const result = Array.from(Iterable.flatMap(iterable, function (x) { return [x, x * this.factor]; }, thisArg));
+        const result = Array.from(Iterable.flatMap(iterable, function(x) {
+            return [x, x * this.factor];
+        }, thisArg));
 
         expect(result).toEqual([1, 2, 2, 4, 3, 6]);
     });
@@ -136,7 +142,9 @@ describe("reduce", () => {
         const iterable = [1, 2, 3, 4, 5];
         const thisArg = { factor: 2 };
 
-        const result = Iterable.reduce(iterable, function (acc, curr) { return acc + curr * this.factor; }, 0, thisArg);
+        const result = Iterable.reduce(iterable, function(acc, curr) {
+            return acc + curr * this.factor;
+        }, 0, thisArg);
 
         expect(result).toBe(30);
     });
@@ -241,7 +249,7 @@ describe("every", () => {
     test("returns true if all elements meet the condition", () => {
         const iterable = [2, 4, 6, 8];
 
-        const result = Iterable.every(iterable, (value) => value % 2 === 0);
+        const result = Iterable.every(iterable, value => value % 2 === 0);
 
         expect(result).toBe(true);
     });
@@ -249,7 +257,7 @@ describe("every", () => {
     test("returns false if any element does not meet the condition", () => {
         const iterable = [2, 4, 5, 8];
 
-        const result = Iterable.every(iterable, (value) => value % 2 === 0);
+        const result = Iterable.every(iterable, value => value % 2 === 0);
 
         expect(result).toBe(false);
     });
@@ -258,7 +266,9 @@ describe("every", () => {
         const iterable = [2, 4, 6, 8];
         const thisArg = { factor: 2 };
 
-        const result = Iterable.every(iterable, function (x) { return x % this.factor === 0; }, thisArg);
+        const result = Iterable.every(iterable, function(x) {
+            return x % this.factor === 0;
+        }, thisArg);
 
         expect(result).toBe(true);
     });
@@ -268,7 +278,7 @@ describe("some", () => {
     test("returns true if any element meets the condition", () => {
         const iterable = [1, 3, 4, 7];
 
-        const result = Iterable.some(iterable, (value) => value % 2 === 0);
+        const result = Iterable.some(iterable, value => value % 2 === 0);
 
         expect(result).toBe(true);
     });
@@ -276,7 +286,7 @@ describe("some", () => {
     test("returns false if no element meets the condition", () => {
         const iterable = [1, 3, 5, 7];
 
-        const result = Iterable.some(iterable, (value) => value % 2 === 0);
+        const result = Iterable.some(iterable, value => value % 2 === 0);
 
         expect(result).toBe(false);
     });
@@ -285,7 +295,9 @@ describe("some", () => {
         const iterable = [1, 3, 4, 7];
         const thisArg = { factor: 2 };
 
-        const result = Iterable.some(iterable, function (x) { return x % this.factor === 0; }, thisArg);
+        const result = Iterable.some(iterable, function(x) {
+            return x % this.factor === 0;
+        }, thisArg);
 
         expect(result).toBe(true);
     });
@@ -320,7 +332,9 @@ describe("min", () => {
         const iterable = [3, 1, 4, 2];
         const thisArg = { sign: -1 };
 
-        const result = Iterable.min(iterable, function (a, b) { return (a - b) * this.sign; }, thisArg);
+        const result = Iterable.min(iterable, function(a, b) {
+            return (a - b) * this.sign;
+        }, thisArg);
 
         expect(result).toBe(4);
     });
@@ -349,7 +363,9 @@ describe("max", () => {
         const iterable = [3, 1, 4, 2];
         const thisArg = { sign: -1 };
 
-        const result = Iterable.max(iterable, function (a, b) { return (a - b) * this.sign; }, thisArg);
+        const result = Iterable.max(iterable, function(a, b) {
+            return (a - b) * this.sign;
+        }, thisArg);
 
         expect(result).toBe(1);
     });
@@ -382,7 +398,9 @@ describe("count", () => {
         const iterable = [1, 2, 3, 4, 5];
         const thisArg = { min: 2 };
 
-        const result = Iterable.count(iterable, function (x) { return x > this.min; }, thisArg);
+        const result = Iterable.count(iterable, function(x) {
+            return x > this.min;
+        }, thisArg);
 
         expect(result).toBe(3);
     });
@@ -660,7 +678,9 @@ describe("findIndex", () => {
         const iterable = [1, 2, 3, 4, 5];
         const thisArg = { target: 3 };
 
-        const result = Iterable.findIndex(iterable, function (x) { return x === this.target; }, thisArg);
+        const result = Iterable.findIndex(iterable, function(x) {
+            return x === this.target;
+        }, thisArg);
 
         expect(result).toBe(2);
     });
@@ -699,7 +719,9 @@ describe("first", () => {
         const iterable = [{ id: 1, value: "a" }, { id: 2, value: "b" }, { id: 3, value: "a" }, { id: 4, value: "b" }];
         const thisArg = { target: "b" };
 
-        const result = Iterable.first(iterable, function (x) { return x.value === this.target; }, thisArg);
+        const result = Iterable.first(iterable, function(x) {
+            return x.value === this.target;
+        }, thisArg);
 
         expect(result).toEqual({ id: 2, value: "b" });
     });
@@ -738,7 +760,9 @@ describe("last", () => {
         const iterable = [{ id: 1, value: "a" }, { id: 2, value: "b" }, { id: 3, value: "a" }, { id: 4, value: "b" }];
         const thisArg = { target: "a" };
 
-        const result = Iterable.last(iterable, function (x) { return x.value === this.target; }, thisArg);
+        const result = Iterable.last(iterable, function(x) {
+            return x.value === this.target;
+        }, thisArg);
 
         expect(result).toEqual({ id: 3, value: "a" });
     });
@@ -1048,7 +1072,7 @@ describe("ArrayLikeIterable", () => {
 
             const record = iterable.toRecord();
 
-            expect(record).toEqual({ "zero": 0, "one": 1, "two": 2 });
+            expect(record).toEqual({ zero: 0, one: 1, two: 2 });
         });
     });
 

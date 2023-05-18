@@ -460,6 +460,6 @@ export function generateSecureRandomString(length: number): string {
  *
  * @returns The hashed string in hexadecimal format.
  */
-export function hashString(input: string, algorithm: string = "sha256"): string {
+export function hashString(input: string, algorithm = "sha256"): string {
     return createHash(algorithm).update(input).digest("hex");
 }

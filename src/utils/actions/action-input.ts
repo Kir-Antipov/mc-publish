@@ -95,6 +95,7 @@ export interface InputObjectOptions extends InputOptions {
  * - Hm, seems legit
  *
  */
+// eslint-disable-next-line no-template-curly-in-string
 export const SYNTHETIC_UNDEFINED = "${undefined}";
 
 /**
@@ -149,7 +150,7 @@ export function getActionInput(name: string, options?: InputOptions, env?: Recor
     const environmentVariableName = INPUT_PREFIX + normalizedName;
     const brokenValue = getEnvironmentVariable(environmentVariableName, env);
     const value = isActionInputDefined(brokenValue) ? brokenValue : undefined;
-    const trimmedValue = (options?.trimWhitespace ?? true) ? value?.trim() : value
+    const trimmedValue = (options?.trimWhitespace ?? true) ? value?.trim() : value;
 
     if (options?.required && value === undefined) {
         throw new Error(`Input required and not supplied: ${name}.`);

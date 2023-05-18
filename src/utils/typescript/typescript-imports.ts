@@ -81,8 +81,8 @@ export class TypeScriptImports extends AbstractTypeScriptNode implements Iterabl
         this._imports.set(importNode.path, importNode);
         if (existingImportNode) {
             importNode.addNamedImports(existingImportNode.namedImports());
-            importNode.defaultImportName = importNode.defaultImportName || existingImportNode.defaultImportName;
-            importNode.wildcardImportName = importNode.wildcardImportName || existingImportNode.wildcardImportName;
+            importNode.defaultImportName ||= existingImportNode.defaultImportName;
+            importNode.wildcardImportName ||= existingImportNode.wildcardImportName;
         }
         return importNode;
     }
@@ -139,7 +139,7 @@ export class TypeScriptImports extends AbstractTypeScriptNode implements Iterabl
      *
      * @returns The {@link TypeScriptImport} instance that was added or merged.
      */
-   addDefaultImport(path: string, defaultImportName: string): TypeScriptImport {
+    addDefaultImport(path: string, defaultImportName: string): TypeScriptImport {
         const importNode = this.getOrCreateImport(path);
         importNode.defaultImportName = defaultImportName;
         return importNode;

@@ -205,7 +205,7 @@ export class ArraySet<T> implements Set<T> {
      * @param callbackFn - Function to execute for each value in the set.
      * @param thisArg - Object to use as `this` when executing `callbackFn`.
      */
-    forEach(callbackFn: (value: T, theSameValueAgain: T, set: ArraySet<T>) => void, thisArg?: any): void {
+    forEach(callbackFn: (value: T, theSameValueAgain: T, set: ArraySet<T>) => void, thisArg?: unknown): void {
         callbackFn = thisArg === undefined ? callbackFn : callbackFn.bind(thisArg);
         const values = this._values;
 

@@ -26,7 +26,7 @@ describe("ForgeMetadata", () => {
 
             expect(metadata.id).toBe("example-mod");
         });
-    })
+    });
 
     describe("name", () => {
         test("returns name of the mod", () => {

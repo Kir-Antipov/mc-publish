@@ -1,9 +1,11 @@
 import { $i } from "@/utils/collections";
 import { getOwnEntries } from "@/utils/reflection";
 import { ConstructorReturnType } from "@/utils/types";
-import { FormData as FormDataPolyfill } from "node-fetch";
 import { basename } from "node:path";
 import { Blob, readBlobSync } from "./blob";
+
+/* eslint-disable-next-line no-restricted-imports */
+import { FormData as FormDataPolyfill } from "node-fetch";
 
 /**
  * The `FormData` interface provides a way to easily construct a set of key/value pairs representing form fields and

@@ -1,3 +1,5 @@
+/* eslint-disable no-cond-assign */
+
 import { asArrayLike, isIterable } from "@/utils/collections";
 import { VersionRange, parseVersionRange } from "@/utils/versioning";
 import { MinecraftVersion, MinecraftVersionManifestEntry } from "./minecraft-version";

@@ -130,10 +130,10 @@ function mapQuiltDependencies(dependencies: (string | QuiltDependency)[], custom
 }
 
 /**
-* Converts {@link QuiltDependency} to a {@link Dependency} object.
-*
-* @returns A Dependency object representing the given Quilt dependency.
-*/
+ * Converts {@link QuiltDependency} to a {@link Dependency} object.
+ *
+ * @returns A Dependency object representing the given Quilt dependency.
+ */
 export function normalizeQuiltDependency(dependency: QuiltDependency): Dependency {
     const payload = getQuiltDependencyCustomPayload(dependency);
 

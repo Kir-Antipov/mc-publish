@@ -1,12 +1,14 @@
 import { ACTION_NAME } from "@/action";
 import { Middleware, MiddlewareHandler } from "@/utils/functions";
 import { asString } from "@/utils/string-utils";
-import nodeFetch from "node-fetch";
 import { Headers, cloneHeaders, setDefaultHeaders } from "./headers";
 import { HttpMethod, canHttpMethodAcceptBody, httpMethodEquals } from "./http-method";
 import { HttpRequest } from "./http-request";
 import { HttpResponse } from "./http-response";
 import { isURLSearchParams } from "./query-string";
+
+/* eslint-disable-next-line no-restricted-imports */
+import nodeFetch from "node-fetch";
 
 /**
  * Represents a fetch function that takes a URL and an optional request configuration,
@@ -116,7 +118,7 @@ export function createFetch(options?: FetchOptions): ConfigurableFetch {
     Object.defineProperty(configurableFetch, "use", { value: (middleware: Middleware<Fetch>) => {
         fetchPipeline.use(middleware);
         return configurableFetch;
-    }});
+    } });
 
     return configurableFetch;
 }
@@ -153,7 +155,7 @@ function prepareUrl(fetch: ConfigurableFetch, url: FetchUrl, request?: HttpReque
     // Attach `URLSearchParams` to URL
     if (isURLSearchParams(request?.body) && !canHttpMethodAcceptBody(request?.method)) {
         if (typeof url === "string") {
-            url = `${url}${url.includes("?") ? "&" : "?"}${request.body}`
+            url = `${url}${url.includes("?") ? "&" : "?"}${request.body}`;
         } else {
             request.body.forEach((param, key) => (url as URL).searchParams.append(key, param));
         }
@@ -173,7 +175,7 @@ function prepareUrl(fetch: ConfigurableFetch, url: FetchUrl, request?: HttpReque
 function prepareRequest(fetch: ConfigurableFetch, request?: HttpRequest): HttpRequest {
     // Set default headers
     if (fetch.defaultHeaders) {
-        request = request || {};
+        request ||= {};
         request.headers = setDefaultHeaders(request.headers, fetch.defaultHeaders);
     }
 

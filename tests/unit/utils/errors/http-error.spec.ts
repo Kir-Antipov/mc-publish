@@ -9,7 +9,7 @@ describe("HttpError", () => {
             const error = new HttpError(response, "An error occurred.", false);
 
             expect(error).toBeInstanceOf(HttpError);
-            expect(error.name).toBe("HttpError")
+            expect(error.name).toBe("HttpError");
             expect(error.message).toBe("An error occurred.");
             expect(error.isSoft).toBe(false);
             expect(error.response).toBe(response);
@@ -41,7 +41,7 @@ describe("HttpError", () => {
             const error = await HttpError.fromResponse(response, false);
 
             expect(error).toBeInstanceOf(HttpError);
-            expect(error.name).toBe("HttpError")
+            expect(error.name).toBe("HttpError");
         });
 
         test("includes text content in the error message", async () => {

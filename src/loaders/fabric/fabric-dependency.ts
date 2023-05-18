@@ -80,10 +80,10 @@ export function toFabricDependencyArray(list: FabricDependencyList, type: Fabric
 }
 
 /**
-* Converts {@link FabricDependency} to a {@link Dependency} object.
-*
-* @returns A Dependency object representing the given Fabric dependency, or `undefined` if the input is invalid..
-*/
+ * Converts {@link FabricDependency} to a {@link Dependency} object.
+ *
+ * @returns A Dependency object representing the given Fabric dependency, or `undefined` if the input is invalid..
+ */
 export function normalizeFabricDependency(dependency: FabricDependency): Dependency | undefined {
     return createDependency({
         id: dependency?.id,

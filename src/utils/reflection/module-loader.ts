@@ -17,6 +17,7 @@ export interface ModuleLoader {
 /**
  * A module loader implementation that loads modules using Node.js dynamic `import` syntax.
  */
+/* eslint-disable-next-line no-new-func */
 export const NODE_MODULE_LOADER: ModuleLoader = new Function("x", "return import(x).catch(() => undefined)") as (name: string) => Promise<unknown>;
 
 /**

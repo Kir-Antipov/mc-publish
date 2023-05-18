@@ -561,7 +561,7 @@ export function indexOf<T>(iterable: Iterable<T>, searchElement: T, fromIndex?: 
 
     let i = 0;
     for (const value of iterable) {
-        if (i>= fromIndex && comparer(searchElement, value)) {
+        if (i >= fromIndex && comparer(searchElement, value)) {
             return i;
         }
         ++i;
@@ -899,10 +899,11 @@ export function first<T>(iterable: Iterable<T>, predicate?: (value: T, index: nu
  */
 export function first<T>(iterable: Iterable<T>, predicate?: (value: T, index: number, iterable: Iterable<T>) => unknown, thisArg?: unknown): T | undefined {
     if (!predicate) {
+        // eslint-disable-next-line no-unreachable-loop
         for (const value of iterable) {
             return value;
         }
-        return undefined
+        return undefined;
     }
 
     predicate = thisArg === undefined ? predicate : predicate.bind(thisArg);
@@ -1183,8 +1184,8 @@ export class ArrayLikeIterable<T> implements Iterable<T> {
      *
      * @returns A new instance of the {@link ArrayLikeIterable} class.
      */
-   static from<T>(iterable: Iterable<T>): ArrayLikeIterable<T> {
-       return new ArrayLikeIterable(iterable);
+    static from<T>(iterable: Iterable<T>): ArrayLikeIterable<T> {
+        return new ArrayLikeIterable(iterable);
     }
 
     /**

@@ -17,7 +17,7 @@ export const CURSEFORGE_ETERNAL_API_URL = `https://api.curseforge.com/v${CURSEFO
  *
  * Trust me on this one.
  */
-const DEFINITELY_NOT_AN_API_KEY = SecureString.from(Buffer.from([36,50,97,36,49,48,36,81,73,47,121,101,83,110,106,105,69,90,72,90,109,70,108,109,105,74,86,73,46,50,120,109,87,89,108,80,98,107,65,88,87,56,114,81,46,120,77,54,53,118,107,116,65,115,115,97,74,112,109,105])).unwrap();
+const DEFINITELY_NOT_AN_API_KEY = SecureString.from(Buffer.from([36, 50, 97, 36, 49, 48, 36, 81, 73, 47, 121, 101, 83, 110, 106, 105, 69, 90, 72, 90, 109, 70, 108, 109, 105, 74, 86, 73, 46, 50, 120, 109, 87, 89, 108, 80, 98, 107, 65, 88, 87, 56, 114, 81, 46, 120, 77, 54, 53, 118, 107, 116, 65, 115, 115, 97, 74, 112, 109, 105])).unwrap();
 
 /**
  * Describes the configuration options for the CurseForge Eternal API client.
@@ -75,12 +75,12 @@ export class CurseForgeEternalApiClient {
      * @returns The project, or `undefined` if not found.
      */
     async getProject(idOrSlug: number | string): Promise<CurseForgeProject | undefined> {
-        if (isCurseForgeProjectId(idOrSlug)) {
-            const response = await this._fetch(`/mods/${idOrSlug}`);
-            return await response.json<{ data: CurseForgeProject }>().then(x => x?.data) ?? undefined;
-        } else {
+        if (!isCurseForgeProjectId(idOrSlug)) {
             const response = await this._fetch("/mods/search", HttpRequest.get().with({ gameId: 432, slug: idOrSlug }));
             return await response.json<{ data: CurseForgeProject[] }>().then(x => x?.data?.[0]) ?? undefined;
         }
+
+        const response = await this._fetch(`/mods/${idOrSlug}`);
+        return await response.json<{ data: CurseForgeProject }>().then(x => x?.data) ?? undefined;
     }
 }

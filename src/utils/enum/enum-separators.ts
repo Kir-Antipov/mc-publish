@@ -1,7 +1,7 @@
 /**
  * An array of characters that can be used to separate enum values in a string.
  */
-export const ENUM_SEPARATORS = [",", "|"]  as const;
+export const ENUM_SEPARATORS = [",", "|"] as const;
 
 /**
  * The default separator used when converting an enum value to a string.

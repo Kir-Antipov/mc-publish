@@ -33,7 +33,7 @@ describe("getQuiltDependencies", () => {
                         unless: "fixes-conflicts-id-2",
                     },
                 ],
-            }
+            },
         } as RawQuiltMetadata;
 
         const dependencies = getQuiltDependencies(metadata);

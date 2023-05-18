@@ -1,4 +1,4 @@
-// TODO: Drop support for the legacy format completely.
+// _ TODO: Drop support for the legacy format completely.
 
 import { FabricDependencyType } from "@/loaders/fabric/fabric-dependency-type";
 import { deprecate } from "node:util";

@@ -3,7 +3,7 @@ import { ForgeDependency } from "./forge-dependency";
 import { ForgeMod } from "./forge-mod";
 import { ForgeMetadataCustomPayload } from "./forge-metadata-custom-payload";
 
-// TODO: Remove the deprecated stuff in v4.0.
+// _ TODO: Remove the deprecated stuff in v4.0.
 
 /**
  * The metadata file for a Forge mod.

@@ -1,9 +1,11 @@
 import { ArgumentNullError } from "@/utils/errors";
 import { asString } from "@/utils/string-utils";
-import { Headers as NodeFetchHeaders, Response } from "node-fetch";
 import { Blob } from "./blob";
 import { FormData } from "./form-data";
 import { Headers } from "./headers";
+
+/* eslint-disable-next-line no-restricted-imports */
+import { Headers as NodeFetchHeaders, Response } from "node-fetch";
 
 /**
  * Represents the response to an HTTP request.

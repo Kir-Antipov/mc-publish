@@ -92,7 +92,7 @@ export class CurseForgeUploader extends GenericPlatformUploader<CurseForgeUpload
         return {
             id: +idOrSlug,
             slug: String(idOrSlug),
-            links: { websiteUrl: `https://www.curseforge.com/minecraft/mc-mods/${idOrSlug}` }
+            links: { websiteUrl: `https://www.curseforge.com/minecraft/mc-mods/${idOrSlug}` },
         } as CurseForgeProject;
     }
 

@@ -247,16 +247,16 @@ export class TypeScriptImport extends AbstractTypeScriptNode {
 
         let formatted = `${indent}import `;
         if (this.isWildcardImport) {
-            formatted += `* as ${this._wildcardImportName}`
+            formatted += `* as ${this._wildcardImportName}`;
         }
         if (this.isDefaultImport) {
             formatted += this.defaultImportName;
         }
         if (this.isNamedImport) {
             const formattedNamedImports = (
-                "{ "
-                    + [...this._namedImports].join(", ") +
-                " }"
+                `{ ${
+                    [...this._namedImports].join(", ")
+                } }`
             );
 
             formatted += this.isDefaultImport ? ", " : "";
