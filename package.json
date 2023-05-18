@@ -10,7 +10,7 @@
     "build": "ncc build -s --license license.txt",
     "test:lint": "eslint \"@(src|scripts)/**/*.ts\" && eslint --rule \"no-invalid-this: off\" tests/**/*.ts",
     "test:unit": "jest --testPathPattern=unit --watchAll=false",
-    "test:integration": "jest --testPathPattern=integration",
+    "test:integration": "jest --testPathPattern=integration --watchAll=false --passWithNoTests",
     "test": "npm run test:lint && npm run test:unit && npm run test:integration"
   },
   "repository": {
