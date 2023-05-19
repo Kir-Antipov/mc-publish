@@ -189,7 +189,7 @@
     "key-spacing": "error",
     "keyword-spacing": "error",
     "line-comment-position": "error",
-    "linebreak-style": ["error", "windows"],
+    "linebreak-style": "off",
     "@typescript-eslint/lines-around-comment": ["error", {
       "allowClassStart": true,
       "allowInterfaceStart": true,
