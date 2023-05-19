@@ -5,9 +5,10 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
+    "clean": "rimraf dist",
     "generate": "ncc run scripts/generate.ts -t",
-    "prebuild": "npm run generate",
-    "build": "ncc build -s --license license.txt",
+    "prebuild": "npm run clean && npm run generate",
+    "build": "ncc build -m -s --license license.txt",
     "test:lint": "eslint \"@(src|scripts)/**/*.ts\" && eslint --rule \"no-invalid-this: off\" tests/**/*.ts",
     "test:unit": "jest --testPathPattern=unit --watchAll=false",
     "test:integration": "jest --testPathPattern=integration --watchAll=false --passWithNoTests",
