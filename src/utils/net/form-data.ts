@@ -97,3 +97,9 @@ function toFormDataEntry(value: unknown): [string | Blob, string?] {
 
     return [JSON.stringify(value)];
 }
+
+// Force this to be included into the final build.
+import { MultipartParser } from "node-fetch/src/utils/multipart-parser";
+if (!MultipartParser) {
+    isFormData(MultipartParser);
+}
