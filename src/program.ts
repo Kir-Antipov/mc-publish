@@ -37,8 +37,9 @@ export async function main(): Promise<void> {
     const logger = getDefaultLogger(env);
 
     try {
+        const action = await initializeAction(new URL("../action.yml", import.meta.url), env);
+
         const githubContext = new GitHubContext(env);
-        const action = await initializeAction(new URL("../action.yml"), env);
         await publish(action, githubContext, logger);
     } catch (e) {
         logger.fatal(e);
