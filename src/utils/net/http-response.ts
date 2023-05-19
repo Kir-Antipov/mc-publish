@@ -263,7 +263,7 @@ class CachedHttpResponse implements HttpResponse {
      */
     get body(): NodeJS.ReadableStream {
         if (this._blob) {
-            return this._blob.stream();
+            return this._blob.stream() as unknown as NodeJS.ReadableStream;
         }
 
         if (!this._response.bodyUsed) {

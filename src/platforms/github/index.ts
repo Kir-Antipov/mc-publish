@@ -3,7 +3,6 @@ export {
     GitHubApiOptions,
 
     GITHUB_API_URL,
-    DEFAULT_GITHUB_API_URL,
     GITHUB_API_VERSION,
 } from "./github-api-client";
 
