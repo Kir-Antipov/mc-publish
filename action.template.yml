@@ -1,84 +1,196 @@
-name: Publish Minecraft Mods
-description: GitHub Action that helps you publish your Minecraft mods
+# TODO: Remove deprecated inputs in v4.0
+
+name: mc-publish
+description: Your one-stop GitHub Action for seamless Minecraft project publication across various platforms.
 author: Kir-Antipov
 branding:
-  color: orange
-  icon: upload
-inputs:
-  modrinth:
-    publisher: true
-  curseforge:
-    publisher: true
-  github:
-    publisher: true
+  color: purple
+  icon: box
 
+types:
+  input:
+    name: McPublishInput
+    description: The input parameters for the action.
+  output:
+    name: McPublishOutput
+    description: The output parameters provided by the action.
+
+groups:
+  input:
+    modrinth:
+      type: ModrinthUploadRequest
+      description: Options used to publish Minecraft projects to Modrinth.
+    curseforge:
+      type: CurseForgeUploadRequest
+      description: Options used to publish Minecraft projects to CurseForge.
+    github:
+      type: GitHubUploadRequest
+      description: Options used to publish Minecraft projects to GitHub.
+  output:
+    modrinth:
+      type: ModrinthUploadReport
+      description: Report detailing the status of the project published on Modrinth.
+    curseforge:
+      type: CurseForgeUploadReport
+      description: Report detailing the status of the project published on CurseForge.
+    github:
+      type: GitHubUploadReport
+      description: Report detailing the status of the project published on GitHub.
+
+inputs:
   modrinth-id:
-    description: The ID of the Modrinth project to upload to
+    type: string
+    description: The unique identifier of your Modrinth project.
   modrinth-featured:
-    description: Indicates whether the version should be featured on Modrinth or not
+    type: boolean
+    description: Set to true to feature the version on Modrinth; false otherwise.
   modrinth-unfeature-mode:
-    description: Determines the way automatic unfeaturing of older Modrinth versions works
+    type: platforms.modrinth.ModrinthUnfeatureMode
+    description: Sets the behavior for unfeaturing older Modrinth versions.
+    default: subset
   modrinth-token:
-    description: A valid token for the Modrinth API
+    type: utils.security.SecureString
+    description: Your Modrinth API token.
 
   curseforge-id:
-    description: The ID of the CurseForge project to upload to
+    type: string
+    description: The unique identifier of your CurseForge project.
   curseforge-token:
-    description: A valid token for the CurseForge API
+    type: utils.security.SecureString
+    description: Your CurseForge API token.
 
   github-tag:
-    description: The tag name of the release to upload assets to
+    type: string
+    description: The tag name for the release where assets will be uploaded.
   github-generate-changelog:
-    description: Indicates whether to automatically generate the changelog for this release. If changelog is specified, it will be pre-pended to the automatically generated notes. Unused if the GitHub Release already exists
+    type: boolean
+    description: Set to true to generate a changelog automatically for this release; false otherwise. Ignored if the GitHub Release already exists.
   github-draft:
-    description: true to create a draft (unpublished) release, false to create a published one. Unused if the GitHub Release already exists
+    type: boolean
+    description: Set to true to create a draft release; false otherwise. Ignored if the GitHub Release already exists.
   github-prerelease:
-    description: true to identify the release as a prerelease, false to identify the release as a full release. Unused if the GitHub Release already exists
+    type: boolean
+    description: Set to true to mark the release as a prerelease; false otherwise. Ignored if the GitHub Release already exists.
   github-commitish:
-    description: Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists
+    type: string
+    description: Defines the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Ignored if the Git tag already exists.
   github-discussion:
-    description: If specified, a discussion of the specified category is created and linked to the release. Unused if the GitHub Release already exists
+    type: string
+    description: If specified, creates and links a discussion of the specified **existing** category to the release. Ignored if the GitHub Release already exists.
   github-token:
-    description: A valid token for the GitHub API
+    type: utils.security.SecureString
+    description: Your GitHub API token.
 
   files:
-    description: A glob of the files to upload
+    type: utils.io.FileInfo[]:{findFiles}?processSeparately=false
+    description: An array of globs determining which files to upload.
+    default: |
+      build/libs/!(*-@(dev|sources|javadoc)).jar
+      build/libs/*-@(dev|sources|javadoc).jar
   files-primary:
-    description: A glob of the primary files to upload
+    type: utils.io.FileInfo[]:{findFiles}?processSeparately=false
+    redirect: files
+    description: A glob determining the primary files to upload.
+    deprecationMessage: Please, use 'files' instead.
   files-secondary:
-    description: A glob of the secondary files to upload
+    type: utils.io.FileInfo[]:{findFiles}?processSeparately=false
+    redirect: void
+    description: A glob determining the secondary files to upload.
+    deprecationMessage: Please, use 'files' instead.
 
   name:
-    description: The name of the version
+    type: string
+    description: The name of the version.
   version:
-    description: The version number
+    type: string
+    description: The version number.
   version-type:
-    description: The type of the release - alpha, beta, or release
+    type: utils.versioning.VersionType
+    description: The version type - alpha, beta, or release.
 
   changelog:
-    description: The changelog for this version
+    type: string
+    description: The changelog for this version.
   changelog-file:
-    description: A glob of the changelog file
+    type: string;utils/io/file-info->{readAllText}
+    redirect: changelog
+    description: A glob pointing to the changelog file.
 
   loaders:
-    description: A list of supported mod loaders
+    type: string[]?separator=/\s%2B/
+    description: An array of supported mod loaders.
   game-versions:
-    description: A list of supported Minecraft versions
+    type: string[]
+    description: An array of supported Minecraft versions.
   dependencies:
-    description: A list of dependencies
+    type: dependencies.Dependency[]
+    description: An array of dependencies required by your project.
   version-resolver:
-    description: Determines the way automatic game-versions resolvement works
+    type: games.GameVersionFilter:fromVersionResolver
+    redirect: game-version-filter
+    description: Controls the method used to automatically resolve game versions.
+    deprecationMessage: Please, use 'game-version-filter' instead.
+  game-version-filter:
+    type: games.GameVersionFilter
+    description: Controls the method used to filter game versions.
+    default: releases | min-major | min-minor # ">=1.18" -> ["1.18", "1.18.1", "1.18.2"]
   java:
-    description: A list of supported Java versions
+    type: utils.java.JavaVersion[]
+    description: An array of Java versions compatible with your project.
 
   retry-attempts:
-    description: The maximum number of attempts to publish assets
+    description: Defines the maximum number of asset publishing attempts.
+    type: number
     default: 2
   retry-delay:
-    description: Time delay between attempts to publish assets (in milliseconds)
+    description: Specifies the delay (in milliseconds) between asset publishing attempts.
+    type: number
     default: 10000
   fail-mode:
-    description: Determines how errors that occur during mod publishing process are handled
+    type: utils.errors.FailMode
+    description: Controls how the action responds to errors during the mod publishing process.
+    default: fail
+
+outputs:
+  modrinth-id:
+    type: string
+    description: The unique identifier of your Modrinth project.
+  modrinth-version:
+    type: string
+    description: The unique identifier of the version published on Modrinth by this action.
+  modrinth-url:
+    type: string
+    description: The URL directing to the newly published version on Modrinth.
+  modrinth-files:
+    type: platforms.UploadedFile[]
+    description: Array of objects, each containing details about the files published for the new version on Modrinth, such as file `name`, `id`, and download `url`.
+
+  curseforge-id:
+    type: number
+    description: The unique identifier of your CurseForge project.
+  curseforge-version:
+    type: number
+    description: The unique identifier of the version published on CurseForge by this action.
+  curseforge-url:
+    type: string
+    description: The URL directing to the newly published version on CurseForge.
+  curseforge-files:
+    type: platforms.UploadedFile[]
+    description: Array of objects, each containing details about the files published for the new version on CurseForge, such as file `name`, `id`, and download `url`.
+
+  github-repo:
+    type: string
+    description: The full repository name on GitHub, formatted as 'username/repository'.
+  github-tag:
+    type: string
+    description: The Git tag associated with the new or updated release published on GitHub.
+  github-url:
+    type: string
+    description: The URL directing to the newly published version on GitHub.
+  github-files:
+    type: platforms.UploadedFile[]
+    description: Array of objects, each containing details about the files published for the new version on GitHub, such as file `name`, `id`, and download `url`.
+
 runs:
-  using: node12
+  using: node16
   main: dist/index.js

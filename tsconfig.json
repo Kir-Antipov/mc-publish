@@ -2,11 +2,16 @@
     "include": ["./src/**/*"],
     "exclude": ["node_modules", "./test/**/*"],
     "compilerOptions": {
-        "target": "ES6",
-        "esModuleInterop": true,
+        "target": "ESNext",
+        "module": "ESNext",
         "moduleResolution": "node",
+        "esModuleInterop": true,
+
         "baseUrl": "./src",
         "outDir": "./dist",
-        "resolveJsonModule": true,
+
+        "paths": {
+            "@/*": ["./*"],
+        }
     },
 }

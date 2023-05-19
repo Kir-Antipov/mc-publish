@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "example-mod",
+  "version": "0.1.0",
+  "name": "Example Mod",
+  "description": "Description",
+  "authors": [
+    "Author"
+  ],
+  "contact": {
+    "homepage": "https://github.com/",
+    "sources": "https://github.com/"
+  },
+  "license": "MIT",
+  "icon": "assets/example-mod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "example.ExampleMod"
+    ]
+  },
+  "mixins": [
+    "example-mod.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": ">=0.40.0",
+    "minecraft": [
+      "1.17",
+      "1.17.1"
+    ],
+    "java": ">=16"
+  },
+  "recommends": {
+    "recommended-mod": "0.2.0"
+  },
+  "includes": {
+    "included-mod": "*"
+  },
+  "suggests": {
+    "suggested-mod": "*"
+  },
+  "conflicts": {
+    "conflicting-mod": "<0.40.0"
+  },
+  "breaks": {
+    "breaking-mod": "*"
+  },
+
+  "custom": {
+    "mc-publish": {
+      "modrinth": "AANobbMI",
+      "curseforge": 394468,
+      "github": "mc1.18-0.4.0-alpha5",
+
+      "loaders": ["fabric", "quilt"],
+      "dependencies": [
+        "recommended-mod@0.2.0(recommended){modrinth:AAAA}{curseforge:42}{github:v0.2.0}#(ignore)"
+      ]
+    }
+  }
+}
