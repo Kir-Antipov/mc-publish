@@ -15,10 +15,10 @@ jobs:
     - name: Set up node modules
       run: npm ci
 
+    - name: Build artifacts
+      run: npm run build
+
     - name: Execute tests
       run: npm run test
       env:
         CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-
-    - name: Build artifacts
-      run: npm run build
