@@ -17,7 +17,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v3.2
+      - uses: Kir-Antipov/mc-publish@v3.3
         with:
           # Only include this section if you wish to publish
           # your assets on Modrinth.
@@ -47,7 +47,7 @@ jobs:
   build:
     # ...
     steps:
-      - uses: Kir-Antipov/mc-publish@v3.2
+      - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: AANobbMI
           modrinth-featured: true
