@@ -80,7 +80,7 @@ async function publish(action: Action, githubContext: GitHubContext, logger: Log
     }
 
     if (processedPlatforms.length) {
-        logger.info(`🎉 Successfully published the assets to ${processedPlatforms.join(", ")}`);
+        logger.info(`🎉 Successfully published the assets to ${processedPlatforms.map(p => PlatformType.friendlyNameOf(p)).join(", ")}`);
     } else if (!errors.hasErrors) {
         logger.warn("⚠️ No valid platform tokens found in your config. To publish your project, please add the required access tokens for the desired platforms. Assets will not be published without them. Refer to the documentation for assistance in setting up your tokens.");
     }
