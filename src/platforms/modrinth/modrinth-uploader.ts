@@ -51,7 +51,7 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
      */
     protected async uploadCore(request: ModrinthUploadRequest): Promise<ModrinthUploadReport> {
         const api = new ModrinthApiClient({ token: request.token.unwrap() });
-        const unfeatureMode = request.unfeatureMode ?? request.featured ? ModrinthUnfeatureMode.SUBSET : ModrinthUnfeatureMode.NONE;
+        const unfeatureMode = request.unfeatureMode ?? (request.featured ? ModrinthUnfeatureMode.SUBSET : ModrinthUnfeatureMode.NONE);
 
         const project = await this.getProject(request.id, api);
         const version = await this.createVersion(request, project, api);
@@ -97,15 +97,16 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
         const dependencies = await this.convertToModrinthDependencies(request.dependencies, api);
 
         return await api.createVersion({
-            project_id: project.id,
             name: request.name,
             version_number: request.version,
+            project_id: project.id,
             changelog: request.changelog,
-            version_type: request.versionType,
-            featured: request.featured,
-            game_versions: gameVersions,
-            loaders,
             dependencies,
+            game_versions: gameVersions,
+            version_type: request.versionType,
+            loaders,
+            featured: request.featured,
+            files: request.files,
         });
     }
 

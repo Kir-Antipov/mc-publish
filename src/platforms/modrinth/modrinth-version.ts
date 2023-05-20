@@ -411,14 +411,16 @@ export function packModrinthVersionInit(version: ModrinthVersionInit): ModrinthV
     const { files = [] } = version;
 
     const data: ModrinthVersionInitData = {
-        // Default values
-        featured: true,
-        dependencies: [],
-        version_type: VersionType.RELEASE,
-
         // Unpack the `version`
         ...{ ...version, files: undefined },
+
+        // Default values
         name: version.name || version.version_number,
+        version_type: version.version_type ?? VersionType.RELEASE,
+        featured: version.featured ?? true,
+        dependencies: version.dependencies ?? [],
+        game_versions: version.game_versions ?? [],
+        loaders: version.loaders ?? [],
 
         // Names of each file part
         primary_file: files.length ? "_0" : undefined,
