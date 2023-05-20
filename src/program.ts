@@ -9,6 +9,7 @@ import { ENVIRONMENT } from "@/utils/environment";
 import { ArgumentError, ArgumentNullError, ErrorBuilder, FailMode, FileNotFoundError } from "@/utils/errors";
 import { Logger, getDefaultLogger } from "@/utils/logging";
 import { DYNAMIC_MODULE_LOADER } from "@/utils/reflection";
+import { UnionToIntersection } from "@/utils/types";
 import { VersionType } from "@/utils/versioning";
 import { PathLike } from "node:fs";
 
@@ -68,7 +69,7 @@ async function publish(action: Action, githubContext: GitHubContext, logger: Log
             continue;
         }
 
-        const options = await fillInDefaultValues(platformOptions, githubContext, metadataReader);
+        const options = await fillInDefaultValues(platformOptions, platform, githubContext, metadataReader);
         const uploader = createPlatformUploader(platform, { logger, githubContext });
         try {
             action.output[platform as string] = await uploader.upload(options);
@@ -91,12 +92,13 @@ async function publish(action: Action, githubContext: GitHubContext, logger: Log
  * Fills in the default values for the specified options.
  *
  * @param options - The options to fill in the default values for.
+ * @param platform - The target platform.
  * @param githubContext - The GitHub context.
  * @param reader - The metadata reader.
  *
  * @returns A promise that resolves to the options with default values filled in.
  */
-async function fillInDefaultValues<T extends McPublishInput[PlatformType]>(options: T, githubContext: GitHubContext, reader?: LoaderMetadataReader): Promise<T> {
+async function fillInDefaultValues<T extends McPublishInput[P], P extends PlatformType>(options: T, platform: P, githubContext: GitHubContext, reader?: LoaderMetadataReader): Promise<T> {
     ArgumentError.throwIfNullOrEmpty(options.files, "options.files");
 
     options = { ...options };
@@ -108,6 +110,7 @@ async function fillInDefaultValues<T extends McPublishInput[PlatformType]>(optio
     const gameVersions = await gameVersionProvider?.(wrappedGameVersions);
     const unwrappedGameVersions = gameVersions ? GameVersionFilter.filter(gameVersions, options.gameVersionFilter).map(x => x.id) : wrappedGameVersions;
 
+    (options as UnionToIntersection<McPublishInput[PlatformType]>).id ||= metadata?.getProjectId(platform) || "";
     options.version ||= githubContext.payload.release?.tag_name || metadata?.version;
     options.versionType ||= VersionType.parseFromFileName(metadata?.version || primaryFile.name);
     options.name ??= githubContext.payload.release?.name || options.version;
