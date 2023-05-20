@@ -35,6 +35,10 @@ export {
     processActionMetadataTemplateFile,
     processActionMetadataTemplateString,
 
+    stripActionMetadataFromCustomFields,
+    stripActionMetadataFileFromCustomFields,
+    stripActionMetadataStringFromCustomFields,
+
     createTypeScriptDefinitionForActionMetadata,
     createModuleLoaderTypeScriptDefinitionForActionMetadata,
 } from "./action-metadata";
