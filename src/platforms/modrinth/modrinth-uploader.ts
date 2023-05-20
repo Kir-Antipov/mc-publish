@@ -4,6 +4,7 @@ import { GenericPlatformUploader, GenericPlatformUploaderOptions } from "@/platf
 import { PlatformType } from "@/platforms/platform-type";
 import { $i } from "@/utils/collections";
 import { IGNORE_CASE_AND_NON_WORD_CHARACTERS_EQUALITY_COMPARER } from "@/utils/comparison";
+import { ArgumentError } from "@/utils/errors";
 import { ModrinthApiClient } from "./modrinth-api-client";
 import { ModrinthDependency } from "./modrinth-dependency";
 import { ModrinthDependencyType } from "./modrinth-dependency-type";
@@ -50,6 +51,8 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
      * @inheritdoc
      */
     protected async uploadCore(request: ModrinthUploadRequest): Promise<ModrinthUploadReport> {
+        ArgumentError.throwIfNullOrEmpty(request.id, "request.id");
+
         const api = new ModrinthApiClient({ token: request.token.unwrap() });
         const unfeatureMode = request.unfeatureMode ?? (request.featured ? ModrinthUnfeatureMode.SUBSET : ModrinthUnfeatureMode.NONE);
 

@@ -2,6 +2,7 @@ import { CurseForgeUploadRequest as UploadRequest, CurseForgeUploadReport as Upl
 import { Dependency } from "@/dependencies";
 import { PlatformType } from "@/platforms/platform-type";
 import { GenericPlatformUploader, GenericPlatformUploaderOptions } from "@/platforms/generic-platform-uploader";
+import { ArgumentError } from "@/utils/errors";
 import { CurseForgeDependency } from "./curseforge-dependency";
 import { CurseForgeDependencyType } from "./curseforge-dependency-type";
 import { CurseForgeEternalApiClient } from "./curseforge-eternal-api-client";
@@ -48,6 +49,8 @@ export class CurseForgeUploader extends GenericPlatformUploader<CurseForgeUpload
      * @inheritdoc
      */
     protected async uploadCore(request: CurseForgeUploadRequest): Promise<CurseForgeUploadReport> {
+        ArgumentError.throwIfNullOrEmpty(request.id, "request.id");
+
         const api = new CurseForgeUploadApiClient({ token: request.token.unwrap() });
         const eternalApi = new CurseForgeEternalApiClient();
 
