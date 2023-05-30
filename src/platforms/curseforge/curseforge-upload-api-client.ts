@@ -207,10 +207,9 @@ export class CurseForgeUploadApiClient {
         const addonGameVersionIds = findCurseForgeGameVersionIdsByNames(map.game_versions_for_addons, pluginGameVersionNames, undefined, CURSEFORGE_GAME_VERSION_PLUGIN_NAME_COMPARER);
 
         const idVariants = [
-            // These ids are the most common on CurseForge.
+            // These ids are used by: `Mods`.
             //
-            // They are used by: `Mods`, `Modpacks`, `Customization`,
-            // `Resource Packs`, and `Worlds`.
+            // This is the most common project type out there, so we try these ids first.
             loaderIds.length ? gameVersionIds.concat(loaderIds, javaIds) : gameVersionIds,
 
             // These ids are used by: `Bukkit Plugins`.
@@ -219,6 +218,13 @@ export class CurseForgeUploadApiClient {
             // it's safe to say that users of `mc-publish` are most likely
             // to publish plugins with it, rather than addons.
             pluginGameVersionIds,
+
+            // These ids are used by: `Modpacks`, `Customization`,
+            // `Resource Packs`, and `Worlds`.
+            //
+            // The same ids as for `Mods`, but without loaders, because
+            // those are not supported for any other project type.
+            loaderIds.length ? gameVersionIds : [],
 
             // These ids are used by: `Addons`.
             addonGameVersionIds,
