@@ -8,9 +8,9 @@ website: "https://github.com"
 api-version: "1.19"
 
 dependencies:
-  - name: "RequiredPlugin"
+  RequiredPlugin:
     required: true
-  - name: "OptionalPlugin"
+  OptionalPlugin:
     required: false
 
 main: "example.ExamplePlugin"
