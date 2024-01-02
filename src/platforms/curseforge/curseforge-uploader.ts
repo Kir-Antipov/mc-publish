@@ -3,6 +3,7 @@ import { Dependency } from "@/dependencies";
 import { PlatformType } from "@/platforms/platform-type";
 import { GenericPlatformUploader, GenericPlatformUploaderOptions } from "@/platforms/generic-platform-uploader";
 import { ArgumentError } from "@/utils/errors";
+import { stringEquals } from "@/utils/string-utils";
 import { CurseForgeDependency } from "./curseforge-dependency";
 import { CurseForgeDependencyType } from "./curseforge-dependency-type";
 import { CurseForgeEternalApiClient } from "./curseforge-eternal-api-client";
@@ -136,13 +137,17 @@ export class CurseForgeUploader extends GenericPlatformUploader<CurseForgeUpload
      */
     private async convertToCurseForgeDependencies(dependencies: Dependency[], eternalApi: CurseForgeEternalApiClient): Promise<CurseForgeDependency[]> {
         const simpleDependencies = this.convertToSimpleDependencies(dependencies, CurseForgeDependencyType.fromDependencyType);
-        const curseforgeDependencies = await Promise.all(simpleDependencies.map(async ([id, type]) => ({
+        const curseForgeDependencies = await Promise.all(simpleDependencies.map(async ([id, type]) => ({
             slug: isCurseForgeProjectId(id)
                 ? await eternalApi.getProject(id).catch(() => undefined as CurseForgeProject).then(x => x?.slug)
                 : id,
 
             type,
         })));
-        return curseforgeDependencies.filter(x => x.slug && x.type);
+        const uniqueCurseForgeDependencies = curseForgeDependencies
+            .filter(x => x.slug && x.type)
+            .filter((x, i, self) => i === self.findIndex(y => stringEquals(x.slug, y.slug, { ignoreCase: true })));
+
+        return uniqueCurseForgeDependencies;
     }
 }

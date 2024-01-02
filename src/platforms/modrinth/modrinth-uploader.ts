@@ -127,7 +127,11 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
             project_id: await api.getProjectId(id).catch(() => undefined as string),
             dependency_type: type,
         })));
-        return modrinthDependencies.filter(x => x.project_id && x.dependency_type);
+        const uniqueModrinthDependencies = modrinthDependencies
+            .filter(x => x.project_id && x.dependency_type)
+            .filter((x, i, self) => i === self.findIndex(y => x.project_id === y.project_id));
+
+        return uniqueModrinthDependencies;
     }
 
     /**
