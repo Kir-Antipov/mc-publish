@@ -63,8 +63,27 @@ export class GitHubContext {
      * Gets the tag associated with the context, if available.
      */
     get tag(): string | undefined {
+        const payload = this.payload;
+        if (payload.release?.tag_name) {
+            return payload.release.tag_name;
+        }
+
         const ref = this.ref;
-        return ref?.startsWith(GITHUB_REF_TAG_PREFIX) && ref.substring(GITHUB_REF_TAG_PREFIX.length);
+        if (ref?.startsWith(GITHUB_REF_TAG_PREFIX)) {
+            return ref.substring(GITHUB_REF_TAG_PREFIX.length);
+        }
+
+        return undefined;
+    }
+
+    /**
+     * Gets the version associated with the context, if available.
+     */
+    get version(): string | undefined {
+        const tag = this.tag;
+
+        // Remove the `v` prefix, popularized by GitHub.
+        return /v\d/.test(tag) ? tag.substring(1) : tag;
     }
 
     /**

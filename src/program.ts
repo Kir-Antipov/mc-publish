@@ -111,7 +111,7 @@ async function fillInDefaultValues<T extends McPublishInput[P], P extends Platfo
     const unwrappedGameVersions = gameVersions ? GameVersionFilter.filter(gameVersions, options.gameVersionFilter).map(x => x.id) : wrappedGameVersions;
 
     (options as UnionToIntersection<McPublishInput[PlatformType]>).id ||= metadata?.getProjectId(platform) || "";
-    options.version ||= githubContext.payload.release?.tag_name || metadata?.version;
+    options.version ||= githubContext.version || metadata?.version;
     options.versionType ||= VersionType.parseFromFileName(metadata?.version || primaryFile.name);
     options.name ??= githubContext.payload.release?.name || options.version;
     options.changelog ??= githubContext.payload.release?.body || "";
