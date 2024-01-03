@@ -63,7 +63,7 @@ export class ForgeMetadata implements LoaderMetadata {
      * @inheritdoc
      */
     get loaders(): string[] {
-        return getLoadersFromForgeMetadataCustomPayload(this.customPayload);
+        return getLoadersFromForgeMetadataCustomPayload(this._raw);
     }
 
     /**

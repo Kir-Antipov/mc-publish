@@ -59,6 +59,7 @@ export function createLoaderMetadataReader(loader: LoaderType): LoaderMetadataRe
             return new FabricMetadataReader();
 
         case LoaderType.FORGE:
+        case LoaderType.NEOFORGE:
             return new ForgeMetadataReader();
 
         case LoaderType.QUILT:

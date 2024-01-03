@@ -13,6 +13,7 @@ beforeEach(async () => {
         "fabric.jar": await zipFile([__dirname, "../../content/fabric/fabric.mod.json"]),
         "quilt.jar": await zipFile([__dirname, "../../content/quilt/quilt.mod.json"]),
         "forge.jar": await zipFile([__dirname, "../../content/forge/mods.toml"], "META-INF/mods.toml"),
+        "neoforge.jar": await zipFile([__dirname, "../../content/neoforge/mods.toml"], "META-INF/mods.toml"),
         "text.txt": "",
     });
 });
