@@ -185,7 +185,7 @@ function normalizeUnknownMinecraftVersion(version: string, releaseVersion?: stri
         return SPECIAL_VERSIONS.get(version);
     }
 
-    if (!releaseVersion || version === releaseVersion) {
+    if (!releaseVersion || version === releaseVersion || version.substring(1).startsWith(releaseVersion)) {
         return normalizeOldMinecraftVersion(version);
     }
 
@@ -207,6 +207,11 @@ function normalizeUnknownMinecraftVersion(version: string, releaseVersion?: stri
     } else {
         version = normalizeOldMinecraftVersion(version);
     }
+
+    if (version.startsWith(`${releaseVersion}-`)) {
+        return version;
+    }
+
     return `${releaseVersion}-${version}`;
 }
 
