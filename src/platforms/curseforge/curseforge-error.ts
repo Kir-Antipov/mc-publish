@@ -23,7 +23,7 @@ export interface CurseForgeError {
 export function isCurseForgeError(error: unknown): error is CurseForgeError {
     const e = error as CurseForgeError;
     return (
-        e &&
+        !!e &&
         typeof e.errorCode === "number" &&
         typeof e.errorMessage === "string"
     );
