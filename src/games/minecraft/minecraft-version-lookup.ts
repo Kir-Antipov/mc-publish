@@ -160,7 +160,7 @@ export function getMinecraftVersionRegExp(versions?: Iterable<string>): RegExp {
             pattern = `${version.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d")}|${pattern}`;
         }
     }
-    return pattern === VERSION_PATTERN ? VERSION_REGEX : new RegExp(pattern, "gs");
+    return new RegExp(pattern, "gs");
 }
 
 /**
