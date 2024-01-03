@@ -1,7 +1,7 @@
 /* eslint-disable no-cond-assign */
 
 import { asArrayLike, isIterable } from "@/utils/collections";
-import { VersionRange, parseVersionRange } from "@/utils/versioning";
+import { VersionRange, noneVersionRange, parseVersionRange } from "@/utils/versioning";
 import { MinecraftVersion, MinecraftVersionManifestEntry } from "./minecraft-version";
 import { MinecraftVersionType } from "./minecraft-version-type";
 
@@ -139,7 +139,7 @@ export function normalizeMinecraftVersionRange(range: string | Iterable<string> 
         return normalizeMinecraftVersion(x);
     }));
 
-    return parseVersionRange(normalizedRanges);
+    return parseVersionRange(normalizedRanges) || noneVersionRange(normalizedRanges.join(" || "));
 }
 
 /**
