@@ -77,7 +77,7 @@ export class CurseForgeEternalApiClient {
     async getProject(idOrSlug: number | string): Promise<CurseForgeProject | undefined> {
         if (!isCurseForgeProjectId(idOrSlug)) {
             const response = await this._fetch("/mods/search", HttpRequest.get().with({ gameId: 432, slug: idOrSlug }));
-            return await response.json<{ data: CurseForgeProject[] }>().then(x => x?.data?.[0]) ?? undefined;
+            return await response.json<{ data: CurseForgeProject[] }>().then(x => x?.data?.find(y => y.slug === idOrSlug)) ?? undefined;
         }
 
         const response = await this._fetch(`/mods/${idOrSlug}`);
