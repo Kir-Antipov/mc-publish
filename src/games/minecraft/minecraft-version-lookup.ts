@@ -89,6 +89,7 @@ const SPECIAL_VERSIONS: ReadonlyMap<string, string> = new Map([
     ["Combat Test 4", "1.15-rc.3.combat.4"],
     ["Combat Test 5", "1.15.2-rc.2.combat.5"],
     ["20w14~", "1.16-alpha.20.13.inf"],
+    ["20w14infinite", "1.16-alpha.20.13.inf"],
     ["Combat Test 6", "1.16.2-beta.3.combat.6"],
     ["Combat Test 7", "1.16.3-combat.7"],
     ["1.16_combat-2", "1.16.3-combat.7.b"],
@@ -96,6 +97,7 @@ const SPECIAL_VERSIONS: ReadonlyMap<string, string> = new Map([
     ["1.16_combat-4", "1.16.3-combat.8"],
     ["1.16_combat-5", "1.16.3-combat.8.b"],
     ["1.16_combat-6", "1.16.3-combat.8.c"],
+    ["22w13oneblockatatime", "1.19-alpha.22.13.oneblockatatime"],
     ["23w13a_or_b", "1.20-alpha.23.13.ab"],
 ]);
 
