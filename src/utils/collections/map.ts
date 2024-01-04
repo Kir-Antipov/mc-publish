@@ -330,7 +330,7 @@ export class MultiMap<K, V> extends ArrayMap<K, V[]> {
      * @returns This {@link MultiMap} instance for chaining purposes.
      */
     set(key: K, value: V | Iterable<V>): this {
-        const values = isIterable(value) ? asArray(value) : [value];
+        const values = typeof value !== "string" && isIterable(value) ? asArray(value) : [value];
         return super.set(key, values);
     }
 
@@ -368,7 +368,7 @@ export class MultiMap<K, V> extends ArrayMap<K, V[]> {
             return this.set(key, value as V);
         }
 
-        if (isIterable(value)) {
+        if (typeof value !== "string" && isIterable(value)) {
             existingValues.push(...value);
         } else {
             existingValues.push(value);
