@@ -289,7 +289,7 @@ class CachedHttpResponse implements HttpResponse {
      * @inheritdoc
      */
     get bodyUsed(): boolean {
-        return false;
+        return !this._blob && !this._formData && this._response.bodyUsed;
     }
 
     /**
