@@ -46,6 +46,6 @@ export function createPlatformUploader(platform: PlatformType, options: KnownPla
             return new GitHubUploader(options);
 
         default:
-            throw new Error(`Unknown platform "${PlatformType.format(platform)}."`);
+            throw new Error(`Unknown platform '${PlatformType.format(platform)}'`);
     }
 }
