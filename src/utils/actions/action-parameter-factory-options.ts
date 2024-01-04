@@ -1,7 +1,11 @@
+import { Enum, EnumOptions } from "@/utils/enum";
+
 /**
- * Representing the known options for the action parameter factory function.
+ * Represents the known options for the action parameter factory function.
+ *
+ * @partial
  */
-export enum ActionParameterFactoryOptions {
+enum ActionParameterFactoryOptionsValues {
     /**
      * Determines if the input string should be split into an array of strings.
      *
@@ -47,3 +51,33 @@ export enum ActionParameterFactoryOptions {
      */
     FLAT_DEPTH = "flatDepth",
 }
+
+/**
+ * Options for configuring the behavior of the `ActionParameterFactoryOptions` enum.
+ *
+ * @partial
+ */
+const ActionParameterFactoryOptionsOptions: EnumOptions = {
+    /**
+     * The case should be ignored while parsing the options.
+     */
+    ignoreCase: true,
+
+    /**
+     * Non-word characters should be ignored while parsing the options.
+     */
+    ignoreNonWordCharacters: true,
+};
+
+/**
+ * Represents the known options for the action parameter factory function.
+ */
+export const ActionParameterFactoryOptions = Enum.create(
+    ActionParameterFactoryOptionsValues,
+    ActionParameterFactoryOptionsOptions,
+);
+
+/**
+ * Represents the known options for the action parameter factory function.
+ */
+export type ActionParameterFactoryOptions = Enum<typeof ActionParameterFactoryOptionsValues>;
