@@ -134,7 +134,8 @@ export class HttpResponse {
      * @returns The newly created {@link HttpResponse} instance.
      */
     static formData(formData: FormData, options?: HttpResponseOptions): HttpResponse {
-        return HttpResponse.content(formData, "multipart/form-data", options);
+        // Response constructor will automatically set the "Content-Type" header.
+        return HttpResponse.content(formData, undefined, options);
     }
 
     /**
@@ -193,11 +194,11 @@ export class HttpResponse {
      *
      * @returns The newly created {@link HttpResponse} instance.
      */
-    private static content(data: string | FormData | Blob, contentType: string, options?: HttpResponseOptions): HttpResponse {
+    private static content(data: string | FormData | Blob, contentType?: string, options?: HttpResponseOptions): HttpResponse {
         ArgumentNullError.throwIfNull(data);
 
         const headers = new NodeFetchHeaders(options?.headers);
-        if (!headers.has("Content-Type")) {
+        if (contentType && !headers.has("Content-Type")) {
             headers.set("Content-Type", contentType);
         }
 
