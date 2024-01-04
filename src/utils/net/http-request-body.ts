@@ -50,7 +50,7 @@ export function isStreamableHttpRequestBody(body: unknown): body is Blob | Buffe
 function isReadableStream(stream: unknown): stream is NodeJS.ReadableStream {
     const s = stream as NodeJS.ReadableStream;
     return (
-        s &&
+        !!s &&
         typeof s.read === "function" &&
         typeof s.pause === "function" &&
         typeof s.resume === "function" &&
