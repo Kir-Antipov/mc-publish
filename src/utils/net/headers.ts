@@ -270,6 +270,6 @@ export function inferHttpRequestBodyHeaders(body: HttpRequestBody): Headers {
         undefined;
 
     headers["Content-Type"] = type;
-    headers["Content-Length"] = length;
+    headers["Content-Length"] = String(length);
     return headers;
 }
