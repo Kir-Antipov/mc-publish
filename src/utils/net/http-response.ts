@@ -173,7 +173,18 @@ export class HttpResponse {
      * @returns The newly created {@link HttpResponse} instance.
      */
     static redirect(url: string | URL, options?: HttpResponseOptions): HttpResponse {
-        return Response.redirect(asString(url), options?.status) as NodeFetchResponse;
+        const headers = new NodeFetchHeaders(options?.headers);
+        if (!headers.has("Location")) {
+            headers.set("Location", asString(url));
+        }
+
+        const redirectOptions = {
+            headers,
+            status: options.status ?? 302,
+            statusText: options.statusText ?? "Found",
+        } as HttpResponseOptions;
+
+        return new Response("", redirectOptions) as NodeFetchResponse;
     }
 
     /**
