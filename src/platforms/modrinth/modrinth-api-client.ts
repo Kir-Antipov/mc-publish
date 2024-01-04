@@ -184,7 +184,7 @@ export class ModrinthApiClient {
     async createVersion(version: ModrinthVersionInit): Promise<ModrinthVersion> {
         const form = packModrinthVersionInit(version);
         const response = await this._fetch("/version", HttpRequest.post().with(form));
-        return await response.json();
+        return await response.json() ?? undefined;
     }
 
     /**
