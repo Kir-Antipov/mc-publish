@@ -115,18 +115,14 @@ export class ModrinthApiClient {
     }
 
     /**
-     * Fetches multiple projects by their IDs.
+     * Fetches multiple projects by their IDs and/or slugs.
      *
-     * @param ids - The project IDs.
+     * @param idsOrSlugs - The project IDs and/or slugs.
      *
      * @returns An array of projects.
-     *
-     * @remarks
-     *
-     * This method **DOES NOT** support slugs (for some reason).
      */
-    async getProjects(ids: Iterable<string>): Promise<ModrinthProject[]> {
-        const response = await this._fetch("/projects", HttpRequest.get().with({ ids: JSON.stringify(asArray(ids)) }));
+    async getProjects(idsOrSlugs: Iterable<string>): Promise<ModrinthProject[]> {
+        const response = await this._fetch("/projects", HttpRequest.get().with({ ids: JSON.stringify(asArray(idsOrSlugs)) }));
         return (await response.json()) ?? [];
     }
 
