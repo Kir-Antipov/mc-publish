@@ -38,13 +38,18 @@ export function getHeader(headers: Headers, header: string): string | undefined 
         return undefined;
     }
 
+    if (isMultiMap<string, string>(headers)) {
+        const entries = headers.get(header);
+        return typeof entries === "string" ? entries : entries ? asArrayLike(entries).join(HEADER_SEPARATOR) : undefined;
+    }
+
     if (isMap<string, string>(headers)) {
         return headers.get(header);
     }
 
-    if (isIterable<string>(headers)) {
+    if (isIterable<Iterable<string>>(headers)) {
         const arrayLikeHeaders = asArrayLike(headers);
-        return arrayLikeHeaders.find(x => asArrayLike(x).at(0) === header);
+        return arrayLikeHeaders.find(x => asArrayLike(x).at(0) === header)?.[1];
     }
 
     return headers[header];
