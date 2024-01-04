@@ -213,7 +213,7 @@ export class HttpResponse {
             headers.set("Content-Type", contentType);
         }
 
-        return new Response(data, { ...options, headers }) as NodeFetchResponse;
+        return new Response(data, { status: options?.status, statusText: options?.statusText, headers }) as NodeFetchResponse;
     }
 }
 
