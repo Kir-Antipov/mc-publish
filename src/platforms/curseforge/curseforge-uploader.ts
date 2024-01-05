@@ -52,8 +52,8 @@ export class CurseForgeUploader extends GenericPlatformUploader<CurseForgeUpload
     protected async uploadCore(request: CurseForgeUploadRequest): Promise<CurseForgeUploadReport> {
         ArgumentError.throwIfNullOrEmpty(request.id, "request.id");
 
-        const api = new CurseForgeUploadApiClient({ token: request.token.unwrap() });
-        const eternalApi = new CurseForgeEternalApiClient();
+        const api = new CurseForgeUploadApiClient({ token: request.token.unwrap(), fetch: this._fetch });
+        const eternalApi = new CurseForgeEternalApiClient({ fetch: this._fetch });
 
         const project = await this.getProject(request.id, eternalApi);
         const version = await this.createVersion(request, project.id, api, eternalApi);
