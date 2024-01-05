@@ -61,7 +61,7 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
      * @inheritdoc
      */
     protected async uploadCore(request: GitHubUploadRequest): Promise<GitHubUploadReport> {
-        const api = new GitHubApiClient({ token: request.token.unwrap(), baseUrl: this._context.apiUrl });
+        const api = new GitHubApiClient({ token: request.token.unwrap(), fetch: this._fetch, baseUrl: this._context.apiUrl });
         const repo = this._context.repo;
 
         const release = await this.updateOrCreateRelease(request, api);
