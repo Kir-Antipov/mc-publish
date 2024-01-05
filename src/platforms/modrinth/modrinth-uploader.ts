@@ -151,7 +151,7 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
         const modrinthLoaders = await api.getLoaders();
         return $i(loaders)
             .map(x => modrinthLoaders.find(y => IGNORE_CASE_AND_NON_WORD_CHARACTERS_EQUALITY_COMPARER(x, y.name)))
-            .filter(x => x.supported_project_types?.includes(project.project_type))
+            .filter(x => x?.supported_project_types.includes(project.project_type))
             .map(x => x.name)
             .toArray();
     }
