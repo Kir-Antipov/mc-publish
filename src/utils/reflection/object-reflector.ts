@@ -173,7 +173,7 @@ export function getOwnEntries<K, V>(obj: KeyValueIterable<K, V> | Iterable<reado
         return [];
     }
 
-    if (isKeyValueIterable(obj)) {
+    if (!Array.isArray(obj) && isKeyValueIterable(obj)) {
         return obj.entries();
     }
 
@@ -182,6 +182,10 @@ export function getOwnEntries<K, V>(obj: KeyValueIterable<K, V> | Iterable<reado
         if (entries.every(x => Array.isArray(x))) {
             return entries as Iterable<[K, V]>;
         }
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.entries() as Iterable<[K, V]>;
     }
 
     return Object.entries(obj) as Iterable<[K, V]>;
