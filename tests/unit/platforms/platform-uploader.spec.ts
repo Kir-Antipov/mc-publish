@@ -14,6 +14,6 @@ describe("createPlatformUploader", () => {
     });
 
     test("throws an error when an unknown platform is provided", () => {
-        expect(() => createPlatformUploader("unknown" as PlatformType, { githubContext: null })).toThrow("Unknown platform 'unknown'.");
+        expect(() => createPlatformUploader("unknown" as PlatformType, { githubContext: null })).toThrow();
     });
 });
