@@ -6,9 +6,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Node.js v16
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
         node-version: 16
 
@@ -20,5 +20,3 @@ jobs:
 
     - name: Execute tests
       run: npm run test
-      env:
-        CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
