@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose a new feature you would like to see as part of this project.
+title: "[Feature Request] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please provide a clear and concise description of the feature you want to be implemented.
+      placeholder: It should be possible to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative-solutions
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternatives you have considered, if any.
+      placeholder: You could also...
+    validations:
+      required: false
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks
+      description: Please mention any risks that, to your knowledge, this proposal might entail, such as unnecessary complexity growth, breaking changes, performance regressions, etc.
+      placeholder: This proposal adds a few more inputs to the mc-publish scheme, bringing their total number to 457, which might be a little bit confusing for the end user.
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-information
+    attributes:
+      label: Other Information
+      description: |
+        If you have any additional relevant details you would like to share with us, please provide that information here.
+    validations:
+      required: false
