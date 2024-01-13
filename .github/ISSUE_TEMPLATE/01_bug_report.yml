@@ -1,0 +1,115 @@
+name: Bug report
+description: Submit a bug report to help us improve.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      render: Markdown
+      description: Please provide a clear and concise description of the problem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Provide a description of the expected behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: Provide a description of the actual behavior observed.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Specify the version of mc-publish you are currently using.
+      placeholder: |
+        Please make sure to upgrade to the latest release before opening an issue.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Specify the environment where you are using mc-publish.
+      multiple: false
+      default: 0
+      options:
+        - GitHub Actions
+        - GitLab CI/CD
+        - Other (Docker)
+        - Other (Script)
+        - Other (Executable)
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration
+      description: Provide the relevant parts of the configuration that caused the problem, if applicable.
+      placeholder: |
+        on:
+          release:
+            types: [published]
+
+        jobs:
+          build:
+            runs-on: ubuntu-latest
+            permissions:
+              contents: write
+            steps:
+              # Build artifacts...
+
+              - name: Publish assets to GitHub, Modrinth, and CurseForge
+                uses: Kir-Antipov/mc-publish@v4.0
+                with:
+                  name: ""
+                  modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+                  curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+      render: yml
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Copy and paste the relevant logs, if applicable.
+      placeholder: |
+        Run Kir-Antipov/mc-publish@v4.0
+        with:
+          modrinth-id: AAAAAAAA
+          modrinth-token: ***
+          curseforge-id: 42
+          curseforge-token: ***
+          files: build/libs/*.jar
+
+        📤 Uploading assets to CurseForge
+        ✅ Successfully published assets to CurseForge in 50000 ms
+        📤 Uploading assets to Modrinth
+        Error: Modrinth project "AAAAAAAA" was not found.
+      render: sh
+    validations:
+      required: false
+
+  - type: textarea
+    id: other-information
+    attributes:
+      label: Other Information
+      description: |
+        If you have an idea about where the problem might lie, how to fix it, whether it's a regression or not, please provide that information here. Include any pointers to code, relevant commits, or related issues that you are aware of.
+    validations:
+      required: false
