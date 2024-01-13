@@ -1,0 +1,41 @@
+name: Enhancement
+description: Suggest an enhancement for an existing feature.
+title: "[Enhancement] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: |
+        Provide a description of the current behavior of the feature you want to enhance and explain why it falls short of your expectations.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: false
+
+  - type: textarea
+    id: desired-behavior
+    attributes:
+      label: Desired Behavior
+      description: Please provide a clear and concise description of what you want to happen.
+      placeholder: It should be possible to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative-solutions
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternatives you have considered, if any.
+      placeholder: You could also...
+    validations:
+      required: false
+
+  - type: textarea
+    id: other-information
+    attributes:
+      label: Other Information
+      description: |
+        If you have any additional relevant details you would like to share with us, please provide that information here.
+    validations:
+      required: false
