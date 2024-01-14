@@ -16,6 +16,8 @@ Most values are resolved automatically, so to publish your project, you only nee
 jobs:
   build:
     # ...
+    permissions:
+      contents: write
     steps:
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
@@ -46,6 +48,8 @@ As a rule of thumb, if you don't see a clear reason to use an input, it's best n
 jobs:
   build:
     # ...
+    permissions:
+      contents: write
     steps:
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
