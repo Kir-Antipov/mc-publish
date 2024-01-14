@@ -200,6 +200,7 @@
       "allowObjectStart": true,
       "allowArrayStart": true
     }],
+    "@typescript-eslint/no-unsafe-declaration-merging": "off",
     "lines-between-class-members": "error",
     "max-len": "off",
     "max-statements-per-line": "error",
