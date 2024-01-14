@@ -51,7 +51,10 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
      * @inheritdoc
      */
     protected async uploadCore(request: ModrinthUploadRequest): Promise<ModrinthUploadReport> {
-        ArgumentError.throwIfNullOrEmpty(request.id, "request.id");
+        ArgumentError.throwIfNullOrEmpty(request.id, "request.id", "A project ID is required to upload files to Modrinth.");
+        ArgumentError.throwIfNullOrEmpty(request.version, "request.version", "A version number is required to upload files to Modrinth.");
+        ArgumentError.throwIfNullOrEmpty(request.loaders, "request.loaders", "At least one loader should be specified to upload files to Modrinth.");
+        ArgumentError.throwIfNullOrEmpty(request.gameVersions, "request.gameVersions", "At least one game version should be specified to upload files to Modrinth.");
 
         const api = new ModrinthApiClient({ token: request.token.unwrap(), fetch: this._fetch });
         const unfeatureMode = request.unfeatureMode ?? (request.featured ? ModrinthUnfeatureMode.SUBSET : ModrinthUnfeatureMode.NONE);

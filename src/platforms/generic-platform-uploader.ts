@@ -154,8 +154,8 @@ export abstract class GenericPlatformUploader<TOptions extends GenericPlatformUp
      */
     async upload(request: TRequest): Promise<TReport> {
         ArgumentNullError.throwIfNull(request, "request");
-        ArgumentNullError.throwIfNull(request.token, "request.token");
-        ArgumentNullError.throwIfNullOrEmpty(request.files, "request.files");
+        ArgumentNullError.throwIfNull(request.token, "request.token", `A token is required to upload files to ${PlatformType.friendlyNameOf(this.platform)}.`);
+        ArgumentNullError.throwIfNullOrEmpty(request.files, "request.files", "No files to upload were specified. Please include at least one file in the request.");
 
         const platformName = PlatformType.friendlyNameOf(this.platform);
         const maxAttempts = request.retryAttempts ?? DEFAULT_RETRY_ATTEMPTS;

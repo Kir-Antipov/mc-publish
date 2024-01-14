@@ -42,12 +42,8 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
      * @param options - The options to use for the uploader.
      */
     constructor(options: GitHubUploaderOptions) {
-        ArgumentNullError.throwIfNull(options, "options");
-        ArgumentNullError.throwIfNull(options.githubContext, "options.githubContext");
-        ArgumentNullError.throwIfNull(options.githubContext.repo, "options.githubContext.repo");
-
         super(options);
-        this._context = options.githubContext;
+        this._context = options?.githubContext;
     }
 
     /**
@@ -61,6 +57,8 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
      * @inheritdoc
      */
     protected async uploadCore(request: GitHubUploadRequest): Promise<GitHubUploadReport> {
+        ArgumentNullError.throwIfNull(this._context?.repo, "context.repo", "The information about the repository is required to upload files to GitHub.");
+
         const api = new GitHubApiClient({ token: request.token.unwrap(), fetch: this._fetch, baseUrl: this._context.apiUrl });
         const repo = this._context.repo;
 
