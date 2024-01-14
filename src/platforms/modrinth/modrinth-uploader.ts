@@ -66,7 +66,7 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
         return {
             id: project.id,
             version: version.id,
-            url: `https://modrinth.com/${project.project_type}/${project.slug}/version/${version.name}`,
+            url: `https://modrinth.com/${project.project_type}/${project.slug}/version/${version.version_number}`,
             files: version.files.map(x => ({ id: x.hashes.sha1, name: x.filename, url: x.url })),
         };
     }
