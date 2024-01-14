@@ -69,6 +69,48 @@ describe("parseVersionRange", () => {
         expect(versionRange.includes("2.0.1")).toBe(false);
     });
 
+    test("parses an interval notation string with single version correctly", () => {
+        const versionRange = parseVersionRange("[1.2.3]");
+
+        expect(versionRange).toBeDefined();
+        expect(versionRange.toString()).toBe("[1.2.3]");
+
+        expect(versionRange.includes("1.2.3")).toBe(true);
+        expect(versionRange.includes("1.2.4")).toBe(false);
+        expect(versionRange.includes("2.0.0")).toBe(false);
+        expect(versionRange.includes("1.0.0")).toBe(false);
+        expect(versionRange.includes("1.2.2")).toBe(false);
+        expect(versionRange.includes("2.0.1")).toBe(false);
+    });
+
+    test("parses an interval notation string with single version open end correctly", () => {
+        const versionRange = parseVersionRange("[1.2.3,)");
+
+        expect(versionRange).toBeDefined();
+        expect(versionRange.toString()).toBe("[1.2.3,)");
+
+        expect(versionRange.includes("1.2.3")).toBe(true);
+        expect(versionRange.includes("1.2.4")).toBe(true);
+        expect(versionRange.includes("2.0.0")).toBe(true);
+        expect(versionRange.includes("2.0.1")).toBe(true);
+        expect(versionRange.includes("1.0.0")).toBe(false);
+        expect(versionRange.includes("1.2.2")).toBe(false);
+    });
+
+    test("parses an interval notation string with single version closed end as typo for open end", () => {
+        const versionRange = parseVersionRange("[1.2.3,]");
+
+        expect(versionRange).toBeDefined();
+        expect(versionRange.toString()).toBe("[1.2.3,]");
+
+        expect(versionRange.includes("1.2.3")).toBe(true);
+        expect(versionRange.includes("1.2.4")).toBe(true);
+        expect(versionRange.includes("2.0.0")).toBe(true);
+        expect(versionRange.includes("2.0.1")).toBe(true);
+        expect(versionRange.includes("1.0.0")).toBe(false);
+        expect(versionRange.includes("1.2.2")).toBe(false);
+    });
+
     test("parses an interval notation string with X-ranges correctly", () => {
         const versionRange = parseVersionRange("[1.2.x,2.0.X)");
 

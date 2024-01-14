@@ -85,7 +85,7 @@ function mixedToSemver(range: string): string {
 /**
  * Regular expression for matching interval expressions in version range strings.
  */
-const INTERVAL_REGEX = /(?<from_bracket>\[|\()\s*(?<from>[^,\s]+)?\s*,\s*(?<to>[^,\s\])]+)?\s*(?<to_bracket>\]|\))/;
+const INTERVAL_REGEX = /(?<from_bracket>\[|\()\s*(?<from>[^,\s]+)?\s*(?<separator>,)?\s*(?<to>[^,\s\])]+)?\s*(?<to_bracket>\]|\))/;
 
 /**
  * Converts an interval expression into a semver-compatible range expression.
@@ -102,6 +102,7 @@ function intervalToSemver(range: string): string {
 
     const fromOperator = match.groups.from_bracket === "[" ? ">=" : ">";
     const from = match.groups.from;
+    const separator = match.groups.separator;
     const toOperator = match.groups.to_bracket === "]" ? "<=" : "<";
     const to = match.groups.to;
     if (!from && !to) {
@@ -110,6 +111,10 @@ function intervalToSemver(range: string): string {
 
     if (!from) {
         return `${toOperator}${to}`;
+    }
+
+    if (!separator) {
+        return from;
     }
 
     if (!to) {
