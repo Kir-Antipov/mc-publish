@@ -81,11 +81,22 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
      */
     private async getProject(idOrSlug: string, api: ModrinthApiClient): Promise<ModrinthProject> {
         const project = await api.getProject(idOrSlug);
-        if (!project) {
-            throw new Error(`Modrinth project "${idOrSlug}" was not found.`);
+        if (project) {
+            return project;
         }
 
-        return project;
+        // If the project was not found, it could imply that it is not publicly
+        // visible (e.g., it hasn't been reviewed yet), and the token we have lacks
+        // the `Read projects` permission.
+        //
+        // Regardless, if the user provided us with a project ID, that's all we need
+        // to attempt publishing their assets. Although the upload report may be imprecise
+        // with this placeholder data, it's still preferable to not uploading anything at all.
+        return {
+            id: idOrSlug,
+            slug: idOrSlug,
+            project_type: "mod",
+        } as ModrinthProject;
     }
 
     /**
@@ -154,7 +165,15 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
         const modrinthLoaders = await api.getLoaders();
         return $i(loaders)
             .map(x => modrinthLoaders.find(y => IGNORE_CASE_AND_NON_WORD_CHARACTERS_EQUALITY_COMPARER(x, y.name)))
-            .filter(x => x?.supported_project_types.includes(project.project_type))
+            .filter(x => x)
+
+            // `project.id === project.slug` is only true when we use placeholder data,
+            // which means that we couldn't get the actual project information.
+            // Therefore, we cannot rely on `project_type` to filter out invalid loaders.
+            // So, let's just hope the user, who didn't provide us with a token with
+            // all the required permissions, knows what they are doing.
+            .filter(x => x.supported_project_types.includes(project.project_type) || project.id === project.slug)
+
             .map(x => x.name)
             .toArray();
     }
