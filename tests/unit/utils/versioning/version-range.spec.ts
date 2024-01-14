@@ -109,6 +109,7 @@ describe("parseVersionRange", () => {
         expect(versionRange.includes("2.0.1")).toBe(true);
         expect(versionRange.includes("1.0.0")).toBe(false);
         expect(versionRange.includes("1.2.2")).toBe(false);
+    });
 
     test("parses an interval notation string with X-ranges correctly", () => {
         const versionRange = parseVersionRange("[1.2.x,2.0.X)");
