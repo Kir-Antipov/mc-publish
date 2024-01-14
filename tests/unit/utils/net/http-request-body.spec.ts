@@ -1,5 +1,6 @@
 import { Readable } from "node:stream";
 import { Blob } from "@/utils/net/blob";
+import { FormData } from "@/utils/net/form-data";
 import { isHttpRequestBody, isStreamableHttpRequestBody } from "@/utils/net/http-request-body";
 
 describe("isHttpRequestBody", () => {
