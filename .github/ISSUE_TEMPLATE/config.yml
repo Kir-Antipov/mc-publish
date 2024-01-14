@@ -1,0 +1,15 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discussions
+    url: https://github.com/Kir-Antipov/mc-publish/discussions
+    about: |
+      Please use Issues exclusively for reporting bugs, suggesting enhancements to existing functionality, and requesting new features.
+
+      For general questions, assistance requests, and broader community discussions, please visit our GitHub Discussions space.
+
+  - name: Documentation
+    url: https://github.com/Kir-Antipov/mc-publish#mc-publish
+    about: |
+      Explore our comprehensive documentation to gain valuable insights into using mc-publish effectively within your workflows.
+
+      If you encounter any issues or have suggestions for improving the documentation, feel free to open an issue or participate in our Discussions.

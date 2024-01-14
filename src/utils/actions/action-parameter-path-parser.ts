@@ -26,7 +26,7 @@ export interface ActionParameterPathParser {
  *
  * @returns An array containing a single element, which is the name of the parameter.
  */
-export const IDENTITY_ACTION_PARAMETER_PATH_PARSER: ActionParameterPathParser = name => [name];
+export const IDENTITY_ACTION_PARAMETER_PATH_PARSER: ActionParameterPathParser = name => [name || ""];
 
 /**
  * Splits the parameter name by non-letter and non-number characters, converts each word to lowercase,

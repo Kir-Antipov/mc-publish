@@ -415,7 +415,7 @@ export function packModrinthVersionInit(version: ModrinthVersionInit): ModrinthV
         ...{ ...version, files: undefined },
 
         // Default values
-        name: version.name || version.version_number,
+        name: version.name || version.version_number || files[0] && FileInfo.of(files[0]).name,
         version_type: version.version_type ?? VersionType.RELEASE,
         featured: version.featured ?? true,
         dependencies: version.dependencies ?? [],

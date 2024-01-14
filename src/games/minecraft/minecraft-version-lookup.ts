@@ -1,7 +1,7 @@
 /* eslint-disable no-cond-assign */
 
 import { asArrayLike, isIterable } from "@/utils/collections";
-import { VersionRange, parseVersionRange } from "@/utils/versioning";
+import { VersionRange, noneVersionRange, parseVersionRange } from "@/utils/versioning";
 import { MinecraftVersion, MinecraftVersionManifestEntry } from "./minecraft-version";
 import { MinecraftVersionType } from "./minecraft-version-type";
 
@@ -89,6 +89,7 @@ const SPECIAL_VERSIONS: ReadonlyMap<string, string> = new Map([
     ["Combat Test 4", "1.15-rc.3.combat.4"],
     ["Combat Test 5", "1.15.2-rc.2.combat.5"],
     ["20w14~", "1.16-alpha.20.13.inf"],
+    ["20w14infinite", "1.16-alpha.20.13.inf"],
     ["Combat Test 6", "1.16.2-beta.3.combat.6"],
     ["Combat Test 7", "1.16.3-combat.7"],
     ["1.16_combat-2", "1.16.3-combat.7.b"],
@@ -96,6 +97,7 @@ const SPECIAL_VERSIONS: ReadonlyMap<string, string> = new Map([
     ["1.16_combat-4", "1.16.3-combat.8"],
     ["1.16_combat-5", "1.16.3-combat.8.b"],
     ["1.16_combat-6", "1.16.3-combat.8.c"],
+    ["22w13oneblockatatime", "1.19-alpha.22.13.oneblockatatime"],
     ["23w13a_or_b", "1.20-alpha.23.13.ab"],
 ]);
 
@@ -137,7 +139,7 @@ export function normalizeMinecraftVersionRange(range: string | Iterable<string> 
         return normalizeMinecraftVersion(x);
     }));
 
-    return parseVersionRange(normalizedRanges);
+    return parseVersionRange(normalizedRanges) || noneVersionRange(normalizedRanges.join(" || "));
 }
 
 /**
@@ -158,7 +160,7 @@ export function getMinecraftVersionRegExp(versions?: Iterable<string>): RegExp {
             pattern = `${version.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d")}|${pattern}`;
         }
     }
-    return pattern === VERSION_PATTERN ? VERSION_REGEX : new RegExp(pattern, "gs");
+    return new RegExp(pattern, "gs");
 }
 
 /**
@@ -183,7 +185,7 @@ function normalizeUnknownMinecraftVersion(version: string, releaseVersion?: stri
         return SPECIAL_VERSIONS.get(version);
     }
 
-    if (!releaseVersion || version === releaseVersion) {
+    if (!releaseVersion || version === releaseVersion || version.substring(1).startsWith(releaseVersion)) {
         return normalizeOldMinecraftVersion(version);
     }
 
@@ -205,6 +207,11 @@ function normalizeUnknownMinecraftVersion(version: string, releaseVersion?: stri
     } else {
         version = normalizeOldMinecraftVersion(version);
     }
+
+    if (version.startsWith(`${releaseVersion}-`)) {
+        return version;
+    }
+
     return `${releaseVersion}-${version}`;
 }
 

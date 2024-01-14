@@ -54,12 +54,13 @@ export class ArgumentError extends Error {
      *
      * @param argument - The argument to check.
      * @param paramName - The name of the parameter being checked.
+     * @param message - The error message to display.
      *
      * @throws An {@link ArgumentError} if the specified argument is `null`, `undefined`, or empty.
      */
-    static throwIfNullOrEmpty(argument?: { length: number }, paramName?: string): void | never {
+    static throwIfNullOrEmpty(argument?: { length: number }, paramName?: string, message?: string): void | never {
         if (argument === undefined || argument === null || argument.length === 0) {
-            throw new ArgumentError(paramName, ArgumentError.EMPTY_ARGUMENT_ERROR_MESSAGE);
+            throw new ArgumentError(paramName, message || ArgumentError.EMPTY_ARGUMENT_ERROR_MESSAGE);
         }
     }
 

@@ -133,7 +133,7 @@ inputs:
   game-version-filter:
     type: games.GameVersionFilter
     description: Controls the method used to filter game versions.
-    default: releases | min-major | min-minor # ">=1.18" -> ["1.18", "1.18.1", "1.18.2"]
+    default: releases
   java:
     type: utils.java.JavaVersion[]
     description: An array of Java versions compatible with your project.

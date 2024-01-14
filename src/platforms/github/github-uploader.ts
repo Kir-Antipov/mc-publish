@@ -42,12 +42,8 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
      * @param options - The options to use for the uploader.
      */
     constructor(options: GitHubUploaderOptions) {
-        ArgumentNullError.throwIfNull(options, "options");
-        ArgumentNullError.throwIfNull(options.githubContext, "options.githubContext");
-        ArgumentNullError.throwIfNull(options.githubContext.repo, "options.githubContext.repo");
-
         super(options);
-        this._context = options.githubContext;
+        this._context = options?.githubContext;
     }
 
     /**
@@ -61,11 +57,12 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
      * @inheritdoc
      */
     protected async uploadCore(request: GitHubUploadRequest): Promise<GitHubUploadReport> {
-        const api = new GitHubApiClient({ token: request.token.unwrap(), baseUrl: this._context.apiUrl });
+        ArgumentNullError.throwIfNull(this._context?.repo, "context.repo", "The information about the repository is required to upload files to GitHub.");
+
+        const api = new GitHubApiClient({ token: request.token.unwrap(), fetch: this._fetch, baseUrl: this._context.apiUrl });
         const repo = this._context.repo;
 
-        const releaseId = await this.getOrCreateReleaseId(request, api);
-        const release = await this.updateRelease(request, releaseId, api);
+        const release = await this.updateOrCreateRelease(request, api);
 
         return {
             repo: `${repo.owner}/${repo.repo}`,
@@ -82,23 +79,25 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
      * @param request - Contains parameters that define the desired release.
      * @param api - An instance of the GitHub API client for interacting with GitHub services.
      *
-     * @returns The ID of the release corresponding to the request parameters.
+     * @returns The ID of the release and a boolean indicating whether a new release was created.
      */
-    private async getOrCreateReleaseId(request: GitHubUploadRequest, api: GitHubApiClient): Promise<number> {
+    private async getOrCreateReleaseId(request: GitHubUploadRequest, api: GitHubApiClient): Promise<[id: number, created: boolean]> {
         const repo = this._context.repo;
         const tag = request.tag || this._context.tag || request.version;
 
-        let releaseId = undefined as number;
+        let id = undefined as number;
+        let created = false;
+
         if (request.tag) {
-            releaseId = await api.getRelease({ ...repo, tag_name: request.tag }).then(x => x?.id);
+            id = await api.getRelease({ ...repo, tag_name: request.tag }).then(x => x?.id);
         } else if (this._context.payload.release?.id) {
-            releaseId = this._context.payload.release.id;
+            id = this._context.payload.release.id;
         } else if (tag) {
-            releaseId = await api.getRelease({ ...repo, tag_name: tag }).then(x => x?.id);
+            id = await api.getRelease({ ...repo, tag_name: tag }).then(x => x?.id);
         }
 
-        if (!releaseId && tag) {
-            releaseId = (await api.createRelease({
+        if (!id && tag) {
+            id = (await api.createRelease({
                 ...repo,
                 tag_name: tag,
                 target_commitish: request.commitish,
@@ -109,29 +108,35 @@ export class GitHubUploader extends GenericPlatformUploader<GitHubUploaderOption
                 discussion_category_name: request.discussion,
                 generate_release_notes: request.generateChangelog ?? !request.changelog,
             }))?.id;
+
+            created = true;
         }
 
-        if (!releaseId) {
+        if (!id) {
             throw new Error(`Cannot find or create GitHub Release${tag ? ` (${tag})` : ""}.`);
         }
-        return releaseId;
+
+        return [id, created];
     }
 
     /**
-     * Updates the content of an existing GitHub release based on the provided request.
+     * Updates or creates a GitHub release based on the provided request.
      *
      * @param request - Contains parameters that define the changes to apply to the release.
-     * @param releaseId - The ID of the release to be updated.
      * @param api - An instance of the GitHub API client for interacting with GitHub services.
      *
-     * @returns The updated release data from GitHub.
+     * @returns The release data from GitHub.
      */
-    private async updateRelease(request: GitHubUploadRequest, releaseId: number, api: GitHubApiClient): Promise<GitHubRelease> {
+    private async updateOrCreateRelease(request: GitHubUploadRequest, api: GitHubApiClient): Promise<GitHubRelease> {
+        const [id, created] = await this.getOrCreateReleaseId(request, api);
+        const body = (!request.changelog || created) ? undefined : request.changelog;
+        const assets = request.files;
+
         return await api.updateRelease({
             ...this._context.repo,
-            id: releaseId,
-            body: request.changelog,
-            assets: request.files,
+            id,
+            body,
+            assets,
         });
     }
 }

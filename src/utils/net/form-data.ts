@@ -67,7 +67,7 @@ export function toFormData(obj: unknown): FormData {
         .filter(([, value]) => value !== undefined && value !== null)
         .map(([key, value]) => [key, ...toFormDataEntry(value)] as const)
         .reduce((formData, [key, value, name]) => {
-            formData.append(String(key), value, name);
+            formData.append(String(key), value as Blob, name);
             return formData;
         }, new FormData());
 }

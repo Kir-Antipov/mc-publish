@@ -38,6 +38,10 @@ describe("ArgumentError", () => {
             expect(() => ArgumentError.throwIfNullOrEmpty("", "param1")).toThrowError(new ArgumentError("param1", "The value cannot be null, undefined, or empty."));
         });
 
+        test("throws an ArgumentError with the provided error message", () => {
+            expect(() => ArgumentError.throwIfNullOrEmpty(null, "param1", "I don't like nulls.")).toThrowError(new ArgumentError("param1", "I don't like nulls."));
+        });
+
         test("does not throw if the argument is not null, undefined, or empty", () => {
             expect(() => ArgumentError.throwIfNullOrEmpty("not empty", "param1")).not.toThrow();
         });

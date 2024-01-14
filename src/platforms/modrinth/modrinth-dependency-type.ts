@@ -78,12 +78,12 @@ function fromDependencyType(type: DependencyType): ModrinthDependencyType | unde
     switch (type) {
         case DependencyType.REQUIRED:
             return ModrinthDependencyType.REQUIRED;
+        case DependencyType.OPTIONAL:
         case DependencyType.RECOMMENDED:
             return ModrinthDependencyType.OPTIONAL;
         case DependencyType.EMBEDDED:
             return ModrinthDependencyType.EMBEDDED;
-        case DependencyType.OPTIONAL:
-            return ModrinthDependencyType.OPTIONAL;
+        case DependencyType.CONFLICTING:
         case DependencyType.INCOMPATIBLE:
             return ModrinthDependencyType.INCOMPATIBLE;
         default:

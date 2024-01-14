@@ -99,7 +99,7 @@ async function publish(action: Action, githubContext: GitHubContext, logger: Log
  * @returns A promise that resolves to the options with default values filled in.
  */
 async function fillInDefaultValues<T extends McPublishInput[P], P extends PlatformType>(options: T, platform: P, githubContext: GitHubContext, reader?: LoaderMetadataReader): Promise<T> {
-    ArgumentError.throwIfNullOrEmpty(options.files, "options.files");
+    ArgumentError.throwIfNullOrEmpty(options.files, "options.files", "No files found for the specified glob. Please ensure the glob is correct and files matching the pattern exist in the specified directory.");
 
     options = { ...options };
     const primaryFile = options.files[0];
@@ -111,7 +111,7 @@ async function fillInDefaultValues<T extends McPublishInput[P], P extends Platfo
     const unwrappedGameVersions = gameVersions ? GameVersionFilter.filter(gameVersions, options.gameVersionFilter).map(x => x.id) : wrappedGameVersions;
 
     (options as UnionToIntersection<McPublishInput[PlatformType]>).id ||= metadata?.getProjectId(platform) || "";
-    options.version ||= githubContext.payload.release?.tag_name || metadata?.version;
+    options.version ||= githubContext.version || metadata?.version;
     options.versionType ||= VersionType.parseFromFileName(metadata?.version || primaryFile.name);
     options.name ??= githubContext.payload.release?.name || options.version;
     options.changelog ??= githubContext.payload.release?.body || "";

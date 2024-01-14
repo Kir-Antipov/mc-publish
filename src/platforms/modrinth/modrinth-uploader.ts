@@ -51,9 +51,12 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
      * @inheritdoc
      */
     protected async uploadCore(request: ModrinthUploadRequest): Promise<ModrinthUploadReport> {
-        ArgumentError.throwIfNullOrEmpty(request.id, "request.id");
+        ArgumentError.throwIfNullOrEmpty(request.id, "request.id", "A project ID is required to upload files to Modrinth.");
+        ArgumentError.throwIfNullOrEmpty(request.version, "request.version", "A version number is required to upload files to Modrinth.");
+        ArgumentError.throwIfNullOrEmpty(request.loaders, "request.loaders", "At least one loader should be specified to upload files to Modrinth.");
+        ArgumentError.throwIfNullOrEmpty(request.gameVersions, "request.gameVersions", "At least one game version should be specified to upload files to Modrinth.");
 
-        const api = new ModrinthApiClient({ token: request.token.unwrap() });
+        const api = new ModrinthApiClient({ token: request.token.unwrap(), fetch: this._fetch });
         const unfeatureMode = request.unfeatureMode ?? (request.featured ? ModrinthUnfeatureMode.SUBSET : ModrinthUnfeatureMode.NONE);
 
         const project = await this.getProject(request.id, api);
@@ -63,7 +66,7 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
         return {
             id: project.id,
             version: version.id,
-            url: `https://modrinth.com/${project.project_type}/${project.slug}/version/${version.name}`,
+            url: `https://modrinth.com/${project.project_type}/${project.slug}/version/${version.version_number}`,
             files: version.files.map(x => ({ id: x.hashes.sha1, name: x.filename, url: x.url })),
         };
     }
@@ -127,7 +130,11 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
             project_id: await api.getProjectId(id).catch(() => undefined as string),
             dependency_type: type,
         })));
-        return modrinthDependencies.filter(x => x.project_id && x.dependency_type);
+        const uniqueModrinthDependencies = modrinthDependencies
+            .filter(x => x.project_id && x.dependency_type)
+            .filter((x, i, self) => i === self.findIndex(y => x.project_id === y.project_id));
+
+        return uniqueModrinthDependencies;
     }
 
     /**
@@ -147,7 +154,7 @@ export class ModrinthUploader extends GenericPlatformUploader<ModrinthUploaderOp
         const modrinthLoaders = await api.getLoaders();
         return $i(loaders)
             .map(x => modrinthLoaders.find(y => IGNORE_CASE_AND_NON_WORD_CHARACTERS_EQUALITY_COMPARER(x, y.name)))
-            .filter(x => x.supported_project_types?.includes(project.project_type))
+            .filter(x => x?.supported_project_types.includes(project.project_type))
             .map(x => x.name)
             .toArray();
     }

@@ -135,7 +135,7 @@ describe("getAllEntries", () => {
 });
 
 describe("getOwnEntries", () => {
-    test("returns the key-value pairs from an object", () => {
+    test("returns the key/value pairs from an object", () => {
         const obj = { a: 1, b: 2 };
 
         const result = Array.from(getOwnEntries(obj));
@@ -143,10 +143,18 @@ describe("getOwnEntries", () => {
         expect(result).toEqual([["a", 1], ["b", 2]]);
     });
 
-    test("returns the key-value pairs from a map", () => {
+    test("returns the key/value pairs from a map", () => {
         const map = new Map(Object.entries({ a: 1, b: 2 }));
 
         const result = Array.from(getOwnEntries(map));
+
+        expect(result).toEqual([["a", 1], ["b", 2]]);
+    });
+
+    test("returns the key/value pairs from an array of key/value pairs", () => {
+        const entries = [["a", 1], ["b", 2]];
+
+        const result = Array.from(getOwnEntries(entries));
 
         expect(result).toEqual([["a", 1], ["b", 2]]);
     });

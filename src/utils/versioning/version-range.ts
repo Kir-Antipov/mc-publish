@@ -127,7 +127,7 @@ function intervalToSemver(range: string): string {
 /**
  * Regular expression for matching semver-like tags in version strings with optional patch version.
  */
-const SEMVER_OPTIONAL_PATCH_REGEX = /(\d+\.\d+)(\.\d+|\.[Xx])?([\w\-.+]*)/g;
+const SEMVER_OPTIONAL_PATCH_REGEX = /((?:\d+|[Xx*])(?:\.\d+|\.[Xx*]))(\.\d+|\.[Xx*])?([\w\-.+]*)/g;
 
 /**
  * Ensures that a semver string has a patch version, adding ".0" if it is missing.

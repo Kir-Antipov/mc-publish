@@ -20,6 +20,11 @@ enum LoaderTypeValues {
      * Quilt mod loader.
      */
     QUILT = "quilt",
+
+    /**
+     * NeoForge mod loader.
+     */
+    NEOFORGE = "neoforge",
 }
 
 /**

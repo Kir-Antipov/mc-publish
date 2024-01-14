@@ -31,10 +31,10 @@ export interface CurseForgeGameVersion {
  * An equality comparer that compares two game version names ignoring the "-Snapshot" suffix.
  */
 export const CURSEFORGE_GAME_VERSION_SNAPSHOT_NAME_COMPARER: EqualityComparer<string> = (a, b) => {
-    const aVersion = a.replace("-Snapshot", "");
-    const bVersion = b.replace("-Snapshot", "");
+    const aVersion = a?.replace("-Snapshot", "");
+    const bVersion = b?.replace("-Snapshot", "");
 
-    return aVersion && bVersion && aVersion === bVersion;
+    return aVersion === bVersion;
 };
 
 /**
@@ -43,10 +43,10 @@ export const CURSEFORGE_GAME_VERSION_SNAPSHOT_NAME_COMPARER: EqualityComparer<st
  * are the same.
  */
 export const CURSEFORGE_GAME_VERSION_PLUGIN_NAME_COMPARER: EqualityComparer<string> = (a, b) => {
-    const aVersion = a.match(/\d+\.\d+/)?.[0];
-    const bVersion = b.match(/\d+\.\d+/)?.[0];
+    const aVersion = a?.match(/\d+\.\d+/)?.[0];
+    const bVersion = b?.match(/\d+\.\d+/)?.[0];
 
-    return aVersion && bVersion && aVersion === bVersion;
+    return aVersion === bVersion;
 };
 
 /**

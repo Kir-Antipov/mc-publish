@@ -3,6 +3,7 @@ import { Dependency } from "@/dependencies";
 import { PlatformType } from "@/platforms/platform-type";
 import { GenericPlatformUploader, GenericPlatformUploaderOptions } from "@/platforms/generic-platform-uploader";
 import { ArgumentError } from "@/utils/errors";
+import { stringEquals } from "@/utils/string-utils";
 import { CurseForgeDependency } from "./curseforge-dependency";
 import { CurseForgeDependencyType } from "./curseforge-dependency-type";
 import { CurseForgeEternalApiClient } from "./curseforge-eternal-api-client";
@@ -49,10 +50,12 @@ export class CurseForgeUploader extends GenericPlatformUploader<CurseForgeUpload
      * @inheritdoc
      */
     protected async uploadCore(request: CurseForgeUploadRequest): Promise<CurseForgeUploadReport> {
-        ArgumentError.throwIfNullOrEmpty(request.id, "request.id");
+        ArgumentError.throwIfNullOrEmpty(request.id, "request.id", "A project ID is required to upload files to CurseForge.");
+        ArgumentError.throwIfNullOrEmpty(request.loaders, "request.loaders", "At least one loader should be specified to upload files to CurseForge.");
+        ArgumentError.throwIfNullOrEmpty(request.gameVersions, "request.gameVersions", "At least one game version should be specified to upload files to CurseForge.");
 
-        const api = new CurseForgeUploadApiClient({ token: request.token.unwrap() });
-        const eternalApi = new CurseForgeEternalApiClient();
+        const api = new CurseForgeUploadApiClient({ token: request.token.unwrap(), fetch: this._fetch });
+        const eternalApi = new CurseForgeEternalApiClient({ fetch: this._fetch });
 
         const project = await this.getProject(request.id, eternalApi);
         const version = await this.createVersion(request, project.id, api, eternalApi);
@@ -136,13 +139,17 @@ export class CurseForgeUploader extends GenericPlatformUploader<CurseForgeUpload
      */
     private async convertToCurseForgeDependencies(dependencies: Dependency[], eternalApi: CurseForgeEternalApiClient): Promise<CurseForgeDependency[]> {
         const simpleDependencies = this.convertToSimpleDependencies(dependencies, CurseForgeDependencyType.fromDependencyType);
-        const curseforgeDependencies = await Promise.all(simpleDependencies.map(async ([id, type]) => ({
+        const curseForgeDependencies = await Promise.all(simpleDependencies.map(async ([id, type]) => ({
             slug: isCurseForgeProjectId(id)
                 ? await eternalApi.getProject(id).catch(() => undefined as CurseForgeProject).then(x => x?.slug)
                 : id,
 
             type,
         })));
-        return curseforgeDependencies.filter(x => x.slug && x.type);
+        const uniqueCurseForgeDependencies = curseForgeDependencies
+            .filter(x => x.slug && x.type)
+            .filter((x, i, self) => i === self.findIndex(y => stringEquals(x.slug, y.slug, { ignoreCase: true })));
+
+        return uniqueCurseForgeDependencies;
     }
 }

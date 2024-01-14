@@ -6,6 +6,7 @@ import { JavaVersion } from "@/utils/java";
 import { Logger, LoggingStopwatch, NULL_LOGGER } from "@/utils/logging";
 import { SecureString } from "@/utils/security";
 import { VersionType } from "@/utils/versioning";
+import { Fetch, fetch } from "@/utils/net";
 import { CurseForgeUploaderOptions } from "./curseforge/curseforge-uploader";
 import { GitHubUploaderOptions } from "./github/github-uploader";
 import { ModrinthUploaderOptions } from "./modrinth/modrinth-uploader";
@@ -20,6 +21,11 @@ export interface GenericPlatformUploaderOptions {
      * An optional logger that can be used for recording log messages.
      */
     logger?: Logger;
+
+    /**
+     * The Fetch implementation used for making HTTP requests.
+     */
+    fetch?: Fetch;
 }
 
 /**
@@ -124,12 +130,18 @@ export abstract class GenericPlatformUploader<TOptions extends GenericPlatformUp
     protected readonly _logger: Logger;
 
     /**
+     * The Fetch implementation used for making HTTP requests.
+     */
+    protected readonly _fetch: Fetch;
+
+    /**
      * Constructs a new {@link PlatformUploader} instance.
      *
      * @param options - The options to use for the uploader.
      */
     protected constructor(options?: TOptions) {
         this._logger = options?.logger || NULL_LOGGER;
+        this._fetch = options?.fetch || fetch;
     }
 
     /**
@@ -142,8 +154,8 @@ export abstract class GenericPlatformUploader<TOptions extends GenericPlatformUp
      */
     async upload(request: TRequest): Promise<TReport> {
         ArgumentNullError.throwIfNull(request, "request");
-        ArgumentNullError.throwIfNull(request.token, "request.token");
-        ArgumentNullError.throwIfNullOrEmpty(request.files, "request.files");
+        ArgumentNullError.throwIfNull(request.token, "request.token", `A token is required to upload files to ${PlatformType.friendlyNameOf(this.platform)}.`);
+        ArgumentNullError.throwIfNullOrEmpty(request.files, "request.files", "No files to upload were specified. Please include at least one file in the request.");
 
         const platformName = PlatformType.friendlyNameOf(this.platform);
         const maxAttempts = request.retryAttempts ?? DEFAULT_RETRY_ATTEMPTS;
