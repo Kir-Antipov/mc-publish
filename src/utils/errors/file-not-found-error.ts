@@ -39,10 +39,11 @@ export class FileNotFoundError extends Error {
      * Throws a {@link FileNotFoundError} if the specified file does not exist.
      *
      * @param fileName - The name of the file to check for existence.
+     * @param message - The error message to display.
      */
-    static throwIfNotFound(fileName: PathLike): void | never {
+    static throwIfNotFound(fileName: PathLike, message?: string): void | never {
         if (!existsSync(fileName)) {
-            throw new FileNotFoundError(String(fileName));
+            throw new FileNotFoundError(String(fileName), message);
         }
     }
 }

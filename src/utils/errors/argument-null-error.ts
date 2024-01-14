@@ -27,12 +27,13 @@ export class ArgumentNullError extends ArgumentError {
      *
      * @param argument - The argument to check.
      * @param paramName - The name of the parameter being checked.
+     * @param message - The error message to display.
      *
      * @throws An {@link ArgumentNullError} if the specified argument is `null` or `undefined`.
      */
-    static throwIfNull(argument?: unknown, paramName?: string): void | never {
+    static throwIfNull(argument?: unknown, paramName?: string, message?: string): void | never {
         if (argument === undefined || argument === null) {
-            throw new ArgumentNullError(paramName);
+            throw new ArgumentNullError(paramName, message);
         }
     }
 }
