@@ -45,7 +45,7 @@ describe("ForgeMetadata", () => {
     });
 
     describe("loaders", () => {
-        test(`returns 'forge' by default`, () => {
+        test("returns 'forge' by default", () => {
             const rawWithoutLoadersField = {
                 ...RAW_METADATA,
                 "mc-publish": {
@@ -122,7 +122,7 @@ describe("ForgeMetadata", () => {
             }
         });
 
-        test(`special dependencies ('forge', 'minecraft', 'java') are ignored by default`, () => {
+        test("special dependencies ('forge', 'minecraft', 'java') are ignored by default", () => {
             const metadata = ForgeMetadata.from(RAW_METADATA);
 
             const dependencies = metadata.dependencies;

@@ -45,7 +45,7 @@ describe("NeoForgeMetadata", () => {
     });
 
     describe("loaders", () => {
-        test(`returns 'neoforge' by default`, () => {
+        test("returns 'neoforge' by default", () => {
             const rawWithoutLoadersField = {
                 ...RAW_METADATA,
                 "mc-publish": {
@@ -122,7 +122,7 @@ describe("NeoForgeMetadata", () => {
             }
         });
 
-        test(`special dependencies ('neoforge', 'minecraft', 'java') are ignored by default`, () => {
+        test("special dependencies ('neoforge', 'minecraft', 'java') are ignored by default", () => {
             const metadata = NeoForgeMetadata.from(RAW_METADATA);
 
             const dependencies = metadata.dependencies;

@@ -30,7 +30,7 @@ export type NeoForgeMetadataCustomPayload = {
  * @returns The custom payload attached to the given metadata.
  */
 export function getNeoForgeMetadataCustomPayload(metadata: RawNeoForgeMetadata): NeoForgeMetadataCustomPayload {
-    return metadata?.[ACTION_NAME] || {}
+    return metadata?.[ACTION_NAME] || {};
 }
 
 /**
