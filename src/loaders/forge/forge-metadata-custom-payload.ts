@@ -5,7 +5,6 @@ import { PlatformType } from "@/platforms";
 import { PartialRecord } from "@/utils/types";
 import { deprecate } from "node:util";
 import { RawForgeMetadata } from "./raw-forge-metadata";
-import { getForgeDependencies } from "./forge-dependency";
 import { asString } from "@/utils/string-utils";
 
 // _ TODO: Remove the deprecated stuff in v4.0.
@@ -80,16 +79,6 @@ const getLegacyForgeMetadataCustomPayload = deprecate(
 );
 
 /**
- * A list of default mod loaders associated with the Forge loader.
- */
-const DEFAULT_FORGE_LOADERS = [LoaderType.FORGE] as const;
-
-/**
- * A list of default mod loaders associated with the NeoForge loader.
- */
-const DEFAULT_NEOFORGE_LOADERS = [LoaderType.NEOFORGE] as const;
-
-/**
  * Gets an array of supported mod loaders from the custom payload attached to the Forge metadata.
  *
  * @param payload - The custom payload object.
@@ -98,12 +87,7 @@ const DEFAULT_NEOFORGE_LOADERS = [LoaderType.NEOFORGE] as const;
  */
 export function getLoadersFromForgeMetadataCustomPayload(metadata: RawForgeMetadata): string[] {
     const payload = getForgeMetadataCustomPayload(metadata);
-    if (payload?.loaders) {
-        return payload.loaders;
-    }
-
-    const isNeoForge = getForgeDependencies(metadata).some(x => x.modId === LoaderType.NEOFORGE);
-    return isNeoForge ? [...DEFAULT_NEOFORGE_LOADERS] : [...DEFAULT_FORGE_LOADERS];
+    return payload.loaders || [LoaderType.FORGE];
 }
 
 /**

@@ -101,7 +101,6 @@ const IGNORED_DEPENDENCIES: readonly string[] = [
     "minecraft",
     "java",
     "forge",
-    "neoforge",
 ];
 
 /**
