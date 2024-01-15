@@ -1,7 +1,8 @@
 import { $i } from "@/utils/collections";
 import { FileNotFoundError } from "@/utils/errors";
 import glob from "fast-glob";
-import { ReadStream, createReadStream, existsSync, readFileSync as readFileNodeSync, statSync } from "node:fs";
+import StreamZip from "node-stream-zip";
+import { PathLike, ReadStream, createReadStream, existsSync, readFileSync as readFileNodeSync, statSync } from "node:fs";
 import { readFile as readFileNode } from "node:fs/promises";
 import { basename, dirname } from "node:path";
 
@@ -195,13 +196,9 @@ export function findFilesSync(pattern: string | string[]): FileInfo[] {
  *
  * @throws {FileNotFoundError} - If no files matching the pattern are found.
  */
-export async function readFile(pattern: string): Promise<Buffer> {
-    const files = await glob(pattern);
-    if (!files?.length) {
-        throw new FileNotFoundError(pattern);
-    }
-
-    return await readFileNode(files[0]);
+export async function readFile(pattern: PathLike): Promise<Buffer> {
+    const file = await getFileName(pattern);
+    return await readFileNode(file);
 }
 
 /**
@@ -214,8 +211,43 @@ export async function readFile(pattern: string): Promise<Buffer> {
  *
  * @throws {FileNotFoundError} - If no files matching the pattern are found.
  */
-export async function readAllText(pattern: string, encoding?: BufferEncoding): Promise<string> {
+export async function readAllText(pattern: PathLike, encoding?: BufferEncoding): Promise<string> {
     return (await readFile(pattern)).toString(encoding);
+}
+
+/**
+ * Reads a zipped file and returns its content as a Buffer.
+ *
+ * @param pattern - The glob pattern used to locate the zip archive.
+ * @param entry - The entry name of the file within the zip archive.
+ *
+ * @returns A promise that resolves to a Buffer containing the file contents.
+ */
+export async function readZippedFile(pattern: PathLike, entry: string) : Promise<Buffer> {
+    const file = await getFileName(pattern);
+
+    let zip = undefined as StreamZip.StreamZipAsync;
+    try {
+        // Dude, it's not my constructor, calm down.
+        // eslint-disable-next-line new-cap
+        zip = new StreamZip.async({ file });
+        return await zip.entryData(entry);
+    } finally {
+        await zip?.close().catch(() => undefined);
+    }
+}
+
+/**
+ * Reads a zipped file and returns its content as a string.
+ *
+ * @param pattern - The glob pattern used to locate the zip archive.
+ * @param entry - The entry name of the file within the zip archive.
+ * @param encoding - The optional encoding to use for reading the file. Defaults to `utf8`.
+ *
+ * @returns A promise that resolves to a string containing the file contents.
+ */
+export async function readAllZippedText(pattern: PathLike, entry: string, encoding?: BufferEncoding) : Promise<string> {
+    return (await readZippedFile(pattern, entry)).toString(encoding);
 }
 
 /**
@@ -227,13 +259,9 @@ export async function readAllText(pattern: string, encoding?: BufferEncoding): P
  *
  * @throws {FileNotFoundError} - If no files matching the pattern are found.
  */
-export function readFileSync(pattern: string): Buffer {
-    const files = glob.sync(pattern);
-    if (!files?.length) {
-        throw new FileNotFoundError(pattern);
-    }
-
-    return readFileNodeSync(files[0]);
+export function readFileSync(pattern: PathLike): Buffer {
+    const file = getFileNameSync(pattern);
+    return readFileNodeSync(file);
 }
 
 /**
@@ -246,6 +274,50 @@ export function readFileSync(pattern: string): Buffer {
  *
  * @throws {FileNotFoundError} - If no files matching the pattern are found.
  */
-export function readAllTextSync(pattern: string, encoding?: BufferEncoding): string {
+export function readAllTextSync(pattern: PathLike, encoding?: BufferEncoding): string {
     return readFileSync(pattern).toString(encoding);
+}
+
+/**
+ * Retrieves the name of the first file that matches the specified glob pattern.
+ *
+ * @param pattern - The file path or glob pattern.
+ *
+ * @returns The name of the first matching file.
+ *
+ * @throws {FileNotFoundError} - If no matching file is found.
+ */
+async function getFileName(pattern: PathLike): Promise<string> {
+    if (existsSync(pattern)) {
+        return pattern.toString();
+    }
+
+    const files = await glob(pattern.toString());
+    if (files?.[0]) {
+        return files[0];
+    }
+
+    throw new FileNotFoundError(pattern.toString());
+}
+
+/**
+ * Synchronously retrieves the name of the first file that matches the specified glob pattern.
+ *
+ * @param pattern - The file path or glob pattern.
+ *
+ * @returns The name of the first matching file.
+ *
+ * @throws {FileNotFoundError} - If no matching file is found.
+ */
+function getFileNameSync(pattern: PathLike): string {
+    if (existsSync(pattern)) {
+        return pattern.toString();
+    }
+
+    const files = glob.sync(pattern.toString());
+    if (files?.[0]) {
+        return files[0];
+    }
+
+    throw new FileNotFoundError(pattern.toString());
 }

@@ -1,5 +1,6 @@
 import { statSync } from "node:fs";
 import mockFs from "mock-fs";
+import { zipContent } from "../../../utils/zip-utils";
 import {
     FileInfo,
     fileEquals,
@@ -7,15 +8,18 @@ import {
     findFilesSync,
     readAllText,
     readAllTextSync,
+    readAllZippedText,
     readFile,
     readFileSync,
+    readZippedFile,
 } from "@/utils/io/file-info";
 
-beforeEach(() => {
+beforeEach(async () => {
     mockFs({
         "path/to": {
             "test.txt": "test",
             "test.json": JSON.stringify({ foo: 42 }),
+            "test.zip": await zipContent("test", "test.txt"),
         },
     });
 });
@@ -279,5 +283,38 @@ describe("readAllTextSync", () => {
 
     test("throws if no files were found", () => {
         expect(() => readAllTextSync("path/from/*.txt")).toThrow(/path\/from\/\*\.txt/);
+    });
+});
+
+describe("readZippedFile", () => {
+    test("reads the contents of the first matching file", async () => {
+        const content = await readZippedFile("path/to/*.zip", "test.txt");
+
+        expect(Buffer.isBuffer(content)).toBe(true);
+        expect(content.toString()).toEqual("test");
+    });
+
+    test("throws if no files were found", async () => {
+        await expect(readZippedFile("path/from/*.zip", "")).rejects.toThrow(/path\/from\/\*\.zip/);
+    });
+
+    test("throws if the entry does not exist within the zip", async () => {
+        await expect(readZippedFile("path/to/test.zip", "not-test.txt")).rejects.toThrow(/Entry not found/);
+    });
+});
+
+describe("readAllZippedText", () => {
+    test("reads the contents of the first matching file", async () => {
+        const content = await readAllZippedText("path/to/*.zip", "test.txt");
+
+        expect(content).toEqual("test");
+    });
+
+    test("throws if no files were found", async () => {
+        await expect(readAllZippedText("path/from/*.zip", "")).rejects.toThrow(/path\/from\/\*\.zip/);
+    });
+
+    test("throws if the entry does not exist within the zip", async () => {
+        await expect(readAllZippedText("path/to/test.zip", "not-test.txt")).rejects.toThrow(/Entry not found/);
     });
 });
