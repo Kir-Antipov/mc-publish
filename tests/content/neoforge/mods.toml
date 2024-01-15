@@ -15,13 +15,12 @@ license="MIT"
 
 [[dependencies.example-mod]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="[1.17, 1.18)"
     side="BOTH"
 
 [[dependencies.example-mod]]
     modId="neoforge"
-    mandatory=true
     versionRange="[34,)"
     ordering="NONE"
     side="BOTH"
@@ -35,7 +34,7 @@ license="MIT"
 
 [[dependencies.example-mod]]
     modId="suggested-mod"
-    mandatory=false
+    type="optional"
     versionRange="*"
     ordering="NONE"
     side="BOTH"
@@ -45,19 +44,16 @@ license="MIT"
         github="v0.3.0"
         ignore=["curseforge"]
 
-
 [[dependencies.example-mod]]
-    modId="included-mod"
-    mandatory=false
-    embedded=true
-    versionRange="*"
+    modId="conflicting-mod"
+    type="discouraged"
+    versionRange="(,0.40.0)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.example-mod]]
     modId="breaking-mod"
-    mandatory=false
-    incompatible=true
+    type="incompatible"
     versionRange="*"
     ordering="NONE"
     side="BOTH"
@@ -66,8 +62,8 @@ license="MIT"
     modrinth="AANobbMI"
     curseforge=394468
     github="mc1.18-0.4.0-alpha5"
-    loaders=["forge", "forge2"]
+    loaders=["neoforge", "neoforge2"]
     dependencies=[
         "recommended-mod@0.2.0(recommended){modrinth:AAAA}{curseforge:42}{github:v0.2.0}#(ignore)",
-        "conflicting-mod@<0.40.0(conflicting)",
+        "included-mod(embedded)",
     ]
