@@ -5,6 +5,7 @@ import { ForgeMetadataReader } from "./forge/forge-metadata-reader";
 import { LoaderMetadata } from "./loader-metadata";
 import { LoaderType } from "./loader-type";
 import { QuiltMetadataReader } from "./quilt/quilt-metadata-reader";
+import { NeoForgeMetadataReader } from "./neoforge/neoforge-metadata-reader";
 
 /**
  * Defines a structure for reading metadata files.
@@ -61,11 +62,13 @@ export function createLoaderMetadataReader(loader: LoaderType): LoaderMetadataRe
             return new FabricMetadataReader();
 
         case LoaderType.FORGE:
-        case LoaderType.NEOFORGE:
             return new ForgeMetadataReader();
 
         case LoaderType.QUILT:
             return new QuiltMetadataReader();
+
+        case LoaderType.NEOFORGE:
+            return new NeoForgeMetadataReader();
 
         default:
             throw new Error(`Unknown mod loader '${LoaderType.format(loader)}'.`);
