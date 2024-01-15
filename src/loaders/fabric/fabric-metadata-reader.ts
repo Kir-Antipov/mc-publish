@@ -1,15 +1,18 @@
-import { ZippedTextLoaderMetadataReader } from "@/loaders/zipped-loader-metadata-reader";
+import { PathLike } from "node:fs";
+import { readAllZippedText } from "@/utils/io/file-info";
+import { LoaderMetadataReader } from "../loader-metadata-reader";
 import { FabricMetadata } from "./fabric-metadata";
-import { FABRIC_MOD_JSON, RawFabricMetadata } from "./raw-fabric-metadata";
+import { FABRIC_MOD_JSON } from "./raw-fabric-metadata";
 
 /**
  * A metadata reader that is able to read Fabric mod metadata from a zipped file.
  */
-export class FabricMetadataReader extends ZippedTextLoaderMetadataReader<FabricMetadata, RawFabricMetadata> {
+export class FabricMetadataReader implements LoaderMetadataReader<FabricMetadata> {
     /**
-     * Constructs a new {@link FabricMetadataReader} instance.
+     * @inheritdoc
      */
-    constructor() {
-        super(FABRIC_MOD_JSON, FabricMetadata.from, JSON.parse);
+    async readMetadataFile(path: PathLike): Promise<FabricMetadata> {
+        const metadataText = await readAllZippedText(path, FABRIC_MOD_JSON);
+        return FabricMetadata.from(JSON.parse(metadataText));
     }
 }

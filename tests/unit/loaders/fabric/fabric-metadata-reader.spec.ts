@@ -23,19 +23,15 @@ describe("FabricMetadataReader", () => {
         expect(metadata).toBeInstanceOf(FabricMetadata);
     });
 
-    test("returns undefined if file is not a Fabric mod", async () => {
+    test("throws if file is not a Fabric mod", async () => {
         const reader = new FabricMetadataReader();
 
-        const metadata = await reader.readMetadataFile("text.txt");
-
-        expect(metadata).toBeUndefined();
+        await expect(reader.readMetadataFile("text.txt")).rejects.toThrow();
     });
 
-    test("returns undefined if file does not exist", async () => {
+    test("throws if file does not exist", async () => {
         const reader = new FabricMetadataReader();
 
-        const metadata = await reader.readMetadataFile("text.json");
-
-        expect(metadata).toBeUndefined();
+        await expect(reader.readMetadataFile("text.json")).rejects.toThrow();
     });
 });

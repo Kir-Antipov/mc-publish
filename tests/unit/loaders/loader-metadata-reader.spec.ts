@@ -43,20 +43,18 @@ describe("combineLoaderMetadataReaders", () => {
         expect(reader2.readMetadataFile).toHaveBeenCalledWith("2");
     });
 
-    test("combined reader returns undefined when no reader can read the metadata", async () => {
+    test("combined reader throws when no reader can read the metadata", async () => {
         const combined = combineLoaderMetadataReaders([]);
-        const metadata = await combined.readMetadataFile("test");
 
-        expect(metadata).toBeUndefined();
+        await expect(combined.readMetadataFile("test")).rejects.toThrow();
     });
 
-    test("combined reader returns undefined instead of throwing", async () => {
+    test("combined reader throws if all underlying readers throw", async () => {
         const reader1 = { readMetadataFile: jest.fn().mockRejectedValue(new Error("Cannot read the metadata file")) } as LoaderMetadataReader;
 
         const combined = combineLoaderMetadataReaders([reader1]);
-        const metadata = await combined.readMetadataFile("test");
 
-        expect(metadata).toBeUndefined();
+        await expect(combined.readMetadataFile("test")).rejects.toThrow();
     });
 });
 
@@ -77,21 +75,19 @@ describe("createLoaderMetadataReader", () => {
         }
     });
 
-    test("created reader returns undefined for unsupported metadata files", async () => {
+    test("created reader throws for unsupported metadata files", async () => {
         for (const loader of LoaderType.values()) {
             const reader = createLoaderMetadataReader(loader);
-            const metadata = await reader.readMetadataFile("text.txt");
 
-            expect(metadata).toBeUndefined();
+            await expect(reader.readMetadataFile("text.txt")).rejects.toThrow();
         }
     });
 
-    test("created reader returns undefined for non-existing files", async () => {
+    test("created reader throws for non-existing files", async () => {
         for (const loader of LoaderType.values()) {
             const reader = createLoaderMetadataReader(loader);
-            const metadata = await reader.readMetadataFile("text.json");
 
-            expect(metadata).toBeUndefined();
+            await expect(reader.readMetadataFile("text.json")).rejects.toThrow();
         }
     });
 

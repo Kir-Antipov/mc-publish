@@ -17,9 +17,11 @@ export interface LoaderMetadataReader<T extends LoaderMetadata = LoaderMetadata>
      *
      * @param path - The path to the metadata file.
      *
-     * @returns The metadata object, or `undefined` if the file cannot be read.
+     * @returns The metadata object.
+     *
+     * @throws {Error} - If the file cannot be read.
      */
-    readMetadataFile(path: PathLike): Promise<T | undefined>;
+    readMetadataFile(path: PathLike): Promise<T>;
 }
 
 /**
@@ -40,7 +42,7 @@ export function combineLoaderMetadataReaders(readers: Iterable<LoaderMetadataRea
                 return metadata;
             }
         }
-        return undefined;
+        throw new Error(`Unable to read metadata from the file located at: '${path}'`);
     };
 
     return { readMetadataFile };

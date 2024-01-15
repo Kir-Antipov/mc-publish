@@ -1,7 +1,7 @@
 import { McPublishInput, McPublishOutput } from "@/action";
 import { GameVersionFilter, getGameVersionProviderByName } from "@/games";
 import { MINECRAFT } from "@/games/minecraft";
-import { LoaderMetadataReader, createDefaultLoaderMetadataReader } from "@/loaders";
+import { LoaderMetadata, LoaderMetadataReader, createDefaultLoaderMetadataReader } from "@/loaders";
 import { PlatformType, createPlatformUploader } from "@/platforms";
 import { GitHubContext } from "@/platforms/github";
 import { SPLIT_BY_WORDS_AND_GROUP_ACTION_PARAMETER_PATH_PARSER, createActionOutputControllerUsingMetadata, getActionOutput, getAllActionInputsAsObjectUsingMetadata, parseActionMetadataFromFile, setActionOutput } from "@/utils/actions";
@@ -103,7 +103,7 @@ async function fillInDefaultValues<T extends McPublishInput[P], P extends Platfo
 
     options = { ...options };
     const primaryFile = options.files[0];
-    const metadata = await reader?.readMetadataFile(primaryFile.path);
+    const metadata = await reader?.readMetadataFile(primaryFile.path).catch(() => undefined as LoaderMetadata);
 
     const gameVersionProvider = getGameVersionProviderByName(metadata?.gameName || MINECRAFT);
     const wrappedGameVersions = options.gameVersions?.length ? options.gameVersions : (metadata?.gameVersions || []);
