@@ -102,15 +102,15 @@ describe("FileInfo", () => {
     });
 
     describe("stream", () => {
-        test("creates a readable stream", () => {
+        test("creates a readable stream", () => new Promise(resolve => {
             const info = new FileInfo("path/to/test.txt");
             const stream = info.stream();
 
             expect(stream).toBeDefined();
             expect(stream.readable).toBe(true);
 
-            stream.close();
-        });
+            stream.close(resolve);
+        }));
     });
 
     describe("buffer", () => {
