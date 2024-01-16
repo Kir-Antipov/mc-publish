@@ -1,0 +1,14 @@
+name: "ExamplePlugin" # Automatically acts as ID too
+version: "1.0.0"
+description: "Description"
+authors: ["author"] # There is also "author" that accepts a single String
+
+depends: ["RequiredPlugin"] # Required dependencies
+softDepends: ["OptionalPlugin"] # Optional dependencies
+
+main: "example.ExamplePlugin"
+
+mc-publish:
+  modrinth: "AAAA"
+  curseforge: 123456
+  loaders: ["bungeecord", "waterfall"]
