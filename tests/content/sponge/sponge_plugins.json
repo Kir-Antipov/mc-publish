@@ -1,0 +1,63 @@
+{
+    "loader": {
+        "name": "java_plain",
+        "version": "1.0"
+    },
+    "license": "MIT",
+    "global": {
+        "version": "8.0.0",
+        "links": {},
+        "branding": {},
+        "contributors": [
+            {
+                "name": "Name",
+                "description": "Author"
+            }
+        ],
+        "dependencies": [
+            {
+                "id": "spongeapi",
+                "version": "8.1.0",
+                "load-order": "after",
+                "optional": false
+            }
+        ]
+    },
+    "plugins": [
+        {
+            "id": "exampleplugin",
+            "entrypoint": "example.ExamplePlugin",
+            "name": "ExamplePlugin",
+            "description": "Description",
+            "version": "1.0.0",
+            "branding": {},
+            "links": {},
+            "contributors": [
+                {
+                    "name": "Name",
+                    "description": "Author"
+                }
+            ],
+            "dependencies": [
+                {
+                    "id": "spongeapi",
+                    "version": "8.1.0",
+                    "load-order": "after",
+                    "optional": false
+                },
+                {
+                    "id": "required",
+                    "version": "1.0.0",
+                    "load-order": "after",
+                    "optional": false
+                },
+                {
+                    "id": "optional",
+                    "version": "1.0.0",
+                    "load-order": "after",
+                    "optional": true
+                }
+            ]
+        }
+    ]
+}
