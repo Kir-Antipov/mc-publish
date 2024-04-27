@@ -5,7 +5,7 @@ import { NeoForgeMetadataReader } from "@/loaders/neoforge/neoforge-metadata-rea
 
 beforeEach(async () => {
     mockFs({
-        "neoforge.mod.jar": await zipFile([__dirname, "../../../content/neoforge/mods.toml"], "META-INF/mods.toml"),
+        "neoforge.mod.jar": await zipFile([__dirname, "../../../content/neoforge/neoforge.mods.toml"], "META-INF/neoforge.mods.toml"),
         "text.txt": "",
     });
 });
@@ -15,7 +15,7 @@ afterEach(() => {
 });
 
 describe("NeoForgeMetadataReader", () => {
-    test("successfully reads mods.toml", async () => {
+    test("successfully reads neoforge.mods.toml", async () => {
         const reader = new NeoForgeMetadataReader();
 
         const metadata = await reader.readMetadataFile("neoforge.mod.jar");

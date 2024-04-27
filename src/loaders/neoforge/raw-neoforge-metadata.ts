@@ -73,3 +73,8 @@ export interface RawNeoForgeMetadata {
  * Name of the `mods.toml` file, that contains raw NeoForge metadata.
  */
 export const MODS_TOML = "META-INF/mods.toml";
+
+/**
+ * Name of the `neoforge.mods.toml` file, that contains raw NeoForge metadata.
+ */
+export const NEOFORGE_MODS_TOML = "META-INF/neoforge.mods.toml";

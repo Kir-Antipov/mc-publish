@@ -7,7 +7,7 @@ import { RawNeoForgeMetadata } from "@/loaders/neoforge/raw-neoforge-metadata";
 import { NeoForgeMetadata } from "@/loaders/neoforge/neoforge-metadata";
 
 const RAW_METADATA: RawNeoForgeMetadata = Object.freeze(parseToml(
-    readFileSync(resolvePath(__dirname, "../../../content/neoforge/mods.toml"), "utf8")
+    readFileSync(resolvePath(__dirname, "../../../content/neoforge/neoforge.mods.toml"), "utf8")
 ));
 
 describe("NeoForgeMetadata", () => {
