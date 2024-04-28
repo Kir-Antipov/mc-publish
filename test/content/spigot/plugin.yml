@@ -1,0 +1,18 @@
+name: "ExamplePlugin"
+version: "1.0.0"
+
+description: "Description"
+authors: ["Author"]
+website: "https://github.com"
+
+api-version: "1.19"
+
+depends: ["RequiredPlugin"]
+softdepends: ["OptionalPlugin"]
+
+main: "example.ExamplePlugin"
+
+mc-publish:
+  modrinth: "AAAA"
+  curseforge: 123456
+  loaders: ["bukkit", "spigot", "paper", "purpur"]
