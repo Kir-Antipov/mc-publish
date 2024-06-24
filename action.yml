@@ -398,5 +398,5 @@ outputs:
       for the new version on GitHub, such as file `name`, `id`, and download
       `url`.
 runs:
-  using: node16
+  using: node20
   main: dist/index.js
